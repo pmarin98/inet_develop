@@ -4,7 +4,18 @@ Credit-Based Shaping
 Goals
 -----
 
-In this example we demonstrate how to use the credit-based traffic shaper.
+Credit-based shaping is a method of smoothing out traffic and reducing bursting
+in the outgoing interfaces of network nodes. It works by adding gaps (idle
+periods) between successive packets of an incoming packet burst. These gaps can
+be used to transmit traffic belonging to a higher priority traffic class, for
+example, which can help to reduce the delay of higher priority traffic.
+Credit-based shaping is often used to improve the performance of time-sensitive
+applications by reducing delay and jitter.
+
+In this example, we will demonstrate how to use the credit-based traffic shaper
+to smooth out traffic and reduce bursting in network nodes.
+
+.. **TODO** some interesting stuff to show? -> shaping in general increases delay even for high priority frames. but can overall decrease delay (as it decreases delay for lower priority frames)
 
 | INET version: ``4.4``
 | Source files location: `inet/showcases/tsn/trafficshaping/creditbasedshaper <https://github.com/inet-framework/inet/tree/master/showcases/tsn/trafficshaping/creditbasedshaper>`__
@@ -12,37 +23,126 @@ In this example we demonstrate how to use the credit-based traffic shaper.
 The Model
 ---------
 
-There are three network nodes in the network. The client and the server are
-:ned:`TsnDevice` modules, and the switch is a :ned:`TsnSwitch` module. The
-links between them use 100 Mbps :ned:`EthernetLink` channels.
+Overview
+~~~~~~~~
+
+The shaper maintains an amount of credit that changes depending on whether the
+interface is currently transmitting or idle. Frame transmission is only allowed
+when the credit count is non-negative. When frames are transmitted, credit
+decreases with the channel data rate (`send slope`) until the  transmission is
+complete. When there is no transmission, credit increases with a rate called
+`idle slope`. The next frame is transmitted when the credit is zero or positive.
+The idle slope controls the average outgoing data rate.
+
+In INET, the credit-based shaper is implemented by the
+:ned:`Ieee8021qCreditBasedShaper` simple module. This is a packet gate module
+that can be combined with a packet queue to implement the credit based shaper
+algorithm. A convenient way to combine a credit-based shaper with queues, and to
+insert it into network interfaces, is to use a :ned:`Ieee8021qTimeAwareShaper`.
+This module already has queue submodules, supports a configurable number of
+traffic classes, and fits into Ethernet interfaces by replacing the default
+packet queue module in the MAC layer of the interface. The credit-based shaper
+module takes the place of the optional ``transmissionSelectionAlgorithm``
+submodule of the time-aware shaper. The submodules of a time-aware shaper module
+is shown below:
+
+.. figure:: media/timeawareshaper.png
+   :align: center
+
+Packets arriving in the time-aware shaper module are classified to the different
+traffic categories based on their PCP number. The priority is decided by the
+``transmissionSelection`` submodule. This is a :ned:`PriorityScheduler`
+configured to work in reverse order, i.e., priority increases with traffic class
+index (on the image above, ``video`` has priority over ``best effort``).
+
+.. note:: By default, the time-aware shaper doesn't do any time-aware shaping, as its gates are always open. Thus it is possible to use the combined time-aware
+   shaper/credit-based shaper module as only a credit-based shaper this way, or add optional time-aware shaping as well (by specifying gate schedules).
+
+The :ned:`Ieee8021qCreditBasedShaper` module's :par:`idleSlope` parameter
+specifies the outgoing data rate of the shaper in `bps`. By default, the gate is
+open when the number of credits is zero or more. When the number of credits is
+positive, the shaper builds a burst reserve. However, by default, if there are
+no packets in the queue, the credits are set to zero.
+
+.. note:: The :par:`idleSlope` parameter specifies the `channel data rate`. However, this is not the same as the data rate in the shaper due to protocol overhead.
+          This is relevant when observing traffic in the shaper, as it isn't limited to the value of :par:`idleSlope`, but slightly less.
+
+The Configuration
+~~~~~~~~~~~~~~~~~
+
+The Network
++++++++++++
+
+The showcase uses the following network:
 
 .. figure:: media/Network.png
    :align: center
 
-There are four applications in the network creating two independent data streams
-between the client and the server. The data rate of both streams are ~48 Mbps at
-the application level in the client.
+There are three network nodes in the network. The client and the server are
+:ned:`TsnDevice` modules, and the switch is a :ned:`TsnSwitch` module. The
+links between them are 100 Mbps :ned:`EthernetLink` channels.
+
+Overview
+++++++++
+
+In this simulation, we configure the client to generate two streams of
+fluctuating traffic, and to assign them to two traffic categories. We insert
+credit-based shapers for each category into the switch's outgoing interface
+(``eth1``) to smooth traffic.
+
+Traffic
++++++++
+
+Similarly to the ``Time-Aware Shaping`` showcase, we want to observe only the
+effect of the credit-based shaper on the traffic. Thus our goal is for the
+traffic to only get altered in the traffic shaper, and minimize unintended
+traffic shaping effects in other parts of the network.
+
+We configure two traffic source applications in the client, creating two
+independent data streams between the client and the server. The data rates of
+the streams change sinusoidally, with ~37.7 and ~16.7 Mbps mean values,
+respectively, but the links in the network on average are not saturated. Later
+on, we configure the traffic shaper to limit the data rate to ~42 and ~21 Mbps
+for the data streams, thus the incoming traffic is on average less than the
+outgoing limit. Here is the traffic configuration:
 
 .. literalinclude:: ../omnetpp.ini
    :start-at: client applications
    :end-before: outgoing streams
    :language: ini
 
-The two streams have two different traffic classes: best effort and video. The
-bridging layer identifies the outgoing packets by their UDP destination port.
-The client encodes and the switch decodes the streams using the IEEE 802.1Q PCP
-field.
+Traffic Shaping
++++++++++++++++
+
+In the client, we want to classify packets from the two packet sources into two
+traffic classes: best effort and video. To do that, we enable IEEE 802.1 stream
+identification and stream encoding by setting the :par:`hasOutgoingStreams`
+parameter to ``true``. We configure the stream identifier module in the bridging
+layer to assign the outgoing packets to named streams by their UDP destination
+port. Then, the stream encoder sets the PCP number on the packets according to
+the assigned stream name (using the IEEE 802.1Q header's PCP field):
 
 .. literalinclude:: ../omnetpp.ini
    :start-at: outgoing streams
    :end-before: egress traffic shaping
    :language: ini
 
-The traffic shaping takes place in the outgoing network interface of the switch
-where both streams pass through. The traffic shaper limits the data rate of the
-best effort stream to 40 Mbps and the data rate of the video stream to 20 Mbps.
-The excess traffic is stored in the MAC layer subqueues of the corresponding
-traffic class.
+Traffic shaping takes place in the outgoing network interface of the switch
+(``eth1``). The traffic shaper in the switch classifies packets by their PCP
+number, and limits the data rate of the best effort stream to ~42 Mbps and the
+data rate of the video stream to ~21 Mbps. The excess traffic is stored in the
+MAC layer subqueues of the corresponding traffic class.
+
+.. note:: We'll use time-aware shaper modules in the interface's MAC layer to add the credit-based shapers to (as described earlier, this is a convenient way
+   to add credit-based shapers to interfaces, as the time-aware shaper provides the necessarly modules, such as queues and classifiers; also, we don't
+   configure gate schedules, so there is no time-aware shaping).
+
+We enable egress traffic shaping in the interface (this adds the time-aware
+shaper module). Then, we specify two traffic classes in the time-aware shaper,
+and set the transmission selection algorithm submodule's type to
+:ned:`Ieee8021qCreditBasedShaper` (this adds two credit-based shaper modules,
+one per traffic category). We configure the idle slope parameters of two
+credit-based shapers to ~42 and ~21 Mbps:
 
 .. literalinclude:: ../omnetpp.ini
    :start-at: egress traffic shaping
@@ -51,63 +151,110 @@ traffic class.
 Results
 -------
 
-The first diagram shows the data rate of the application level outgoing traffic
-in the client. The data rate varies randomly over time for both traffic classes
-but the averages are the same.
+Let's take a look at how the traffic changes in the network nodes. First, we
+compare the data rate of the client application traffic with the shaper incoming
+traffic for the two traffic categories:
 
-.. figure:: media/ClientApplicationTraffic.png
+.. figure:: media/client_shaper.png
    :align: center
 
-The next diagram shows the data rate of the incoming traffic of the traffic
-shapers. This data rate is measured inside the outgoing network interface of
-the switch. This diagram is somewhat different from the previous one because
-the traffic is already in the switch, and also because it is measured at a
-different protocol level.
+The traffic is very similar. The shaper incoming traffic has a bit higher data
+rate due to protocol overhead, which was not yet present in the applications.
+Also, the two packet streams are mixed in the client's network interface, which
+can delay packets. So even if the protocol overhead would be accounted for, the
+traffic would not be the same.
 
-.. figure:: media/TrafficShaperIncomingTraffic.png
+Now let's examine how the traffic changes in the shaper. We compare the data
+rate of the incoming and outgoing traffic in the shaper:
+
+.. figure:: media/shaper_both.png
    :align: center
 
-The next diagram shows the data rate of the already shaped outgoing traffic of
-the traffic shapers. This data rate is still measured inside the outgoing network
-interface of the switch but at a different location. As it is quite apparent,
-the randomly varying data rate of the incoming traffic is already transformed
-here into a quite stable data rate.
+The data rate of the incoming traffic is on average less than the shaper's
+limit, but it periodically goes over the limit. In this case, the shaper limits
+the data rate to the configured limit. The shaper stores packets, and eventually
+sends them, so the outgoing traffic is smoothed. When the incoming traffic is
+below the shaper limit, there is no need for traffic shaping, and the outgoing
+traffic is the same as the incoming.
 
-.. figure:: media/TrafficShaperOutgoingTraffic.png
+.. note:: The data rate specified in the ini file as the idle slope parameter is the channel data rate, but this is somewhat different from the outgoing data rate in the shaper due to protocol overhead (PHY + IFG). In this chart, we measure data rate in the shaper, thus we displayed the data rate limits as calculated for the shaper. 
+
+The next chart compares the shaper outgoing and server application traffic:
+
+.. figure:: media/shaper_server.png
    :align: center
+
+Similarly to the first chart, the traffic is similar, with the shaper traffic
+being higher due to protocol overhead. The traffic only changes significantly in
+the shaper, other parts of the network have no traffic shaping effect, as
+expected.
+
+The following sequence chart displays frame transmissions in the network. The
+best effort traffic category is colored blue, the video red:
+
+.. figure:: media/seqchart2.png
+   :align: center
+
+The traffic is more bursty when it arrives in the switch. The traffic shaper in
+the switch distributes packets evenly, and interleaves video packets with best
+effort ones.
 
 The next diagram shows the queue lengths of the traffic classes in the outgoing
-network interface of the switch. The queue lengths increase over time because
-the data rate of the incoming traffic of the traffic shapers is greater than
-the data rate of the outgoing traffic, and packets are not dropped.
+network interface of the switch. The queue lengths don't increase over time
+because the data rate of the shaper incoming traffic is, on average, less than
+the data rate of the allowed outgoing traffic. (The incoming data rate
+fluctuates around ~37.7 and 16.7 Mbps, and the shaper limits the data rate to
+~42 and ~21 Mbps, respectively.) Excess packets are stored in the queues, and
+not dropped.
 
 .. figure:: media/TrafficShaperQueueLengths.png
    :align: center
 
-TODO
+The next chart shows the number of credits as it fluctuates rapidly.
+The number can grow above zero if the corresponding queue is not empty.
 
-.. figure:: media/TransmittingStateAndGateStates.png
-   :align: center
-
-TODO
+.. **TODO** it doesn't accumulate burst reserve if there are no packets -> is this needed?
 
 .. figure:: media/TrafficShaperNumberOfCredits.png
    :align: center
 
+The next charts shows the same chart zoomed in:
+
+.. figure:: media/TrafficShaperNumberOfCredits_zoomed.png
+   :align: center
+
+The next chart shows the gate states for the two credit-based shapers, and the
+transmitting state of the outgoing interface in the switch. Note that the gates
+can be open for periods longer than the duration of one packet transmission if
+the number of credits is zero or more. The transmitter is not transmitting all
+the time, as the maximum outgoing data rate of the switch (~63Mbps) is less than
+the channel capacity (100Mbps).
+
+.. figure:: media/TransmittingStateAndGateStates.png
+   :align: center
+
 The next diagram shows the relationships between the number of credits, the gate
-state of the credit based transmission selection algorithm, and the transmitting
-state of the outgoing network interface for the both traffic classes.
+state of the credit-based transmission selection algorithm, and the transmitting
+state of the outgoing network interface for both traffic classes. The diagram
+shows only the first 2ms of the simulation to make the details visible:
 
 .. figure:: media/TrafficShaping.png
    :align: center
 
-The last diagram shows the data rate of the application level incoming traffic
-in the server. The data rate is somewhat lower than the data rate of the
-outgoing traffic of the corresponding traffic shaper. The reason is that they
-are measured at different protocol layers.
+Note that the queue length is zero most of the time because the queue length
+doesn't increase to 1 if an incoming packet can be transmitted immediately.
+Also, in the transmitter, sometimes two packets (each from a different category)
+are being trasmitted back-to-back, with just an Interframe Gap period in between
+them - e.g. the first two transmissions. This doesn't cause per-traffic-class
+bursting because the two packets are of different traffic classes.
 
-.. figure:: media/ServerApplicationTraffic.png
-   :align: center
+We can observe the operation of the credit-based shaper in this diagram. Take,
+for example, the number of credits for the video traffic category. First the
+number of credits is 0. Then, a packet arrives at the queue and starts
+trasmitting, and the number of credits decreases. When the transmission is
+finished, the number of credits begins to increase. When the number of credits
+reaches 0, another transmission starts, and the number of credits starts
+decreasing again.
 
 Sources: :download:`omnetpp.ini <../omnetpp.ini>`
 
