@@ -39,7 +39,7 @@ static bool testFilter(const Packet *packet)
     return packet->getId() % 2 == 0;
 }
 
-Register_Packet_Filter_Function(TestFilter, testFilter);
+Register_Packet_Filter_Function(@TESTNAME@TestFilter, testFilter);
 
 %inifile: omnetpp.ini
 
@@ -49,7 +49,7 @@ sim-time-limit = 10s
 cmdenv-event-banners = false
 *.provider.packetLength = 1B
 *.collector.collectionInterval = 1s
-*.filter.filterClass = "TestFilter"
+*.filter.filterClass = "@TESTNAME@TestFilter"
 
 %# remove formatting
 %subst: /\x1B\[[0-9;]*m//
