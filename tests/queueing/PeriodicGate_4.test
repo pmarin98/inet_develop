@@ -1,0 +1,61 @@
+%description:
+
+In this test, packets are collected periodically by an active packet sink
+(ActivePacketSink). The packets pass through a periodic packet gate if it's
+open, otherwise packets are not generated. The packets are provided by a
+passive packet source (PassivePacketSource).
+Using bitrate in gate.
+
+%file: test.ned
+
+import inet.queueing.gate.PeriodicGate;
+import inet.queueing.sink.ActivePacketSink;
+import inet.queueing.source.PassivePacketSource;
+
+network TestProviderCollector
+{
+    submodules:
+        provider: PassivePacketSource {
+            @display("p=100,100");
+        }
+        gate: PeriodicGate {
+            @display("p=200,100");
+        }
+        collector: ActivePacketSink {
+            @display("p=300,100");
+        }
+    connections:
+        provider.out --> gate.in;
+        gate.out --> collector.in;
+}
+
+%inifile: omnetpp.ini
+
+[General]
+network = TestProviderCollector
+sim-time-limit = 10s
+cmdenv-event-banners = false
+cmdenv-log-prefix = "At %ts %N: "
+*.provider.packetLength = 1B
+*.collector.collectionInterval = 1s
+*.gate.durations = [1s, 2s]
+*.gate.bitrate = 7bps
+
+%# remove formatting
+%subst: /\x1B\[[0-9;]*m//
+
+%subst: /\nRunning simulation\.\.\.\n//
+
+%contains-regex: stdout
+At 1s gate: Closing gate.
+At 3s gate: Opening gate.
+At 4s gate: Closing gate.
+At 6s gate: Opening gate.
+At 7s gate: Closing gate.
+At 9s gate: Opening gate.
+At 10s gate: Closing gate.
+
+<!> Simulation time limit reached -- at t=10s
+
+%not-contains: stdout
+gate: Passing through packet
