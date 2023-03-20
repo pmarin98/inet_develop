@@ -199,3 +199,5 @@ At [^\n]*?: Processing packet ended, ([^\n]*?sourceApplication-7)[^\n]*?
 At [^\n]*?: Delaying packet, [^\n]*?sourceApplication-7[^\n]*?
 At [^\n]*?: Pulling packet, [^\n]*?sourceApplication-8[^\n]*?
 At [^\n]*?: Processing packet started, ([^\n]*?sourceApplication-8)[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

@@ -100,3 +100,5 @@ At 10s provider: Providing packet, [^\n]*?provider-11[^\n]*?
 At 10s server: Processing packet, [^\n]*?provider-11[^\n]*?
 At 10s queue: Pushing packet, [^\n]*?provider-11[^\n]*?
 At 10s consumer: Collecting packet, [^\n]*?provider-10[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

@@ -131,3 +131,5 @@ At [^\n]*?: Collecting packet, [^\n]*?provider-25[^\n]*?
 At [^\n]*?: Providing packet, [^\n]*?provider-26[^\n]*?
 At [^\n]*?: Forwarding packet, [^\n]*?provider-26[^\n]*?
 At [^\n]*?: Collecting packet, [^\n]*?provider-26[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

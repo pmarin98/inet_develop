@@ -409,3 +409,5 @@ At 99s limiter: Filtering out packet, [^\n]*?producer-99[^\n]*?
 At 100s producer: Producing packet, [^\n]*?producer-100[^\n]*?
 At 100s meter: Metering packet, [^\n]*?producer-100[^\n]*?
 At 100s limiter: Filtering out packet, [^\n]*?producer-100[^\n]*?
+
+<!> Simulation time limit reached -- at t=100s

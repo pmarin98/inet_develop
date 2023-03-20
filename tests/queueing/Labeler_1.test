@@ -133,3 +133,5 @@ At 10s marker: Marking packet, [^\n]*?producer-10[^\n]*?
 At 10s marker: Marking packet, [^\n]*?producer-10[^\n]*?
 At 10s classifier: Classifying packet, [^\n]*?producer-10[^\n]*?
 At 10s consumer2: Consuming packet, [^\n]*?producer-10[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

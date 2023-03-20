@@ -258,3 +258,5 @@ At [^\n]*?: Pushing packet, [^\n]*?producer2-17[^\n]*?
 At [^\n]*?: Adding packet, [^\n]*?producer2-17[^\n]*?
 At [^\n]*?: Dropping packet, [^\n]*?producer2-17[^\n]*?
 At [^\n]*?: Removing packet, [^\n]*?producer2-17[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

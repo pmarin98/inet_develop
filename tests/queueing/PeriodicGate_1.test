@@ -64,3 +64,5 @@ At 9s provider: Providing packet, [^\n]*?provider-3[^\n]*?
 At 9s gate: Passing through packet, [^\n]*?provider-3[^\n]*?
 At 9s collector: Collecting packet, [^\n]*?provider-3[^\n]*?
 At 10s gate: Closing gate.
+
+<!> Simulation time limit reached -- at t=10s

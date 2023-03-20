@@ -84,3 +84,5 @@ At [^\n]*?: Producing packet, [^\n]*?producer1-7[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer1-7[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer1-8[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer1-8[^\n]*?
+
+<!> Simulation time limit reached -- at t=100s

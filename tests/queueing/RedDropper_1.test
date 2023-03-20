@@ -479,3 +479,5 @@ At [^\n]*?: Collecting packet, [^\n]*producer-86[^\n]*
 At [^\n]*?: Producing packet, [^\n]*producer-87[^\n]*
 At [^\n]*?: Passing through packet, [^\n]*producer-87[^\n]*
 At [^\n]*?: Pushing packet, [^\n]*producer-87[^\n]*
+
+<!> Simulation time limit reached --

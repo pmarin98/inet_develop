@@ -80,3 +80,5 @@ At 10s producer: Producing packet, [^\n]*?producer-10[^\n]*?
 At 10s dropper: Filtering out packet, [^\n]*?producer-10[^\n]*?
 At 10s dropper: Dropping packet, [^\n]*?10[^\n]*?producer-10[^\n]*?
 At 10s dropper: End of dropsVector reached.
+
+<!> Simulation time limit reached -- at t=10s

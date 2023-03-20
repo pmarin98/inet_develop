@@ -75,3 +75,5 @@ At 9s producer: Producing packet, [^\n]*?producer-9[^\n]*?
 At 9s delayer: Delaying packet, [^\n]*?producer-9[^\n]*?
 At 10s producer: Producing packet, [^\n]*?producer-10[^\n]*?
 At 10s delayer: Delaying packet, [^\n]*?producer-10[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

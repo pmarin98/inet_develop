@@ -131,3 +131,5 @@ At [^\n]*?: Consuming packet, [^\n]*?producer\[1\]-8[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer\[0\]-9[^\n]*?
 At [^\n]*?: Forwarding packet, [^\n]*?producer\[0\]-9[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer\[0\]-9[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

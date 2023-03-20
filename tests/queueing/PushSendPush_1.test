@@ -85,3 +85,5 @@ At 9s consumer: Consuming packet, [^\n]*?producer-8[^\n]*?
 At 10s producer: Producing packet, [^\n]*?producer-10[^\n]*?
 At 10s delayer: Delaying packet, [^\n]*?producer-10[^\n]*?
 At 10s consumer: Consuming packet, [^\n]*?producer-9[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

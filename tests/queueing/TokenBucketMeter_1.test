@@ -83,3 +83,5 @@ At [^\n]*?: Metering packet, [^\n]*?producer-7[^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?, [^\n]*?9.88776[^\n]*?, [^\n]*?producer-7[^\n]*?
 At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?, [^\n]*?1.88776[^\n]*?, [^\n]*?green[^\n]*?, [^\n]*?producer-7[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer-7[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

@@ -1104,3 +1104,5 @@ At [^\n]*?: Providing packet, packet = \(Packet\)provider\[1\]-56[^\n]*?
 At [^\n]*?: Processing packet, packet = \(Packet\)provider\[1\]-56[^\n]*?
 At [^\n]*?: Forwarding packet, packet = \(Packet\)provider\[1\]-56[^\n]*?
 At [^\n]*?: Consuming packet, packet = \(Packet\)provider\[1\]-56[^\n]*?
+
+<!> Simulation time limit reached -- at t=100s

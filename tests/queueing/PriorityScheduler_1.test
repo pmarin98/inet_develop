@@ -142,3 +142,5 @@ At [^\n]*?: Scheduling packet, [^\n]*?producer1-10[^\n]*?
 At [^\n]*?: Collecting packet, [^\n]*?producer1-10[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer2-6[^\n]*?
 At [^\n]*?: Pushing packet, [^\n]*?producer2-6[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

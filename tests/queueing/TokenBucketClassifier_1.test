@@ -90,3 +90,5 @@ At [^\n]*?s classifier: Classifying packet, [^\n]*?producer-7[^\n]*?
 At [^\n]*?s classifier: Checking tokens for packet, [^\n]*?8[^\n]*?9.88776[^\n]*?producer-7[^\n]*?
 At [^\n]*?s classifier: Removed tokens for packet, [^\n]*?8[^\n]*?1.88776[^\n]*?producer-7[^\n]*?
 At [^\n]*?s greenConsumer: Consuming packet, [^\n]*?producer-7[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

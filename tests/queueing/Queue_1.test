@@ -79,3 +79,5 @@ At [^\n]*?: Pulling packet, [^\n]*?producer-6[^\n]*?
 At [^\n]*?: Collecting packet, [^\n]*?producer-6[^\n]*?
 At [^\n]*?: Pulling packet, [^\n]*?producer-7[^\n]*?
 At [^\n]*?: Collecting packet, [^\n]*?producer-7[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

@@ -99,3 +99,5 @@ At 9s collector: Collecting packet, [^\n]*?provider2-4[^\n]*?
 At 10s provider1: Providing packet, [^\n]*?provider1-5[^\n]*?
 At 10s scheduler: Scheduling packet, [^\n]*?provider1-5[^\n]*?
 At 10s collector: Collecting packet, [^\n]*?provider1-5[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

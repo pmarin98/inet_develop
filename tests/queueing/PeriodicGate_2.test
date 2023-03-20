@@ -79,3 +79,5 @@ At 9s collector: Collecting packet, [^\n]*?provider-9[^\n]*?
 At 10s provider: Providing packet, [^\n]*?provider-10[^\n]*?
 At 10s gate: Passing through packet, [^\n]*?provider-10[^\n]*?
 At 10s collector: Collecting packet, [^\n]*?provider-10[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

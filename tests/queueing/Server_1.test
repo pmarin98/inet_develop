@@ -70,3 +70,5 @@ At [^\n]*?: Processing packet ended, [^\n]*?provider-5[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?provider-5[^\n]*?
 At [^\n]*?: Providing packet, [^\n]*?provider-6[^\n]*?
 At [^\n]*?: Processing packet started, [^\n]*?provider-6[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

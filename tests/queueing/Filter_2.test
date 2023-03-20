@@ -111,3 +111,5 @@ At 10s filter: Filtering out packet, [^\n]*?provider-19[^\n]*?
 At 10s provider: Providing packet, [^\n]*?provider-20[^\n]*?
 At 10s filter: Passing through packet, [^\n]*?provider-20[^\n]*?
 At 10s collector: Collecting packet, [^\n]*?provider-20[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

@@ -142,3 +142,5 @@ At [^\n]*?: Collecting packet, [^\n]*?producer-8[^\n]*?
 At [^\n]*?: Pulling packet, [^\n]*?producer-5[^\n]*?
 At [^\n]*?: Scheduling packet, [^\n]*?producer-5[^\n]*?
 At [^\n]*?: Collecting packet, [^\n]*?producer-5[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

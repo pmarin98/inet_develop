@@ -96,3 +96,5 @@ At 10s duplicator: Forwarding duplicate packet, [^\n]*?producer-10[^\n]*?
 At 10s consumer: Consuming packet, [^\n]*?producer-10[^\n]*?
 At 10s duplicator: Forwarding original packet, [^\n]*?producer-10[^\n]*?
 At 10s consumer: Consuming packet, [^\n]*?producer-10[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s

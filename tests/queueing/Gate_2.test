@@ -60,3 +60,5 @@ At 6s provider: Providing packet, [^\n]*?provider-3[^\n]*?
 At 6s gate: Passing through packet, [^\n]*?provider-3[^\n]*?
 At 6s collector: Collecting packet, [^\n]*?provider-3[^\n]*?
 At 7s gate: Closing gate.
+
+<!> Simulation time limit reached -- at t=10s

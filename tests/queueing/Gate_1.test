@@ -60,3 +60,5 @@ At 6s producer: Producing packet, [^\n]*?producer-3[^\n]*?
 At 6s gate: Passing through packet, [^\n]*?producer-3[^\n]*?
 At 6s consumer: Consuming packet, [^\n]*?producer-3[^\n]*?
 At 7s gate: Closing gate.
+
+<!> Simulation time limit reached -- at t=10s

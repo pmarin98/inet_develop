@@ -261,3 +261,5 @@ At [^\n]*?: Collecting packet, [^\n]*?producer1-16[^\n]*?
 At [^\n]*?: Pulling packet, [^\n]*?producer2-17[^\n]*?
 At [^\n]*?: Removing packet, [^\n]*?producer2-17[^\n]*?
 At [^\n]*?: Collecting packet, [^\n]*?producer2-17[^\n]*?
+
+<!> Simulation time limit reached -- at t=10s
