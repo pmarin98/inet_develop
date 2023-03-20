@@ -29,4 +29,4 @@ cmdenv-event-banners = false
 cmdenv-log-prefix = "At %ts %N: "
 
 %not-contains: stdout
-Collecting packet, .*?source.*?
+Collecting packet, [^\n]*?source[^\n]*?

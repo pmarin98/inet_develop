@@ -50,84 +50,84 @@ cmdenv-log-prefix = "At %ts %N: "
 %subst: /\nRunning simulation\.\.\.\n//
 
 %contains-regex: stdout
-At 0s provider: Providing packet, .*?provider-0.*?
-At 0s demultiplexer: Forwarding packet, .*?provider-0.*?
-At 0s collector\[0\]: Collecting packet, .*?provider-0.*?
-At 0s provider: Providing packet, .*?provider-1.*?
-At 0s demultiplexer: Forwarding packet, .*?provider-1.*?
-At 0s collector\[1\]: Collecting packet, .*?provider-1.*?
-At 0s provider: Providing packet, .*?provider-2.*?
-At 0s demultiplexer: Forwarding packet, .*?provider-2.*?
-At 0s collector\[2\]: Collecting packet, .*?provider-2.*?
-At [^\n]*?: Providing packet, .*?provider-3.*?
-At [^\n]*?: Forwarding packet, .*?provider-3.*?
-At [^\n]*?: Collecting packet, .*?provider-3.*?
-At [^\n]*?: Providing packet, .*?provider-4.*?
-At [^\n]*?: Forwarding packet, .*?provider-4.*?
-At [^\n]*?: Collecting packet, .*?provider-4.*?
-At [^\n]*?: Providing packet, .*?provider-5.*?
-At [^\n]*?: Forwarding packet, .*?provider-5.*?
-At [^\n]*?: Collecting packet, .*?provider-5.*?
-At [^\n]*?: Providing packet, .*?provider-6.*?
-At [^\n]*?: Forwarding packet, .*?provider-6.*?
-At [^\n]*?: Collecting packet, .*?provider-6.*?
-At [^\n]*?: Providing packet, .*?provider-7.*?
-At [^\n]*?: Forwarding packet, .*?provider-7.*?
-At [^\n]*?: Collecting packet, .*?provider-7.*?
-At [^\n]*?: Providing packet, .*?provider-8.*?
-At [^\n]*?: Forwarding packet, .*?provider-8.*?
-At [^\n]*?: Collecting packet, .*?provider-8.*?
-At [^\n]*?: Providing packet, .*?provider-9.*?
-At [^\n]*?: Forwarding packet, .*?provider-9.*?
-At [^\n]*?: Collecting packet, .*?provider-9.*?
-At [^\n]*?: Providing packet, .*?provider-10.*?
-At [^\n]*?: Forwarding packet, .*?provider-10.*?
-At [^\n]*?: Collecting packet, .*?provider-10.*?
-At [^\n]*?: Providing packet, .*?provider-11.*?
-At [^\n]*?: Forwarding packet, .*?provider-11.*?
-At [^\n]*?: Collecting packet, .*?provider-11.*?
-At [^\n]*?: Providing packet, .*?provider-12.*?
-At [^\n]*?: Forwarding packet, .*?provider-12.*?
-At [^\n]*?: Collecting packet, .*?provider-12.*?
-At [^\n]*?: Providing packet, .*?provider-13.*?
-At [^\n]*?: Forwarding packet, .*?provider-13.*?
-At [^\n]*?: Collecting packet, .*?provider-13.*?
-At [^\n]*?: Providing packet, .*?provider-14.*?
-At [^\n]*?: Forwarding packet, .*?provider-14.*?
-At [^\n]*?: Collecting packet, .*?provider-14.*?
-At [^\n]*?: Providing packet, .*?provider-15.*?
-At [^\n]*?: Forwarding packet, .*?provider-15.*?
-At [^\n]*?: Collecting packet, .*?provider-15.*?
-At [^\n]*?: Providing packet, .*?provider-16.*?
-At [^\n]*?: Forwarding packet, .*?provider-16.*?
-At [^\n]*?: Collecting packet, .*?provider-16.*?
-At [^\n]*?: Providing packet, .*?provider-17.*?
-At [^\n]*?: Forwarding packet, .*?provider-17.*?
-At [^\n]*?: Collecting packet, .*?provider-17.*?
-At [^\n]*?: Providing packet, .*?provider-18.*?
-At [^\n]*?: Forwarding packet, .*?provider-18.*?
-At [^\n]*?: Collecting packet, .*?provider-18.*?
-At [^\n]*?: Providing packet, .*?provider-19.*?
-At [^\n]*?: Forwarding packet, .*?provider-19.*?
-At [^\n]*?: Collecting packet, .*?provider-19.*?
-At [^\n]*?: Providing packet, .*?provider-20.*?
-At [^\n]*?: Forwarding packet, .*?provider-20.*?
-At [^\n]*?: Collecting packet, .*?provider-20.*?
-At [^\n]*?: Providing packet, .*?provider-21.*?
-At [^\n]*?: Forwarding packet, .*?provider-21.*?
-At [^\n]*?: Collecting packet, .*?provider-21.*?
-At [^\n]*?: Providing packet, .*?provider-22.*?
-At [^\n]*?: Forwarding packet, .*?provider-22.*?
-At [^\n]*?: Collecting packet, .*?provider-22.*?
-At [^\n]*?: Providing packet, .*?provider-23.*?
-At [^\n]*?: Forwarding packet, .*?provider-23.*?
-At [^\n]*?: Collecting packet, .*?provider-23.*?
-At [^\n]*?: Providing packet, .*?provider-24.*?
-At [^\n]*?: Forwarding packet, .*?provider-24.*?
-At [^\n]*?: Collecting packet, .*?provider-24.*?
-At [^\n]*?: Providing packet, .*?provider-25.*?
-At [^\n]*?: Forwarding packet, .*?provider-25.*?
-At [^\n]*?: Collecting packet, .*?provider-25.*?
-At [^\n]*?: Providing packet, .*?provider-26.*?
-At [^\n]*?: Forwarding packet, .*?provider-26.*?
-At [^\n]*?: Collecting packet, .*?provider-26.*?
+At 0s provider: Providing packet, [^\n]*?provider-0[^\n]*?
+At 0s demultiplexer: Forwarding packet, [^\n]*?provider-0[^\n]*?
+At 0s collector\[0\]: Collecting packet, [^\n]*?provider-0[^\n]*?
+At 0s provider: Providing packet, [^\n]*?provider-1[^\n]*?
+At 0s demultiplexer: Forwarding packet, [^\n]*?provider-1[^\n]*?
+At 0s collector\[1\]: Collecting packet, [^\n]*?provider-1[^\n]*?
+At 0s provider: Providing packet, [^\n]*?provider-2[^\n]*?
+At 0s demultiplexer: Forwarding packet, [^\n]*?provider-2[^\n]*?
+At 0s collector\[2\]: Collecting packet, [^\n]*?provider-2[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-3[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-3[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-3[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-4[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-4[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-4[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-5[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-5[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-5[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-6[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-6[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-6[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-7[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-7[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-7[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-8[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-8[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-8[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-9[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-9[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-9[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-10[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-10[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-10[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-11[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-11[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-11[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-12[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-12[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-12[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-13[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-13[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-13[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-14[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-14[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-14[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-15[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-15[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-15[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-16[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-16[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-16[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-17[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-17[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-17[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-18[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-18[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-18[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-19[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-19[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-19[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-20[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-20[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-20[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-21[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-21[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-21[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-22[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-22[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-22[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-23[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-23[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-23[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-24[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-24[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-24[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-25[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-25[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-25[^\n]*?
+At [^\n]*?: Providing packet, [^\n]*?provider-26[^\n]*?
+At [^\n]*?: Forwarding packet, [^\n]*?provider-26[^\n]*?
+At [^\n]*?: Collecting packet, [^\n]*?provider-26[^\n]*?

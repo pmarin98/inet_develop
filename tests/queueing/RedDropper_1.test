@@ -52,430 +52,430 @@ cmdenv-log-prefix = "At %ts %N: "
 %subst: /\nRunning simulation\.\.\.\n//
 
 %contains-regex: stdout
-At [^\n]*?: Producing packet, .*?producer-1.*?
-At [^\n]*?: Passing through packet, .*?producer-1.*?
-At [^\n]*?: Pushing packet, .*?producer-1.*?
-At [^\n]*?: Pulling packet, .*?producer-1.*?
-At [^\n]*?: Collecting packet, .*?producer-1.*?
-At [^\n]*?: Producing packet, .*?producer-2.*?
-At [^\n]*?: Passing through packet, .*?producer-2.*?
-At [^\n]*?: Pushing packet, .*?producer-2.*?
-At [^\n]*?: Pulling packet, .*?producer-2.*?
-At [^\n]*?: Collecting packet, .*?producer-2.*?
-At [^\n]*?: Producing packet, .*?producer-3.*?
-At [^\n]*?: Passing through packet, .*?producer-3.*?
-At [^\n]*?: Pushing packet, .*?producer-3.*?
-At [^\n]*?: Producing packet, .*?producer-4.*?
-At [^\n]*?: Passing through packet, .*?producer-4.*?
-At [^\n]*?: Pushing packet, .*?producer-4.*?
-At [^\n]*?: Pulling packet, .*?producer-3.*?
-At [^\n]*?: Collecting packet, .*?producer-3.*?
-At [^\n]*?: Pulling packet, .*?producer-4.*?
-At [^\n]*?: Collecting packet, .*?producer-4.*?
-At [^\n]*?: Producing packet, .*?producer-5.*?
-At [^\n]*?: Passing through packet, .*?producer-5.*?
-At [^\n]*?: Pushing packet, .*?producer-5.*?
-At [^\n]*?: Pulling packet, .*?producer-5.*?
-At [^\n]*?: Collecting packet, .*?producer-5.*?
-At [^\n]*?: Producing packet, .*?producer-6.*?
-At [^\n]*?: Passing through packet, .*?producer-6.*?
-At [^\n]*?: Pushing packet, .*?producer-6.*?
-At [^\n]*?: Pulling packet, .*?producer-6.*?
-At [^\n]*?: Collecting packet, .*?producer-6.*?
-At [^\n]*?: Producing packet, .*?producer-7.*?
-At [^\n]*?: Passing through packet, .*?producer-7.*?
-At [^\n]*?: Pushing packet, .*?producer-7.*?
-At [^\n]*?: Pulling packet, .*?producer-7.*?
-At [^\n]*?: Collecting packet, .*?producer-7.*?
-At [^\n]*?: Producing packet, .*?producer-8.*?
-At [^\n]*?: Passing through packet, .*?producer-8.*?
-At [^\n]*?: Pushing packet, .*?producer-8.*?
-At [^\n]*?: Pulling packet, .*?producer-8.*?
-At [^\n]*?: Collecting packet, .*?producer-8.*?
-At [^\n]*?: Producing packet, .*?producer-9.*?
-At [^\n]*?: Passing through packet, .*?producer-9.*?
-At [^\n]*?: Pushing packet, .*?producer-9.*?
-At [^\n]*?: Pulling packet, .*?producer-9.*?
-At [^\n]*?: Collecting packet, .*?producer-9.*?
-At [^\n]*?: Producing packet, .*?producer-10.*?
-At [^\n]*?: Passing through packet, .*?producer-10.*?
-At [^\n]*?: Pushing packet, .*?producer-10.*?
-At [^\n]*?: Pulling packet, .*?producer-10.*?
-At [^\n]*?: Collecting packet, .*?producer-10.*?
-At [^\n]*?: Producing packet, .*?producer-11.*?
-At [^\n]*?: Passing through packet, .*?producer-11.*?
-At [^\n]*?: Pushing packet, .*?producer-11.*?
-At [^\n]*?: Pulling packet, .*?producer-11.*?
-At [^\n]*?: Collecting packet, .*?producer-11.*?
-At [^\n]*?: Producing packet, .*?producer-12.*?
-At [^\n]*?: Passing through packet, .*?producer-12.*?
-At [^\n]*?: Pushing packet, .*?producer-12.*?
-At [^\n]*?: Pulling packet, .*?producer-12.*?
-At [^\n]*?: Collecting packet, .*?producer-12.*?
-At [^\n]*?: Producing packet, .*?producer-13.*?
-At [^\n]*?: Passing through packet, .*?producer-13.*?
-At [^\n]*?: Pushing packet, .*?producer-13.*?
-At [^\n]*?: Pulling packet, .*?producer-13.*?
-At [^\n]*?: Collecting packet, .*?producer-13.*?
-At [^\n]*?: Producing packet, .*?producer-14.*?
-At [^\n]*?: Passing through packet, .*?producer-14.*?
-At [^\n]*?: Pushing packet, .*?producer-14.*?
-At [^\n]*?: Pulling packet, .*?producer-14.*?
-At [^\n]*?: Collecting packet, .*?producer-14.*?
-At [^\n]*?: Producing packet, .*?producer-15.*?
-At [^\n]*?: Passing through packet, .*?producer-15.*?
-At [^\n]*?: Pushing packet, .*?producer-15.*?
-At [^\n]*?: Producing packet, .*?producer-16.*?
-At [^\n]*?: Passing through packet, .*?producer-16.*?
-At [^\n]*?: Pushing packet, .*?producer-16.*?
-At [^\n]*?: Pulling packet, .*?producer-15.*?
-At [^\n]*?: Collecting packet, .*?producer-15.*?
-At [^\n]*?: Pulling packet, .*?producer-16.*?
-At [^\n]*?: Collecting packet, .*?producer-16.*?
-At [^\n]*?: Producing packet, .*?producer-17.*?
-At [^\n]*?: Passing through packet, .*?producer-17.*?
-At [^\n]*?: Pushing packet, .*?producer-17.*?
-At [^\n]*?: Pulling packet, .*?producer-17.*?
-At [^\n]*?: Collecting packet, .*?producer-17.*?
-At [^\n]*?: Producing packet, .*?producer-18.*?
-At [^\n]*?: Passing through packet, .*?producer-18.*?
-At [^\n]*?: Pushing packet, .*?producer-18.*?
-At [^\n]*?: Pulling packet, .*?producer-18.*?
-At [^\n]*?: Collecting packet, .*?producer-18.*?
-At [^\n]*?: Producing packet, .*?producer-19.*?
-At [^\n]*?: Passing through packet, .*?producer-19.*?
-At [^\n]*?: Pushing packet, .*?producer-19.*?
-At [^\n]*?: Pulling packet, .*?producer-19.*?
-At [^\n]*?: Collecting packet, .*?producer-19.*?
-At [^\n]*?: Producing packet, .*?producer-20.*?
-At [^\n]*?: Passing through packet, .*?producer-20.*?
-At [^\n]*?: Pushing packet, .*?producer-20.*?
-At [^\n]*?: Pulling packet, .*?producer-20.*?
-At [^\n]*?: Collecting packet, .*?producer-20.*?
-At [^\n]*?: Producing packet, .*?producer-21.*?
-At [^\n]*?: Passing through packet, .*?producer-21.*?
-At [^\n]*?: Pushing packet, .*?producer-21.*?
-At [^\n]*?: Pulling packet, .*?producer-21.*?
-At [^\n]*?: Collecting packet, .*?producer-21.*?
-At [^\n]*?: Producing packet, .*?producer-22.*?
-At [^\n]*?: Passing through packet, .*?producer-22.*?
-At [^\n]*?: Pushing packet, .*?producer-22.*?
-At [^\n]*?: Pulling packet, .*?producer-22.*?
-At [^\n]*?: Collecting packet, .*?producer-22.*?
-At [^\n]*?: Producing packet, .*?producer-23.*?
-At [^\n]*?: Passing through packet, .*?producer-23.*?
-At [^\n]*?: Pushing packet, .*?producer-23.*?
-At [^\n]*?: Pulling packet, .*?producer-23.*?
-At [^\n]*?: Collecting packet, .*?producer-23.*?
-At [^\n]*?: Producing packet, .*?producer-24.*?
-At [^\n]*?: Passing through packet, .*?producer-24.*?
-At [^\n]*?: Pushing packet, .*?producer-24.*?
-At [^\n]*?: Pulling packet, .*?producer-24.*?
-At [^\n]*?: Collecting packet, .*?producer-24.*?
-At [^\n]*?: Producing packet, .*?producer-25.*?
-At [^\n]*?: Passing through packet, .*?producer-25.*?
-At [^\n]*?: Pushing packet, .*?producer-25.*?
-At [^\n]*?: Producing packet, .*?producer-26.*?
-At [^\n]*?: Passing through packet, .*?producer-26.*?
-At [^\n]*?: Pushing packet, .*?producer-26.*?
-At [^\n]*?: Pulling packet, .*?producer-25.*?
-At [^\n]*?: Collecting packet, .*?producer-25.*?
-At [^\n]*?: Pulling packet, .*?producer-26.*?
-At [^\n]*?: Collecting packet, .*?producer-26.*?
-At [^\n]*?: Producing packet, .*?producer-27.*?
-At [^\n]*?: Passing through packet, .*?producer-27.*?
-At [^\n]*?: Pushing packet, .*?producer-27.*?
-At [^\n]*?: Pulling packet, .*?producer-27.*?
-At [^\n]*?: Collecting packet, .*?producer-27.*?
-At [^\n]*?: Producing packet, .*?producer-28.*?
-At [^\n]*?: Passing through packet, .*?producer-28.*?
-At [^\n]*?: Pushing packet, .*?producer-28.*?
-At [^\n]*?: Pulling packet, .*?producer-28.*?
-At [^\n]*?: Collecting packet, .*?producer-28.*?
-At [^\n]*?: Producing packet, .*?producer-29.*?
-At [^\n]*?: Passing through packet, .*?producer-29.*?
-At [^\n]*?: Pushing packet, .*?producer-29.*?
-At [^\n]*?: Pulling packet, .*?producer-29.*?
-At [^\n]*?: Collecting packet, .*?producer-29.*?
-At [^\n]*?: Producing packet, .*?producer-30.*?
-At [^\n]*?: Passing through packet, .*?producer-30.*?
-At [^\n]*?: Pushing packet, .*?producer-30.*?
-At [^\n]*?: Pulling packet, .*?producer-30.*?
-At [^\n]*?: Collecting packet, .*?producer-30.*?
-At [^\n]*?: Producing packet, .*?producer-31.*?
-At [^\n]*?: Passing through packet, .*?producer-31.*?
-At [^\n]*?: Pushing packet, .*?producer-31.*?
-At [^\n]*?: Pulling packet, .*?producer-31.*?
-At [^\n]*?: Collecting packet, .*?producer-31.*?
-At [^\n]*?: Producing packet, .*?producer-32.*?
-At [^\n]*?: Passing through packet, .*?producer-32.*?
-At [^\n]*?: Pushing packet, .*?producer-32.*?
-At [^\n]*?: Pulling packet, .*?producer-32.*?
-At [^\n]*?: Collecting packet, .*?producer-32.*?
-At [^\n]*?: Producing packet, .*?producer-33.*?
-At [^\n]*?: Passing through packet, .*?producer-33.*?
-At [^\n]*?: Pushing packet, .*?producer-33.*?
-At [^\n]*?: Pulling packet, .*?producer-33.*?
-At [^\n]*?: Collecting packet, .*?producer-33.*?
-At [^\n]*?: Producing packet, .*?producer-34.*?
-At [^\n]*?: Passing through packet, .*?producer-34.*?
-At [^\n]*?: Pushing packet, .*?producer-34.*?
-At [^\n]*?: Pulling packet, .*?producer-34.*?
-At [^\n]*?: Collecting packet, .*?producer-34.*?
-At [^\n]*?: Producing packet, .*?producer-35.*?
-At [^\n]*?: Passing through packet, .*?producer-35.*?
-At [^\n]*?: Pushing packet, .*?producer-35.*?
-At [^\n]*?: Pulling packet, .*?producer-35.*?
-At [^\n]*?: Collecting packet, .*?producer-35.*?
-At [^\n]*?: Producing packet, .*?producer-36.*?
-At [^\n]*?: Passing through packet, .*?producer-36.*?
-At [^\n]*?: Pushing packet, .*?producer-36.*?
-At [^\n]*?: Pulling packet, .*?producer-36.*?
-At [^\n]*?: Collecting packet, .*?producer-36.*?
-At [^\n]*?: Producing packet, .*?producer-37.*?
-At [^\n]*?: Passing through packet, .*?producer-37.*?
-At [^\n]*?: Pushing packet, .*?producer-37.*?
-At [^\n]*?: Pulling packet, .*?producer-37.*?
-At [^\n]*?: Collecting packet, .*?producer-37.*?
-At [^\n]*?: Producing packet, .*?producer-38.*?
-At [^\n]*?: Passing through packet, .*?producer-38.*?
-At [^\n]*?: Pushing packet, .*?producer-38.*?
-At [^\n]*?: Pulling packet, .*?producer-38.*?
-At [^\n]*?: Collecting packet, .*?producer-38.*?
-At [^\n]*?: Producing packet, .*?producer-39.*?
-At [^\n]*?: Passing through packet, .*?producer-39.*?
-At [^\n]*?: Pushing packet, .*?producer-39.*?
-At [^\n]*?: Pulling packet, .*?producer-39.*?
-At [^\n]*?: Collecting packet, .*?producer-39.*?
-At [^\n]*?: Producing packet, .*?producer-40.*?
-At [^\n]*?: Passing through packet, .*?producer-40.*?
-At [^\n]*?: Pushing packet, .*?producer-40.*?
-At [^\n]*?: Pulling packet, .*?producer-40.*?
-At [^\n]*?: Collecting packet, .*?producer-40.*?
-At [^\n]*?: Producing packet, .*?producer-41.*?
-At [^\n]*?: Passing through packet, .*?producer-41.*?
-At [^\n]*?: Pushing packet, .*?producer-41.*?
-At [^\n]*?: Pulling packet, .*?producer-41.*?
-At [^\n]*?: Collecting packet, .*?producer-41.*?
-At [^\n]*?: Producing packet, .*?producer-42.*?
-At [^\n]*?: Passing through packet, .*?producer-42.*?
-At [^\n]*?: Pushing packet, .*?producer-42.*?
-At [^\n]*?: Producing packet, .*?producer-43.*?
-At [^\n]*?: Passing through packet, .*?producer-43.*?
-At [^\n]*?: Pushing packet, .*?producer-43.*?
-At [^\n]*?: Producing packet, .*?producer-44.*?
-At [^\n]*?: Passing through packet, .*?producer-44.*?
-At [^\n]*?: Pushing packet, .*?producer-44.*?
-At [^\n]*?: Producing packet, .*?producer-45.*?
-At [^\n]*?: Queue length >= capacity, .*?queueLength.*? = 3, .*?packetCapacity.*? = 3.
-At [^\n]*?: Filtering out packet, .*?producer-45.*?
-At [^\n]*?: Pulling packet, .*?producer-42.*?
-At [^\n]*?: Collecting packet, .*?producer-42.*?
-At [^\n]*?: Producing packet, .*?producer-46.*?
-At [^\n]*?: Passing through packet, .*?producer-46.*?
-At [^\n]*?: Pushing packet, .*?producer-46.*?
-At [^\n]*?: Pulling packet, .*?producer-43.*?
-At [^\n]*?: Collecting packet, .*?producer-43.*?
-At [^\n]*?: Pulling packet, .*?producer-44.*?
-At [^\n]*?: Collecting packet, .*?producer-44.*?
-At [^\n]*?: Producing packet, .*?producer-47.*?
-At [^\n]*?: Passing through packet, .*?producer-47.*?
-At [^\n]*?: Pushing packet, .*?producer-47.*?
-At [^\n]*?: Producing packet, .*?producer-48.*?
-At [^\n]*?: Passing through packet, .*?producer-48.*?
-At [^\n]*?: Pushing packet, .*?producer-48.*?
-At [^\n]*?: Pulling packet, .*?producer-46.*?
-At [^\n]*?: Collecting packet, .*?producer-46.*?
-At [^\n]*?: Producing packet, .*?producer-49.*?
-At [^\n]*?: Passing through packet, .*?producer-49.*?
-At [^\n]*?: Pushing packet, .*?producer-49.*?
-At [^\n]*?: Pulling packet, .*?producer-47.*?
-At [^\n]*?: Collecting packet, .*?producer-47.*?
-At [^\n]*?: Producing packet, .*?producer-50.*?
-At [^\n]*?: Passing through packet, .*?producer-50.*?
-At [^\n]*?: Pushing packet, .*?producer-50.*?
-At [^\n]*?: Pulling packet, .*?producer-48.*?
-At [^\n]*?: Collecting packet, .*?producer-48.*?
-At [^\n]*?: Producing packet, .*?producer-51.*?
-At [^\n]*?: Passing through packet, .*?producer-51.*?
-At [^\n]*?: Pushing packet, .*?producer-51.*?
-At [^\n]*?: Producing packet, .*?producer-52.*?
-At [^\n]*?: Queue length >= capacity, .*?queueLength.*? = 3, .*?packetCapacity.*? = 3.
-At [^\n]*?: Filtering out packet, .*?producer-52.*?
-At [^\n]*?: Pulling packet, .*?producer-49.*?
-At [^\n]*?: Collecting packet, .*?producer-49.*?
-At [^\n]*?: Pulling packet, .*?producer-50.*?
-At [^\n]*?: Collecting packet, .*?producer-50.*?
-At [^\n]*?: Producing packet, .*?producer-53.*?
-At [^\n]*?: Passing through packet, .*?producer-53.*?
-At [^\n]*?: Pushing packet, .*?producer-53.*?
-At [^\n]*?: Producing packet, .*?producer-54.*?
-At [^\n]*?: Passing through packet, .*?producer-54.*?
-At [^\n]*?: Pushing packet, .*?producer-54.*?
-At [^\n]*?: Pulling packet, .*?producer-51.*?
-At [^\n]*?: Collecting packet, .*?producer-51.*?
-At [^\n]*?: Pulling packet, .*?producer-53.*?
-At [^\n]*?: Collecting packet, .*?producer-53.*?
-At [^\n]*?: Producing packet, .*?producer-55.*?
-At [^\n]*?: Passing through packet, .*?producer-55.*?
-At [^\n]*?: Pushing packet, .*?producer-55.*?
-At [^\n]*?: Pulling packet, .*?producer-54.*?
-At [^\n]*?: Collecting packet, .*?producer-54.*?
-At [^\n]*?: Producing packet, .*?producer-56.*?
-At [^\n]*?: Passing through packet, .*?producer-56.*?
-At [^\n]*?: Pushing packet, .*?producer-56.*?
-At [^\n]*?: Pulling packet, .*?producer-55.*?
-At [^\n]*?: Collecting packet, .*?producer-55.*?
-At [^\n]*?: Pulling packet, .*?producer-56.*?
-At [^\n]*?: Collecting packet, .*?producer-56.*?
-At [^\n]*?: Producing packet, .*?producer-57.*?
-At [^\n]*?: Passing through packet, .*?producer-57.*?
-At [^\n]*?: Pushing packet, .*?producer-57.*?
-At [^\n]*?: Pulling packet, .*?producer-57.*?
-At [^\n]*?: Collecting packet, .*?producer-57.*?
-At [^\n]*?: Producing packet, .*?producer-58.*?
-At [^\n]*?: Passing through packet, .*?producer-58.*?
-At [^\n]*?: Pushing packet, .*?producer-58.*?
-At [^\n]*?: Pulling packet, .*?producer-58.*?
-At [^\n]*?: Collecting packet, .*?producer-58.*?
-At [^\n]*?: Producing packet, .*?producer-59.*?
-At [^\n]*?: Passing through packet, .*?producer-59.*?
-At [^\n]*?: Pushing packet, .*?producer-59.*?
-At [^\n]*?: Pulling packet, .*?producer-59.*?
-At [^\n]*?: Collecting packet, .*?producer-59.*?
-At [^\n]*?: Producing packet, .*?producer-60.*?
-At [^\n]*?: Passing through packet, .*?producer-60.*?
-At [^\n]*?: Pushing packet, .*?producer-60.*?
-At [^\n]*?: Pulling packet, .*?producer-60.*?
-At [^\n]*?: Collecting packet, .*?producer-60.*?
-At [^\n]*?: Producing packet, .*?producer-61.*?
-At [^\n]*?: Passing through packet, .*?producer-61.*?
-At [^\n]*?: Pushing packet, .*?producer-61.*?
-At [^\n]*?: Pulling packet, .*?producer-61.*?
-At [^\n]*?: Collecting packet, .*?producer-61.*?
-At [^\n]*?: Producing packet, .*?producer-62.*?
-At [^\n]*?: Passing through packet, .*?producer-62.*?
-At [^\n]*?: Pushing packet, .*?producer-62.*?
-At [^\n]*?: Producing packet, .*?producer-63.*?
-At [^\n]*?: Passing through packet, .*?producer-63.*?
-At [^\n]*?: Pushing packet, .*?producer-63.*?
-At [^\n]*?: Producing packet, .*?producer-64.*?
-At [^\n]*?: Passing through packet, .*?producer-64.*?
-At [^\n]*?: Pushing packet, .*?producer-64.*?
-At [^\n]*?: Pulling packet, .*?producer-62.*?
-At [^\n]*?: Collecting packet, .*?producer-62.*?
-At [^\n]*?: Producing packet, .*?producer-65.*?
-At [^\n]*?: Passing through packet, .*?producer-65.*?
-At [^\n]*?: Pushing packet, .*?producer-65.*?
-At [^\n]*?: Producing packet, .*?producer-66.*?
-At [^\n]*?: Queue length >= capacity, .*?queueLength.*? = 3, .*?packetCapacity.*? = 3.
-At [^\n]*?: Filtering out packet, .*?producer-66.*?
-At [^\n]*?: Pulling packet, .*?producer-63.*?
-At [^\n]*?: Collecting packet, .*?producer-63.*?
-At [^\n]*?: Pulling packet, .*?producer-64.*?
-At [^\n]*?: Collecting packet, .*?producer-64.*?
-At [^\n]*?: Pulling packet, .*?producer-65.*?
-At [^\n]*?: Collecting packet, .*?producer-65.*?
-At [^\n]*?: Producing packet, .*?producer-67.*?
-At [^\n]*?: Passing through packet, .*?producer-67.*?
-At [^\n]*?: Pushing packet, .*?producer-67.*?
-At [^\n]*?: Pulling packet, .*?producer-67.*?
-At [^\n]*?: Collecting packet, .*?producer-67.*?
-At [^\n]*?: Producing packet, .*?producer-68.*?
-At [^\n]*?: Passing through packet, .*?producer-68.*?
-At [^\n]*?: Pushing packet, .*?producer-68.*?
-At [^\n]*?: Pulling packet, .*?producer-68.*?
-At [^\n]*?: Collecting packet, .*?producer-68.*?
-At [^\n]*?: Producing packet, .*?producer-69.*?
-At [^\n]*?: Passing through packet, .*?producer-69.*?
-At [^\n]*?: Pushing packet, .*?producer-69.*?
-At [^\n]*?: Pulling packet, .*?producer-69.*?
-At [^\n]*?: Collecting packet, .*?producer-69.*?
-At [^\n]*?: Producing packet, .*?producer-70.*?
-At [^\n]*?: Passing through packet, .*?producer-70.*?
-At [^\n]*?: Pushing packet, .*?producer-70.*?
-At [^\n]*?: Pulling packet, .*?producer-70.*?
-At [^\n]*?: Collecting packet, .*?producer-70.*?
-At [^\n]*?: Producing packet, .*?producer-71.*?
-At [^\n]*?: Passing through packet, .*?producer-71.*?
-At [^\n]*?: Pushing packet, .*?producer-71.*?
-At [^\n]*?: Producing packet, .*?producer-72.*?
-At [^\n]*?: Passing through packet, .*?producer-72.*?
-At [^\n]*?: Pushing packet, .*?producer-72.*?
-At [^\n]*?: Pulling packet, .*?producer-71.*?
-At [^\n]*?: Collecting packet, .*?producer-71.*?
-At [^\n]*?: Pulling packet, .*?producer-72.*?
-At [^\n]*?: Collecting packet, .*?producer-72.*?
-At [^\n]*?: Producing packet, .*?producer-73.*?
-At [^\n]*?: Passing through packet, .*?producer-73.*?
-At [^\n]*?: Pushing packet, .*?producer-73.*?
-At [^\n]*?: Pulling packet, .*?producer-73.*?
-At [^\n]*?: Collecting packet, .*?producer-73.*?
-At [^\n]*?: Producing packet, .*?producer-74.*?
-At [^\n]*?: Passing through packet, .*?producer-74.*?
-At [^\n]*?: Pushing packet, .*?producer-74.*?
-At [^\n]*?: Producing packet, .*?producer-75.*?
-At [^\n]*?: Passing through packet, .*?producer-75.*?
-At [^\n]*?: Pushing packet, .*?producer-75.*?
-At [^\n]*?: Pulling packet, .*?producer-74.*?
-At [^\n]*?: Collecting packet, .*?producer-74.*?
-At [^\n]*?: Pulling packet, .*?producer-75.*?
-At [^\n]*?: Collecting packet, .*?producer-75.*?
-At [^\n]*?: Producing packet, .*?producer-76.*?
-At [^\n]*?: Passing through packet, .*?producer-76.*?
-At [^\n]*?: Pushing packet, .*?producer-76.*?
-At [^\n]*?: Producing packet, .*?producer-77.*?
-At [^\n]*?: Passing through packet, .*?producer-77.*?
-At [^\n]*?: Pushing packet, .*?producer-77.*?
-At [^\n]*?: Pulling packet, .*?producer-76.*?
-At [^\n]*?: Collecting packet, .*?producer-76.*?
-At [^\n]*?: Pulling packet, .*?producer-77.*?
-At [^\n]*?: Collecting packet, .*?producer-77.*?
-At [^\n]*?: Producing packet, .*?producer-78.*?
-At [^\n]*?: Passing through packet, .*?producer-78.*?
-At [^\n]*?: Pushing packet, .*?producer-78.*?
-At [^\n]*?: Pulling packet, .*?producer-78.*?
-At [^\n]*?: Collecting packet, .*?producer-78.*?
-At [^\n]*?: Producing packet, .*?producer-79.*?
-At [^\n]*?: Passing through packet, .*?producer-79.*?
-At [^\n]*?: Pushing packet, .*?producer-79.*?
-At [^\n]*?: Pulling packet, .*?producer-79.*?
-At [^\n]*?: Collecting packet, .*?producer-79.*?
-At [^\n]*?: Producing packet, .*?producer-80.*?
-At [^\n]*?: Passing through packet, .*?producer-80.*?
-At [^\n]*?: Pushing packet, .*?producer-80.*?
-At [^\n]*?: Producing packet, .*?producer-81.*?
-At [^\n]*?: Passing through packet, .*?producer-81.*?
-At [^\n]*?: Pushing packet, .*?producer-81.*?
-At [^\n]*?: Producing packet, .*?producer-82.*?
-At [^\n]*?: Passing through packet, .*?producer-82.*?
-At [^\n]*?: Pushing packet, .*?producer-82.*?
-At [^\n]*?: Pulling packet, .*?producer-80.*?
-At [^\n]*?: Collecting packet, .*?producer-80.*?
-At [^\n]*?: Pulling packet, .*?producer-81.*?
-At [^\n]*?: Collecting packet, .*?producer-81.*?
-At [^\n]*?: Producing packet, .*?producer-83.*?
-At [^\n]*?: Passing through packet, .*?producer-83.*?
-At [^\n]*?: Pushing packet, .*?producer-83.*?
-At [^\n]*?: Producing packet, .*?producer-84.*?
-At [^\n]*?: Passing through packet, .*?producer-84.*?
-At [^\n]*?: Pushing packet, .*?producer-84.*?
-At [^\n]*?: Pulling packet, .*?producer-82.*?
-At [^\n]*?: Collecting packet, .*?producer-82.*?
-At [^\n]*?: Pulling packet, .*?producer-83.*?
-At [^\n]*?: Collecting packet, .*?producer-83.*?
-At [^\n]*?: Pulling packet, .*?producer-84.*?
-At [^\n]*?: Collecting packet, .*?producer-84.*?
-At [^\n]*?: Producing packet, .*?producer-85.*?
-At [^\n]*?: Passing through packet, .*?producer-85.*?
-At [^\n]*?: Pushing packet, .*?producer-85.*?
-At [^\n]*?: Pulling packet, .*?producer-85.*?
-At [^\n]*?: Collecting packet, .*?producer-85.*?
-At [^\n]*?: Producing packet, .*?producer-86.*?
-At [^\n]*?: Passing through packet, .*?producer-86.*?
-At [^\n]*?: Pushing packet, .*?producer-86.*?
-At [^\n]*?: Pulling packet, .*?producer-86.*?
-At [^\n]*?: Collecting packet, .*?producer-86.*?
-At [^\n]*?: Producing packet, .*?producer-87.*?
-At [^\n]*?: Passing through packet, .*?producer-87.*?
-At [^\n]*?: Pushing packet, .*?producer-87.*?
+At [^\n]*?: Producing packet, [^\n]*producer-1[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-1[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-1[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-1[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-1[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-2[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-2[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-2[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-2[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-2[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-3[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-3[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-3[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-4[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-4[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-4[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-3[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-3[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-4[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-4[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-5[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-5[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-5[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-5[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-5[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-6[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-6[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-6[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-6[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-6[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-7[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-7[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-7[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-7[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-7[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-8[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-8[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-8[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-8[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-8[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-9[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-9[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-9[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-9[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-9[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-10[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-10[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-10[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-10[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-10[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-11[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-11[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-11[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-11[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-11[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-12[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-12[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-12[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-12[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-12[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-13[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-13[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-13[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-13[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-13[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-14[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-14[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-14[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-14[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-14[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-15[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-15[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-15[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-16[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-16[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-16[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-15[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-15[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-16[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-16[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-17[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-17[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-17[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-17[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-17[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-18[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-18[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-18[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-18[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-18[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-19[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-19[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-19[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-19[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-19[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-20[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-20[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-20[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-20[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-20[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-21[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-21[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-21[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-21[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-21[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-22[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-22[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-22[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-22[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-22[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-23[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-23[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-23[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-23[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-23[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-24[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-24[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-24[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-24[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-24[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-25[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-25[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-25[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-26[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-26[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-26[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-25[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-25[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-26[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-26[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-27[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-27[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-27[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-27[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-27[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-28[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-28[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-28[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-28[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-28[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-29[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-29[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-29[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-29[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-29[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-30[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-30[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-30[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-30[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-30[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-31[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-31[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-31[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-31[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-31[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-32[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-32[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-32[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-32[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-32[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-33[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-33[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-33[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-33[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-33[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-34[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-34[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-34[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-34[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-34[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-35[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-35[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-35[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-35[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-35[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-36[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-36[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-36[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-36[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-36[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-37[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-37[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-37[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-37[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-37[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-38[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-38[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-38[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-38[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-38[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-39[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-39[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-39[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-39[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-39[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-40[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-40[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-40[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-40[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-40[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-41[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-41[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-41[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-41[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-41[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-42[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-42[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-42[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-43[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-43[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-43[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-44[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-44[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-44[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-45[^\n]*
+At [^\n]*?: Queue length >= capacity, [^\n]*queueLength[^\n]* = 3, [^\n]*packetCapacity[^\n]* = 3.
+At [^\n]*?: Filtering out packet, [^\n]*producer-45[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-42[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-42[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-46[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-46[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-46[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-43[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-43[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-44[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-44[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-47[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-47[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-47[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-48[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-48[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-48[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-46[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-46[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-49[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-49[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-49[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-47[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-47[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-50[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-50[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-50[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-48[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-48[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-51[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-51[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-51[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-52[^\n]*
+At [^\n]*?: Queue length >= capacity, [^\n]*queueLength[^\n]* = 3, [^\n]*packetCapacity[^\n]* = 3.
+At [^\n]*?: Filtering out packet, [^\n]*producer-52[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-49[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-49[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-50[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-50[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-53[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-53[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-53[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-54[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-54[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-54[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-51[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-51[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-53[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-53[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-55[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-55[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-55[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-54[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-54[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-56[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-56[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-56[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-55[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-55[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-56[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-56[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-57[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-57[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-57[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-57[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-57[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-58[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-58[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-58[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-58[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-58[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-59[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-59[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-59[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-59[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-59[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-60[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-60[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-60[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-60[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-60[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-61[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-61[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-61[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-61[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-61[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-62[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-62[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-62[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-63[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-63[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-63[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-64[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-64[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-64[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-62[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-62[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-65[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-65[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-65[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-66[^\n]*
+At [^\n]*?: Queue length >= capacity, [^\n]*queueLength[^\n]* = 3, [^\n]*packetCapacity[^\n]* = 3.
+At [^\n]*?: Filtering out packet, [^\n]*producer-66[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-63[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-63[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-64[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-64[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-65[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-65[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-67[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-67[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-67[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-67[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-67[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-68[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-68[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-68[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-68[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-68[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-69[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-69[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-69[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-69[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-69[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-70[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-70[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-70[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-70[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-70[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-71[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-71[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-71[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-72[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-72[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-72[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-71[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-71[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-72[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-72[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-73[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-73[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-73[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-73[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-73[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-74[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-74[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-74[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-75[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-75[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-75[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-74[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-74[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-75[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-75[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-76[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-76[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-76[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-77[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-77[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-77[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-76[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-76[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-77[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-77[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-78[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-78[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-78[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-78[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-78[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-79[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-79[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-79[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-79[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-79[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-80[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-80[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-80[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-81[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-81[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-81[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-82[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-82[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-82[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-80[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-80[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-81[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-81[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-83[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-83[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-83[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-84[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-84[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-84[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-82[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-82[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-83[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-83[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-84[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-84[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-85[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-85[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-85[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-85[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-85[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-86[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-86[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-86[^\n]*
+At [^\n]*?: Pulling packet, [^\n]*producer-86[^\n]*
+At [^\n]*?: Collecting packet, [^\n]*producer-86[^\n]*
+At [^\n]*?: Producing packet, [^\n]*producer-87[^\n]*
+At [^\n]*?: Passing through packet, [^\n]*producer-87[^\n]*
+At [^\n]*?: Pushing packet, [^\n]*producer-87[^\n]*

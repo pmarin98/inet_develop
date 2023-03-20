@@ -42,47 +42,47 @@ cmdenv-log-prefix = "At %ts %N: "
 %subst: /\nRunning simulation\.\.\.\n//
 
 %contains-regex: stdout
-At [^\n]*?: Producing packet, .*?producer-0.*?
-At [^\n]*?: Metering packet, .*?producer-0.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?0.*?producer-0.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?0.*?producer-0.*?
-At [^\n]*?: Insufficient number of tokens for packet, .*?8.*?producer-0.*?
-At [^\n]*?: Consuming packet, .*?producer-0.*?
-At [^\n]*?: Producing packet, .*?producer-1.*?
-At [^\n]*?: Metering packet, .*?producer-1.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?3.1835.*?producer-1.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?1.59175.*?producer-1.*?
-At [^\n]*?: Insufficient number of tokens for packet, .*?8.*?producer-1.*?
-At [^\n]*?: Consuming packet, .*?producer-1.*?
-At [^\n]*?: Producing packet, .*?producer-2.*?
-At [^\n]*?: Metering packet, .*?producer-2.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?6.77774.*?producer-2.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?3.38887.*?producer-2.*?
-At [^\n]*?: Insufficient number of tokens for packet, .*?8.*?producer-2.*?
-At [^\n]*?: Consuming packet, .*?producer-2.*?
-At [^\n]*?: Producing packet, .*?producer-3.*?
-At [^\n]*?: Metering packet, .*?producer-3.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?11.8015.*?producer-3.*?
-At [^\n]*?: Removed tokens, labeling packet, .*?8.*?3.80146.*?green.*?producer-3.*?
-At [^\n]*?: Consuming packet, .*?producer-3.*?
-At [^\n]*?: Producing packet, .*?producer-4.*?
-At [^\n]*?: Metering packet, .*?producer-4.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?11.2399.*?producer-4.*?
-At [^\n]*?: Removed tokens, labeling packet, .*?8.*?3.23988.*?green.*?producer-4.*?
-At [^\n]*?: Consuming packet, .*?producer-4.*?
-At [^\n]*?: Producing packet, .*?producer-5.*?
-At [^\n]*?: Metering packet, .*?producer-5.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?6.93277.*?producer-5.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?11.4664.*?producer-5.*?
-At [^\n]*?: Removed tokens, labeling packet, .*?8.*?3.46639.*?yellow.*?producer-5.*?
-At [^\n]*?: Consuming packet, .*?producer-5.*?
-At [^\n]*?: Producing packet, .*?producer-6.*?
-At [^\n]*?: Metering packet, .*?producer-6.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?14.739.*?producer-6.*?
-At [^\n]*?: Removed tokens, labeling packet, .*?8.*?6.73895.*?green.*?producer-6.*?
-At [^\n]*?: Consuming packet, .*?producer-6.*?
-At [^\n]*?: Producing packet, .*?producer-7.*?
-At [^\n]*?: Metering packet, .*?producer-7.*?
-At [^\n]*?: Checking tokens for packet, .*?8.*?9.88776.*?producer-7.*?
-At [^\n]*?: Removed tokens, labeling packet, .*?8.*?1.88776.*?green.*?producer-7.*?
-At [^\n]*?: Consuming packet, .*?producer-7.*?
+At [^\n]*?: Producing packet, [^\n]*?producer-0[^\n]*?
+At [^\n]*?: Metering packet, [^\n]*?producer-0[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?0[^\n]*?producer-0[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?0[^\n]*?producer-0[^\n]*?
+At [^\n]*?: Insufficient number of tokens for packet, [^\n]*?8[^\n]*?producer-0[^\n]*?
+At [^\n]*?: Consuming packet, [^\n]*?producer-0[^\n]*?
+At [^\n]*?: Producing packet, [^\n]*?producer-1[^\n]*?
+At [^\n]*?: Metering packet, [^\n]*?producer-1[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?3.1835[^\n]*?producer-1[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?1.59175[^\n]*?producer-1[^\n]*?
+At [^\n]*?: Insufficient number of tokens for packet, [^\n]*?8[^\n]*?producer-1[^\n]*?
+At [^\n]*?: Consuming packet, [^\n]*?producer-1[^\n]*?
+At [^\n]*?: Producing packet, [^\n]*?producer-2[^\n]*?
+At [^\n]*?: Metering packet, [^\n]*?producer-2[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?6.77774[^\n]*?producer-2[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?3.38887[^\n]*?producer-2[^\n]*?
+At [^\n]*?: Insufficient number of tokens for packet, [^\n]*?8[^\n]*?producer-2[^\n]*?
+At [^\n]*?: Consuming packet, [^\n]*?producer-2[^\n]*?
+At [^\n]*?: Producing packet, [^\n]*?producer-3[^\n]*?
+At [^\n]*?: Metering packet, [^\n]*?producer-3[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?11.8015[^\n]*?producer-3[^\n]*?
+At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?3.80146[^\n]*?green[^\n]*?producer-3[^\n]*?
+At [^\n]*?: Consuming packet, [^\n]*?producer-3[^\n]*?
+At [^\n]*?: Producing packet, [^\n]*?producer-4[^\n]*?
+At [^\n]*?: Metering packet, [^\n]*?producer-4[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?11.2399[^\n]*?producer-4[^\n]*?
+At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?3.23988[^\n]*?green[^\n]*?producer-4[^\n]*?
+At [^\n]*?: Consuming packet, [^\n]*?producer-4[^\n]*?
+At [^\n]*?: Producing packet, [^\n]*?producer-5[^\n]*?
+At [^\n]*?: Metering packet, [^\n]*?producer-5[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?6.93277[^\n]*?producer-5[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?11.4664[^\n]*?producer-5[^\n]*?
+At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?3.46639[^\n]*?yellow[^\n]*?producer-5[^\n]*?
+At [^\n]*?: Consuming packet, [^\n]*?producer-5[^\n]*?
+At [^\n]*?: Producing packet, [^\n]*?producer-6[^\n]*?
+At [^\n]*?: Metering packet, [^\n]*?producer-6[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?14.739[^\n]*?producer-6[^\n]*?
+At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?6.73895[^\n]*?green[^\n]*?producer-6[^\n]*?
+At [^\n]*?: Consuming packet, [^\n]*?producer-6[^\n]*?
+At [^\n]*?: Producing packet, [^\n]*?producer-7[^\n]*?
+At [^\n]*?: Metering packet, [^\n]*?producer-7[^\n]*?
+At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?9.88776[^\n]*?producer-7[^\n]*?
+At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?1.88776[^\n]*?green[^\n]*?producer-7[^\n]*?
+At [^\n]*?: Consuming packet, [^\n]*?producer-7[^\n]*?

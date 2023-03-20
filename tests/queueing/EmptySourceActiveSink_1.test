@@ -30,4 +30,4 @@ cmdenv-log-prefix = "At %ts %N: "
 *.sink.collectionInterval = 1s
 
 %not-contains: stdout
-Collecting packet, .*?source.*?
+Collecting packet, [^\n]*?source[^\n]*?

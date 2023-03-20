@@ -31,4 +31,4 @@ cmdenv-log-prefix = "At %ts %N: "
 *.source.providingInterval = 1s
 
 %not-contains: stdout
-Producing packet, .*?source.*?
+Producing packet, [^\n]*?source[^\n]*?

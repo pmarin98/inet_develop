@@ -46,10 +46,10 @@ cmdenv-log-prefix = "At %ts %N: "
 %subst: /\nRunning simulation\.\.\.\n//
 
 %not-contains-regex: stdout
-Providing packet, .*?provider.*?
+Providing packet, [^\n]*?provider[^\n]*?
 
 %not-contains-regex: stdout
-Passing through packet, .*?provider.*?
+Passing through packet, [^\n]*?provider[^\n]*?
 
 %not-contains-regex: stdout
-Collecting packet, .*?provider.*?
+Collecting packet, [^\n]*?provider[^\n]*?

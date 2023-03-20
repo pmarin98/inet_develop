@@ -47,16 +47,16 @@ cmdenv-log-prefix = "At %ts %N: "
 
 %contains-regex: stdout
 At 3s gate: Opening gate.
-At 3s provider: Providing packet, .*?provider-0.*?
-At 3s gate: Passing through packet, .*?provider-0.*?
-At 3s collector: Collecting packet, .*?provider-0.*?
-At 4s provider: Providing packet, .*?provider-1.*?
-At 4s gate: Passing through packet, .*?provider-1.*?
-At 4s collector: Collecting packet, .*?provider-1.*?
-At 5s provider: Providing packet, .*?provider-2.*?
-At 5s gate: Passing through packet, .*?provider-2.*?
-At 5s collector: Collecting packet, .*?provider-2.*?
-At 6s provider: Providing packet, .*?provider-3.*?
-At 6s gate: Passing through packet, .*?provider-3.*?
-At 6s collector: Collecting packet, .*?provider-3.*?
+At 3s provider: Providing packet, [^\n]*?provider-0[^\n]*?
+At 3s gate: Passing through packet, [^\n]*?provider-0[^\n]*?
+At 3s collector: Collecting packet, [^\n]*?provider-0[^\n]*?
+At 4s provider: Providing packet, [^\n]*?provider-1[^\n]*?
+At 4s gate: Passing through packet, [^\n]*?provider-1[^\n]*?
+At 4s collector: Collecting packet, [^\n]*?provider-1[^\n]*?
+At 5s provider: Providing packet, [^\n]*?provider-2[^\n]*?
+At 5s gate: Passing through packet, [^\n]*?provider-2[^\n]*?
+At 5s collector: Collecting packet, [^\n]*?provider-2[^\n]*?
+At 6s provider: Providing packet, [^\n]*?provider-3[^\n]*?
+At 6s gate: Passing through packet, [^\n]*?provider-3[^\n]*?
+At 6s collector: Collecting packet, [^\n]*?provider-3[^\n]*?
 At 7s gate: Closing gate.
