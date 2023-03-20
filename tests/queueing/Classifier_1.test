@@ -93,5 +93,8 @@ At 8s consumer2: Consuming packet, [^\n]*?producer-8[^\n]*?
 At 9s producer: Producing packet, [^\n]*?producer-9[^\n]*?
 At 9s classifier: Classifying packet, [^\n]*?producer-9[^\n]*?
 At 9s consumer1: Consuming packet, [^\n]*?producer-9[^\n]*?
+At 10s producer: Producing packet, [^\n]*?producer-10[^\n]*?
+At 10s classifier: Classifying packet, [^\n]*?producer-10[^\n]*?
+At 10s consumer2: Consuming packet, [^\n]*?producer-10[^\n]*?
 
 <!> Simulation time limit reached -- at t=10s

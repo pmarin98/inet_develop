@@ -50,40 +50,78 @@ At [^\n]*?: Insufficient number of tokens for packet, [^\n]*?8[^\n]*?producer-0[
 At [^\n]*?: Consuming packet, [^\n]*?producer-0[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer-1[^\n]*?
 At [^\n]*?: Metering packet, [^\n]*?producer-1[^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?3.1835[^\n]*?producer-1[^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?1.59175[^\n]*?producer-1[^\n]*?
 At [^\n]*?: Insufficient number of tokens for packet, [^\n]*?8[^\n]*?producer-1[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer-1[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer-2[^\n]*?
 At [^\n]*?: Metering packet, [^\n]*?producer-2[^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?6.77774[^\n]*?producer-2[^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?3.38887[^\n]*?producer-2[^\n]*?
 At [^\n]*?: Insufficient number of tokens for packet, [^\n]*?8[^\n]*?producer-2[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer-2[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer-3[^\n]*?
 At [^\n]*?: Metering packet, [^\n]*?producer-3[^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?11.8015[^\n]*?producer-3[^\n]*?
+At [^\n]*?s meter:  Removing tokens: [^\n]*?
+At [^\n]*?s meter:  Removed tokens: [^\n]*?
 At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?3.80146[^\n]*?green[^\n]*?producer-3[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer-3[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer-4[^\n]*?
 At [^\n]*?: Metering packet, [^\n]*?producer-4[^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?11.2399[^\n]*?producer-4[^\n]*?
+At [^\n]*?s meter:  Removing tokens: [^\n]*?
+At [^\n]*?s meter:  Removed tokens: [^\n]*?
 At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?3.23988[^\n]*?green[^\n]*?producer-4[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer-4[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer-5[^\n]*?
 At [^\n]*?: Metering packet, [^\n]*?producer-5[^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?6.93277[^\n]*?producer-5[^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?11.4664[^\n]*?producer-5[^\n]*?
+At [^\n]*?s meter:  Removing tokens: [^\n]*?
+At [^\n]*?s meter:  Removed tokens: [^\n]*?
 At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?3.46639[^\n]*?yellow[^\n]*?producer-5[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer-5[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer-6[^\n]*?
 At [^\n]*?: Metering packet, [^\n]*?producer-6[^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?14.739[^\n]*?producer-6[^\n]*?
+At [^\n]*?s meter:  Removing tokens: [^\n]*?
+At [^\n]*?s meter:  Removed tokens: [^\n]*?
 At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?6.73895[^\n]*?green[^\n]*?producer-6[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer-6[^\n]*?
 At [^\n]*?: Producing packet, [^\n]*?producer-7[^\n]*?
 At [^\n]*?: Metering packet, [^\n]*?producer-7[^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
+At [^\n]*?s meter:  Adding tokens: [^\n]*?
+At [^\n]*?s meter:  Added tokens: [^\n]*?
 At [^\n]*?: Checking tokens for packet, [^\n]*?8[^\n]*?9.88776[^\n]*?producer-7[^\n]*?
+At [^\n]*?s meter:  Removing tokens: [^\n]*?
+At [^\n]*?s meter:  Removed tokens: [^\n]*?
 At [^\n]*?: Removed tokens, labeling packet, [^\n]*?8[^\n]*?1.88776[^\n]*?green[^\n]*?producer-7[^\n]*?
 At [^\n]*?: Consuming packet, [^\n]*?producer-7[^\n]*?
 

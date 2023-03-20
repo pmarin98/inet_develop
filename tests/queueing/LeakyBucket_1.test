@@ -82,5 +82,11 @@ At [^\n]*?: Producing packet, [^\n]*?producer-6[^\n]*?
 At [^\n]*?: Pushing packet, [^\n]*?producer-6[^\n]*?
 At [^\n]*?: Pulling packet, [^\n]*?producer-6[^\n]*?
 At [^\n]*?: Processing packet started, [^\n]*?producer-6[^\n]*?
+At [^\n]*?: Processing packet ended, [^\n]*?producer-6[^\n]*?
+At [^\n]*?: Consuming packet, [^\n]*?producer-6[^\n]*?
+At [^\n]*?: Producing packet, [^\n]*?producer-7[^\n]*?
+At [^\n]*?: Pushing packet, [^\n]*?producer-7[^\n]*?
+At [^\n]*?: Pulling packet, [^\n]*?producer-7[^\n]*?
+At [^\n]*?: Processing packet started, [^\n]*?producer-7[^\n]*?
 
 <!> Simulation time limit reached -- at t=10s

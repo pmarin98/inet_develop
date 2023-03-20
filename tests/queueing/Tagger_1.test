@@ -44,6 +44,10 @@ cmdenv-log-prefix = "At %ts %N: "
 %subst: /\nRunning simulation\.\.\.\n//
 
 %contains-regex: stdout
+At 0s producer: Producing packet, [^\n]*?producer-0[^\n]*?
+At 0s tagger: Marking packet, [^\n]*?producer-0[^\n]*?
+At 0s tagger: Attaching HopLimitReq, hopLimit = 1, [^\n]*?producer-0[^\n]*?
+At 0s consumer: Consuming packet, [^\n]*?producer-0[^\n]*?
 At 1s producer: Producing packet, [^\n]*?producer-1[^\n]*?
 At 1s tagger: Marking packet, [^\n]*?producer-1[^\n]*?
 At 1s tagger: Attaching HopLimitReq, hopLimit = 1,[^\n]*?producer-1[^\n]*?

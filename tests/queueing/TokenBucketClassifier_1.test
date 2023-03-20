@@ -57,37 +57,59 @@ At [^\n]*?s classifier: Insufficient number of tokens for packet, [^\n]*?8[^\n]*
 At [^\n]*?s redConsumer: Consuming packet, [^\n]*?producer-0[^\n]*?
 At [^\n]*?s producer: Producing packet, [^\n]*?producer-1[^\n]*?
 At [^\n]*?s classifier: Classifying packet, [^\n]*?producer-1[^\n]*?
+At [^\n]*?s classifier:  Adding tokens: [^\n]*?
+At [^\n]*?s classifier:  Added tokens: [^\n]*?
 At [^\n]*?s classifier: Checking tokens for packet, [^\n]*?8[^\n]*?3.1835[^\n]*?producer-1[^\n]*?
 At [^\n]*?s classifier: Insufficient number of tokens for packet, [^\n]*?8[^\n]*?3.1835[^\n]*?producer-1[^\n]*?
 At [^\n]*?s redConsumer: Consuming packet, [^\n]*?producer-1[^\n]*?
 At [^\n]*?s producer: Producing packet, [^\n]*?producer-2[^\n]*?
 At [^\n]*?s classifier: Classifying packet, [^\n]*?producer-2[^\n]*?
+At [^\n]*?s classifier:  Adding tokens: [^\n]*?
+At [^\n]*?s classifier:  Added tokens: [^\n]*?
 At [^\n]*?s classifier: Checking tokens for packet, [^\n]*?8[^\n]*?6.77774[^\n]*?producer-2[^\n]*?
 At [^\n]*?s classifier: Insufficient number of tokens for packet, [^\n]*?8[^\n]*?6.77774[^\n]*?producer-2[^\n]*?
 At [^\n]*?s redConsumer: Consuming packet, [^\n]*?producer-2[^\n]*?
 At [^\n]*?s producer: Producing packet, [^\n]*?producer-3[^\n]*?
 At [^\n]*?s classifier: Classifying packet, [^\n]*?producer-3[^\n]*?
+At [^\n]*?s classifier:  Adding tokens: [^\n]*?
+At [^\n]*?s classifier:  Added tokens: [^\n]*?
 At [^\n]*?s classifier: Checking tokens for packet, [^\n]*?8[^\n]*?11.8015[^\n]*?producer-3[^\n]*?
+At [^\n]*?s classifier:  Removing tokens: [^\n]*?
+At [^\n]*?s classifier:  Removed tokens: [^\n]*?
 At [^\n]*?s classifier: Removed tokens for packet, [^\n]*?8[^\n]*?3.80146[^\n]*?producer-3[^\n]*?
 At [^\n]*?s greenConsumer: Consuming packet, [^\n]*?producer-3[^\n]*?
 At [^\n]*?s producer: Producing packet, [^\n]*?producer-4[^\n]*?
 At [^\n]*?s classifier: Classifying packet, [^\n]*?producer-4[^\n]*?
+At [^\n]*?s classifier:  Adding tokens: [^\n]*?
+At [^\n]*?s classifier:  Added tokens: [^\n]*?
 At [^\n]*?s classifier: Checking tokens for packet, [^\n]*?8[^\n]*?11.2399[^\n]*?producer-4[^\n]*?
+At [^\n]*?s classifier:  Removing tokens: [^\n]*?
+At [^\n]*?s classifier:  Removed tokens: [^\n]*?
 At [^\n]*?s classifier: Removed tokens for packet, [^\n]*?8[^\n]*?3.23988[^\n]*?producer-4[^\n]*?
 At [^\n]*?s greenConsumer: Consuming packet, [^\n]*?producer-4[^\n]*?
 At [^\n]*?s producer: Producing packet, [^\n]*?producer-5[^\n]*?
 At [^\n]*?s classifier: Classifying packet, [^\n]*?producer-5[^\n]*?
+At [^\n]*?s classifier:  Adding tokens: [^\n]*?
+At [^\n]*?s classifier:  Added tokens: [^\n]*?
 At [^\n]*?s classifier: Checking tokens for packet, [^\n]*?8[^\n]*?6.93277[^\n]*?producer-5[^\n]*?
 At [^\n]*?s classifier: Insufficient number of tokens for packet, [^\n]*?8[^\n]*?6.93277[^\n]*?producer-5[^\n]*?
 At [^\n]*?s redConsumer: Consuming packet, [^\n]*?producer-5[^\n]*?
 At [^\n]*?s producer: Producing packet, [^\n]*?producer-6[^\n]*?
 At [^\n]*?s classifier: Classifying packet, [^\n]*?producer-6[^\n]*?
+At [^\n]*?s classifier:  Adding tokens: [^\n]*?
+At [^\n]*?s classifier:  Added tokens: [^\n]*?
 At [^\n]*?s classifier: Checking tokens for packet, [^\n]*?8[^\n]*?14.739[^\n]*?producer-6[^\n]*?
+At [^\n]*?s classifier:  Removing tokens: [^\n]*?
+At [^\n]*?s classifier:  Removed tokens: [^\n]*?
 At [^\n]*?s classifier: Removed tokens for packet, [^\n]*?8[^\n]*?6.73895[^\n]*?producer-6[^\n]*?
 At [^\n]*?s greenConsumer: Consuming packet, [^\n]*?producer-6[^\n]*?
 At [^\n]*?s producer: Producing packet, [^\n]*?producer-7[^\n]*?
 At [^\n]*?s classifier: Classifying packet, [^\n]*?producer-7[^\n]*?
+At [^\n]*?s classifier:  Adding tokens: [^\n]*?
+At [^\n]*?s classifier:  Added tokens: [^\n]*?
 At [^\n]*?s classifier: Checking tokens for packet, [^\n]*?8[^\n]*?9.88776[^\n]*?producer-7[^\n]*?
+At [^\n]*?s classifier:  Removing tokens: [^\n]*?
+At [^\n]*?s classifier:  Removed tokens: [^\n]*?
 At [^\n]*?s classifier: Removed tokens for packet, [^\n]*?8[^\n]*?1.88776[^\n]*?producer-7[^\n]*?
 At [^\n]*?s greenConsumer: Consuming packet, [^\n]*?producer-7[^\n]*?
 
