@@ -91,111 +91,111 @@ cmdenv-log-prefix = "At %ts %N: "
 %subst: /\nRunning simulation\.\.\.\n//
 
 %contains-regex: stdout
-Producing packet, .*?sourceApplication-0.*?
-Pushing packet, .*?sourceApplication-0.*?
-Pulling packet, .*?sourceApplication-0.*?
-Processing packet started, (.*?sourceApplication-0).*?
-Producing packet, .*?sourceApplication-0.*?
-Pushing packet, .*?sourceApplication-0.*?
-Pulling packet, .*?sourceApplication-0.*?
-Processing packet started, (.*?sourceApplication-0).*?
-Producing packet, .*?sourceApplication-1.*?
-Pushing packet, .*?sourceApplication-1.*?
-Processing packet ended, (.*?sourceApplication-0).*?
-Delaying packet, .*?sourceApplication-0.*?
-Pulling packet, .*?sourceApplication-1.*?
-Processing packet started, (.*?sourceApplication-1).*?
-Producing packet, .*?sourceApplication-1.*?
-Pushing packet, .*?sourceApplication-1.*?
-Processing packet ended, (.*?sourceApplication-0).*?
-Delaying packet, .*?sourceApplication-0.*?
-Pulling packet, .*?sourceApplication-1.*?
-Processing packet started, (.*?sourceApplication-1).*?
-Processing packet ended, (.*?sourceApplication-1).*?
-Delaying packet, .*?sourceApplication-1.*?
-Producing packet, .*?sourceApplication-2.*?
-Pushing packet, .*?sourceApplication-2.*?
-Pulling packet, .*?sourceApplication-2.*?
-Processing packet started, (.*?sourceApplication-2).*?
-Consuming packet, .*?sourceApplication-0.*?
-Consuming packet, .*?sourceApplication-0.*?
-Processing packet ended, (.*?sourceApplication-1).*?
-Delaying packet, .*?sourceApplication-1.*?
-Producing packet, .*?sourceApplication-3.*?
-Pushing packet, .*?sourceApplication-3.*?
-Producing packet, .*?sourceApplication-2.*?
-Pushing packet, .*?sourceApplication-2.*?
-Pulling packet, .*?sourceApplication-2.*?
-Processing packet started, (.*?sourceApplication-2).*?
-Processing packet ended, (.*?sourceApplication-2).*?
-Delaying packet, .*?sourceApplication-2.*?
-Pulling packet, .*?sourceApplication-3.*?
-Processing packet started, (.*?sourceApplication-3).*?
-Producing packet, .*?sourceApplication-3.*?
-Pushing packet, .*?sourceApplication-3.*?
-Consuming packet, .*?sourceApplication-1.*?
-Consuming packet, .*?sourceApplication-1.*?
-Consuming packet, .*?sourceApplication-2.*?
-Processing packet ended, (.*?sourceApplication-3).*?
-Delaying packet, .*?sourceApplication-3.*?
-Producing packet, .*?sourceApplication-4.*?
-Pushing packet, .*?sourceApplication-4.*?
-Producing packet, .*?sourceApplication-4.*?
-Pushing packet, .*?sourceApplication-4.*?
-Pulling packet, .*?sourceApplication-4.*?
-Processing packet started, (.*?sourceApplication-4).*?
-Processing packet ended, (.*?sourceApplication-2).*?
-Delaying packet, .*?sourceApplication-2.*?
-Pulling packet, .*?sourceApplication-3.*?
-Processing packet started, (.*?sourceApplication-3).*?
-Consuming packet, .*?sourceApplication-3.*?
-Processing packet ended, (.*?sourceApplication-4).*?
-Delaying packet, .*?sourceApplication-4.*?
-Producing packet, .*?sourceApplication-5.*?
-Pushing packet, .*?sourceApplication-5.*?
-Processing packet ended, (.*?sourceApplication-3).*?
-Delaying packet, .*?sourceApplication-3.*?
-Pulling packet, .*?sourceApplication-4.*?
-Processing packet started, (.*?sourceApplication-4).*?
-Producing packet, .*?sourceApplication-5.*?
-Pushing packet, .*?sourceApplication-5.*?
-Pulling packet, .*?sourceApplication-5.*?
-Processing packet started, (.*?sourceApplication-5).*?
-Consuming packet, .*?sourceApplication-3.*?
-Producing packet, .*?sourceApplication-6.*?
-Pushing packet, .*?sourceApplication-6.*?
-Producing packet, .*?sourceApplication-7.*?
-Pushing packet, .*?sourceApplication-7.*?
-Consuming packet, .*?sourceApplication-2.*?
-Processing packet ended, (.*?sourceApplication-4).*?
-Delaying packet, .*?sourceApplication-4.*?
-Pulling packet, .*?sourceApplication-5.*?
-Processing packet started, (.*?sourceApplication-5).*?
-Producing packet, .*?sourceApplication-8.*?
-Pushing packet, .*?sourceApplication-8.*?
-Processing packet ended, (.*?sourceApplication-5).*?
-Delaying packet, .*?sourceApplication-5.*?
-Pulling packet, .*?sourceApplication-6.*?
-Processing packet started, (.*?sourceApplication-6).*?
-Producing packet, .*?sourceApplication-6.*?
-Pushing packet, .*?sourceApplication-6.*?
-Consuming packet, .*?sourceApplication-5.*?
-Consuming packet, .*?sourceApplication-4.*?
-Consuming packet, .*?sourceApplication-4.*?
-Producing packet, .*?sourceApplication-9.*?
-Pushing packet, .*?sourceApplication-9.*?
-Processing packet ended, (.*?sourceApplication-5).*?
-Delaying packet, .*?sourceApplication-5.*?
-Pulling packet, .*?sourceApplication-6.*?
-Processing packet started, (.*?sourceApplication-6).*?
-Processing packet ended, (.*?sourceApplication-6).*?
-Delaying packet, .*?sourceApplication-6.*?
-Pulling packet, .*?sourceApplication-7.*?
-Processing packet started, (.*?sourceApplication-7).*?
-Producing packet, .*?sourceApplication-7.*?
-Pushing packet, .*?sourceApplication-7.*?
-Consuming packet, .*?sourceApplication-5.*?
-Processing packet ended, (.*?sourceApplication-7).*?
-Delaying packet, .*?sourceApplication-7.*?
-Pulling packet, .*?sourceApplication-8.*?
-Processing packet started, (.*?sourceApplication-8).*?
+At [^\n]*?: Producing packet, .*?sourceApplication-0.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-0.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-0.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-0).*?
+At [^\n]*?: Producing packet, .*?sourceApplication-0.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-0.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-0.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-0).*?
+At [^\n]*?: Producing packet, .*?sourceApplication-1.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-1.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-0).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-0.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-1.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-1).*?
+At [^\n]*?: Producing packet, .*?sourceApplication-1.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-1.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-0).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-0.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-1.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-1).*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-1).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-1.*?
+At [^\n]*?: Producing packet, .*?sourceApplication-2.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-2.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-2.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-2).*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-0.*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-0.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-1).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-1.*?
+At [^\n]*?: Producing packet, .*?sourceApplication-3.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-3.*?
+At [^\n]*?: Producing packet, .*?sourceApplication-2.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-2.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-2.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-2).*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-2).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-2.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-3.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-3).*?
+At [^\n]*?: Producing packet, .*?sourceApplication-3.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-3.*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-1.*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-1.*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-2.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-3).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-3.*?
+At [^\n]*?: Producing packet, .*?sourceApplication-4.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-4.*?
+At [^\n]*?: Producing packet, .*?sourceApplication-4.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-4.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-4.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-4).*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-2).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-2.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-3.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-3).*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-3.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-4).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-4.*?
+At [^\n]*?: Producing packet, .*?sourceApplication-5.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-5.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-3).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-3.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-4.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-4).*?
+At [^\n]*?: Producing packet, .*?sourceApplication-5.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-5.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-5.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-5).*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-3.*?
+At [^\n]*?: Producing packet, .*?sourceApplication-6.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-6.*?
+At [^\n]*?: Producing packet, .*?sourceApplication-7.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-7.*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-2.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-4).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-4.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-5.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-5).*?
+At [^\n]*?: Producing packet, .*?sourceApplication-8.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-8.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-5).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-5.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-6.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-6).*?
+At [^\n]*?: Producing packet, .*?sourceApplication-6.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-6.*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-5.*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-4.*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-4.*?
+At [^\n]*?: Producing packet, .*?sourceApplication-9.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-9.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-5).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-5.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-6.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-6).*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-6).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-6.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-7.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-7).*?
+At [^\n]*?: Producing packet, .*?sourceApplication-7.*?
+At [^\n]*?: Pushing packet, .*?sourceApplication-7.*?
+At [^\n]*?: Consuming packet, .*?sourceApplication-5.*?
+At [^\n]*?: Processing packet ended, (.*?sourceApplication-7).*?
+At [^\n]*?: Delaying packet, .*?sourceApplication-7.*?
+At [^\n]*?: Pulling packet, .*?sourceApplication-8.*?
+At [^\n]*?: Processing packet started, (.*?sourceApplication-8).*?

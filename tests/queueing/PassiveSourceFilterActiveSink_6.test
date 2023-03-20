@@ -1,0 +1,69 @@
+%description:
+
+In this test, packets are collected periodically by an active packet sink
+(ActivePacketSink). The packets are provided by a passive packet source
+(PassivePacketSource).
+Packets are passed through from the source to the sink by a filter (PacketFilter).
+The filter pass through the first 5 packets, other packets are dropped.
+
+%file: test.ned
+
+import inet.queueing.sink.ActivePacketSink;
+import inet.queueing.filter.PacketFilter;
+import inet.queueing.source.PassivePacketSource;
+
+network TestFilterPA
+{
+    submodules:
+        provider: PassivePacketSource {
+            @display("p=100,100");
+        }
+        filter: PacketFilter {
+            @display("p=200,100");
+        }
+        collector: ActivePacketSink {
+            @display("p=300,100");
+        }
+    connections:
+        provider.out --> filter.in;
+        filter.out --> collector.in;
+}
+
+%file: Test.cc
+#include <string.h>
+#include "inet/queueing/function/PacketFilterFunction.h"
+#include "inet/common/packet/Packet.h"
+
+using namespace inet;
+
+static bool testFilter(const Packet *packet)
+{
+    return (packet->getId() & 1) == 0;
+}
+
+Register_Packet_Filter_Function(@TESTNAME@TestFilter, testFilter);
+
+%inifile: omnetpp.ini
+
+[General]
+network = TestFilterPA
+sim-time-limit = 10s
+cmdenv-event-banners = false
+cmdenv-log-prefix = "At %ts %N: "
+*.provider.packetLength = 1B
+*.provider.providingInterval = 0.2s
+*.collector.collectionInterval = 1s
+*.filter.filterClass = "@TESTNAME@TestFilter"
+*.filter.backpressure = true
+
+%# remove formatting
+%subst: /\x1B\[[0-9;]*m//
+
+%subst: /\nRunning simulation\.\.\.\n//
+
+%contains: stdout
+At 0s provider: Providing packet, packet = (Packet)provider-0 (1 B) ByteCountChunk, length = 1 B, data = 63.
+At 0s filter: Passing through packet, packet = (Packet)provider-0 (1 B) ByteCountChunk, length = 1 B, data = 63.
+At 0s collector: Collecting packet, packet = (Packet)provider-0 (1 B) ByteCountChunk, length = 1 B, data = 63.
+
+<!> Simulation time limit reached -- at t=10s
