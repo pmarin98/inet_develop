@@ -62,4 +62,3 @@ At 10s producer: Producing packet, [^\n]*?producer-10[^\n]*?
 At 10s consumer: Consuming packet, [^\n]*?producer-10[^\n]*?
 
 <!> Simulation time limit reached
-
