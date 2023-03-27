@@ -21,8 +21,8 @@ network TestQueueFiller
             @display("p=300,100");
         }
     connections allowunconnected:
-    	filler.out --> queue.in;
-    	queue.out --> consumer.in;
+        filler.out --> queue.in;
+        queue.out --> consumer.in;
 }
 
 %inifile: omnetpp.ini
