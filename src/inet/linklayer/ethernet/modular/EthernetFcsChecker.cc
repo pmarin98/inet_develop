@@ -10,6 +10,7 @@
 #include "inet/common/ProtocolTag_m.h"
 #include "inet/linklayer/ethernet/common/Ethernet.h"
 #include "inet/linklayer/ethernet/common/EthernetMacHeader_m.h"
+#include "inet/protocolelement/cutthrough/CutthroughTag_m.h"
 
 namespace inet {
 
@@ -47,6 +48,9 @@ void EthernetFcsChecker::processPacket(Packet *packet)
 
 bool EthernetFcsChecker::matchesPacket(const Packet *packet) const
 {
+    if (packet->hasTag<CutthroughTag>())
+        return true;
+
     const auto& trailer = packet->peekAtBack<EthernetFcs>(ETHER_FCS_BYTES);
     auto fcsMode = trailer->getFcsMode();
     auto fcs = trailer->getFcs();
