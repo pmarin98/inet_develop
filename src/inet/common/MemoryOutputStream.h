@@ -54,6 +54,8 @@ class INET_API MemoryOutputStream
         data.reserve((b(initialCapacity).get() + 7) >> 3);
     }
 
+    void clear() { data.clear(); length = b(0); }
+
     /** @name Stream querying functions */
     //@{
     /**
@@ -61,7 +63,30 @@ class INET_API MemoryOutputStream
      */
     b getLength() const { return length; }
 
+    void setCapacity(b capacity) {
+        data.reserve((b(capacity).get() + 7) >> 3);
+    }
+
     const std::vector<uint8_t>& getData() const { return data; }
+
+    void copyFrom(const std::vector<uint8_t>& src, b srcOffset, b srcLength) {
+        size_t offset = b(srcOffset).get();
+        size_t endOffset = b(srcOffset + srcLength).get();
+        assert(endOffset <= src.size() * 8);
+        if (isByteAligned() && offset % 8 == 0) {
+            data.insert(data.end(), src.begin() + offset / 8, src.begin() + (endOffset + 7) / 8);
+            length += srcLength;
+        }
+        else {
+            for (size_t i = b(srcOffset).get(); i < endOffset; i++) {
+                size_t byteIndex = i / 8;
+                size_t bitIndex = i % 8;
+                uint8_t byte = src.at(byteIndex);
+                uint8_t mask = 1 << (7 - bitIndex);
+                writeBit(byte & mask);
+            }
+        }
+    }
 
     void copyData(std::vector<bool>& result, b offset = b(0), b length = b(-1)) const {
         size_t end = b(length == b(-1) ? this->length : offset + length).get();
