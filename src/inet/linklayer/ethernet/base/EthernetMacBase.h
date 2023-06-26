@@ -185,8 +185,6 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
     // helpers
 // TODO REFACTOR
 //    virtual void processConnectDisconnect();
-    virtual void encapsulate(Packet *packet);
-    virtual void decapsulate(Packet *packet);
 
     /// Verify ethernet packet: check FCS and payload length
     bool verifyCrcAndLength(Packet *packet);

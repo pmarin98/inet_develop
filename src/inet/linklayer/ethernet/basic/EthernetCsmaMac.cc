@@ -203,7 +203,6 @@ void EthernetCsmaMac::handleSignalFromNetwork(EthernetSignalBase *signal)
         if (!signal->isUpdate() && dynamic_cast<EthernetSignal *>(signal)) { // count only signal starts, do not count JAM and IFG packets
             auto packet = check_and_cast<Packet *>(signal->decapsulate());
             delete signal;
-            decapsulate(packet);
             PacketDropDetails details;
             details.setReason(INTERFACE_DOWN);
             emit(packetDroppedSignal, packet, &details);
@@ -397,9 +396,6 @@ void EthernetCsmaMac::startFrameTransmission()
 
     B minFrameLengthWithExtension = calculateMinFrameLength();
     B extensionLength = minFrameLengthWithExtension > frame->getDataLength() ? (minFrameLengthWithExtension - frame->getDataLength()) : B(0);
-
-    // add preamble and SFD (Starting Frame Delimiter), then send out
-    encapsulate(frame);
 
     B sentFrameByteLength = frame->getDataLength() + extensionLength;
     auto& oldPacketProtocolTag = frame->removeTag<PacketProtocolTag>();
@@ -713,7 +709,6 @@ void EthernetCsmaMac::frameReceptionComplete()
     bool hasBitError = signal->hasBitError();
     auto packet = check_and_cast<Packet *>(signal->decapsulate());
     delete signal;
-    decapsulate(packet);
     emit(packetReceivedFromLowerSignal, packet);
 
     if (hasBitError || !verifyCrcAndLength(packet)) {

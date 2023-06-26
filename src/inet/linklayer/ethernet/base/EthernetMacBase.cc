@@ -400,20 +400,6 @@ void EthernetMacBase::receiveSignal(cComponent *source, simsignal_t signalID, cO
 //    // FIXME when connect, set statuses to RECONNECT or IDLE
 //}
 
-void EthernetMacBase::encapsulate(Packet *frame)
-{
-    auto phyHeader = makeShared<EthernetPhyHeader>();
-    frame->insertAtFront(phyHeader);
-    frame->addTagIfAbsent<PacketProtocolTag>()->setProtocol(&Protocol::ethernetPhy);
-}
-
-void EthernetMacBase::decapsulate(Packet *packet)
-{
-    auto phyHeader = packet->popAtFront<EthernetPhyHeader>();
-    ASSERT(packet->getDataLength() >= MIN_ETHERNET_FRAME_BYTES);
-    packet->addTagIfAbsent<PacketProtocolTag>()->setProtocol(&Protocol::ethernetMac);
-}
-
 // FIXME should use it in EthernetCsmaMac, EthernetMac, etc. modules. But should not use it in EtherBus, EthernetHub.
 bool EthernetMacBase::verifyCrcAndLength(Packet *packet)
 {

@@ -98,9 +98,6 @@ void EthernetMac::startFrameTransmission()
     ASSERT(hdr);
     ASSERT(!hdr->getSrc().isUnspecified());
 
-    // add preamble and SFD (Starting Frame Delimiter), then send out
-    encapsulate(frame);
-
     // send
     auto& oldPacketProtocolTag = frame->removeTag<PacketProtocolTag>();
     frame->clearTags();
@@ -172,7 +169,6 @@ void EthernetMac::processMsgFromNetwork(Signal *signal)
         if (dynamic_cast<EthernetSignal *>(signal)) { // do not count JAM and IFG packets
             auto packet = check_and_cast<Packet *>(signal->decapsulate());
             delete signal;
-            decapsulate(packet);
             PacketDropDetails details;
             details.setReason(INTERFACE_DOWN);
             emit(packetDroppedSignal, packet, &details);
@@ -202,7 +198,6 @@ void EthernetMac::processMsgFromNetwork(Signal *signal)
     bool hasBitError = signal->hasBitError();
     auto packet = check_and_cast<Packet *>(signal->decapsulate());
     delete signal;
-    decapsulate(packet);
     emit(packetReceivedFromLowerSignal, packet);
 
     if (hasBitError || !verifyCrcAndLength(packet)) {
