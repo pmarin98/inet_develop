@@ -139,7 +139,7 @@ void EthernetCsmaMac::handleSelfMessage(cMessage *msg)
 
     switch (msg->getKind()) {
         case ENDIFG:
-            handleEndIFGPeriod();
+//            handleEndIFGPeriod();
             break;
 
         case ENDTRANSMISSION:
@@ -155,7 +155,7 @@ void EthernetCsmaMac::handleSelfMessage(cMessage *msg)
             break;
 
         case ENDJAMMING:
-            handleEndJammingPeriod();
+//            handleEndJammingPeriod();
             break;
 
         case ENDPAUSE:
@@ -307,34 +307,34 @@ void EthernetCsmaMac::processMsgFromNetwork(Packet *signal)
 //    }
 //}
 
-void EthernetCsmaMac::handleEndIFGPeriod()
-{
-    EV_DETAIL << "IFG elapsed\n";
-
-    if (transmitState == SEND_IFG_STATE) {
-        emit(transmissionEndedSignal, curTxSignal);
-        txFinished();
-        if (canContinueBurst(b(0))) {
-            Packet *packet = dequeuePacket();
-            handleUpperPacket(packet);
-        }
-        else
-            scheduleEndIFGPeriod();
-    }
-    else if (transmitState == WAIT_IFG_STATE) {
-        // End of IFG period, okay to transmit, if Rx idle OR duplexMode ( checked in startFrameTransmission(); )
-        if (currentTxFrame != nullptr)
-            startFrameTransmission();
-        else if (canDequeuePacket()) {
-            Packet *packet = dequeuePacket();
-            handleUpperPacket(packet);
-        }
-        else
-            changeTransmissionState(TX_IDLE_STATE);
-    }
-    else
-        throw cRuntimeError("Not in WAIT_IFG_STATE at the end of IFG period");
-}
+//void EthernetCsmaMac::handleEndIFGPeriod()
+//{
+//    EV_DETAIL << "IFG elapsed\n";
+//
+//    if (transmitState == SEND_IFG_STATE) {
+//        emit(transmissionEndedSignal, curTxSignal);
+//        txFinished();
+//        if (canContinueBurst(b(0))) {
+//            Packet *packet = dequeuePacket();
+//            handleUpperPacket(packet);
+//        }
+//        else
+//            scheduleEndIFGPeriod();
+//    }
+//    else if (transmitState == WAIT_IFG_STATE) {
+//        // End of IFG period, okay to transmit, if Rx idle OR duplexMode ( checked in startFrameTransmission(); )
+//        if (currentTxFrame != nullptr)
+//            startFrameTransmission();
+//        else if (canDequeuePacket()) {
+//            Packet *packet = dequeuePacket();
+//            handleUpperPacket(packet);
+//        }
+//        else
+//            changeTransmissionState(TX_IDLE_STATE);
+//    }
+//    else
+//        throw cRuntimeError("Not in WAIT_IFG_STATE at the end of IFG period");
+//}
 
 B EthernetCsmaMac::calculateMinFrameLength()
 {
@@ -459,8 +459,8 @@ void EthernetCsmaMac::handleEndTxPeriod()
         EV_DETAIL << "Start IFG period\n";
         if (canContinueBurst(INTERFRAME_GAP_BITS))
             fillIFGInBurst();
-        else
-            scheduleEndIFGPeriod();
+//        else
+//            scheduleEndIFGPeriod();
     }
 }
 
@@ -514,7 +514,7 @@ void EthernetCsmaMac::handleEndBackoffPeriod()
 
     if (phy->getReceiveState() == EthernetCsmaPhy::RX_IDLE_STATE) {
         EV_DETAIL << "Backoff period ended, wait IFG\n";
-        scheduleEndIFGPeriod();
+//        scheduleEndIFGPeriod();
     }
     else {
         EV_DETAIL << "Backoff period ended but channel is not free, idling\n";
@@ -555,16 +555,16 @@ void EthernetCsmaMac::sendJamSignal()
 //    changeTransmissionState(JAMMING_STATE);
 }
 
-void EthernetCsmaMac::handleEndJammingPeriod()
-{
-    if (transmitState != JAMMING_STATE)
-        throw cRuntimeError("At end of JAMMING but not in JAMMING_STATE");
-
-    emit(transmissionEndedSignal, curTxSignal);
-    txFinished();
-    EV_DETAIL << "Jamming finished, executing backoff\n";
-    handleRetransmission();
-}
+//void EthernetCsmaMac::handleEndJammingPeriod()
+//{
+//    if (transmitState != JAMMING_STATE)
+//        throw cRuntimeError("At end of JAMMING but not in JAMMING_STATE");
+//
+//    emit(transmissionEndedSignal, curTxSignal);
+//    txFinished();
+//    EV_DETAIL << "Jamming finished, executing backoff\n";
+//    handleRetransmission();
+//}
 
 void EthernetCsmaMac::handleRetransmission()
 {
@@ -603,10 +603,10 @@ void EthernetCsmaMac::printState()
     EV_DETAIL << "transmitState: ";
     switch (transmitState) {
         CASE(TX_IDLE_STATE);
-        CASE(WAIT_IFG_STATE);
-        CASE(SEND_IFG_STATE);
+//        CASE(WAIT_IFG_STATE);
+//        CASE(SEND_IFG_STATE);
         CASE(TRANSMITTING_STATE);
-        CASE(JAMMING_STATE);
+//        CASE(JAMMING_STATE);
         CASE(BACKOFF_STATE);
         CASE(PAUSE_STATE);
     }
@@ -734,14 +734,14 @@ void EthernetCsmaMac::processReceivedControlFrame(Packet *packet)
     delete packet;
 }
 
-void EthernetCsmaMac::scheduleEndIFGPeriod()
-{
-    bytesSentInBurst = B(0);
-    framesSentInBurst = 0;
-    simtime_t ifgTime = b(INTERFRAME_GAP_BITS).get() / curEtherDescr->txrate;
-    scheduleAfter(ifgTime, endIfgTimer);
-    changeTransmissionState(WAIT_IFG_STATE);
-}
+//void EthernetCsmaMac::scheduleEndIFGPeriod()
+//{
+//    bytesSentInBurst = B(0);
+//    framesSentInBurst = 0;
+//    simtime_t ifgTime = b(INTERFRAME_GAP_BITS).get() / curEtherDescr->txrate;
+//    scheduleAfter(ifgTime, endIfgTimer);
+//    changeTransmissionState(WAIT_IFG_STATE);
+//}
 
 void EthernetCsmaMac::fillIFGInBurst()
 {
@@ -802,7 +802,7 @@ void EthernetCsmaMac::handleCanPullPacketChanged(const cGate *gate)
 {
     Enter_Method("handleCanPullPacketChanged");
     if (duplexMode || phy->getReceiveState() == EthernetCsmaPhy::RX_IDLE_STATE) {
-        if (currentTxFrame == nullptr && transmitState == TX_IDLE_STATE && canDequeuePacket()) {
+        if (currentTxFrame == nullptr && phy->getTransmitState() == EthernetCsmaPhy::TX_IDLE_STATE && canDequeuePacket()) {
             Packet *packet = dequeuePacket();
             handleUpperPacket(packet);
         }

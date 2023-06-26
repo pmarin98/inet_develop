@@ -342,27 +342,27 @@ void EthernetCsmaPhy::handleEndIFGPeriod()
     EV_DETAIL << "IFG elapsed\n";
 
     if (transmitState == SEND_IFG_STATE) {
+        emit(transmissionEndedSignal, curTxSignal);
+        txFinished();
 // TODO REFACTOR
-//        emit(transmissionEndedSignal, curTxSignal);
-//        txFinished();
 //        if (canContinueBurst(b(0))) {
 //            Packet *packet = dequeuePacket();
 //            handleUpperPacket(packet);
 //        }
 //        else
-//            scheduleEndIFGPeriod();
+        scheduleEndIFGPeriod();
     }
     else if (transmitState == WAIT_IFG_STATE) {
         // End of IFG period, okay to transmit, if Rx idle OR duplexMode ( checked in startFrameTransmission(); )
+        if (currentTxFrame != nullptr)
+            startFrameTransmission();
 // TODO REFACTOR
-//        if (currentTxFrame != nullptr)
-//            startFrameTransmission();
 //        else if (canDequeuePacket()) {
 //            Packet *packet = dequeuePacket();
 //            handleUpperPacket(packet);
 //        }
 //        else
-//            changeTransmissionState(TX_IDLE_STATE);
+        changeTransmissionState(TX_IDLE_STATE);
     }
     else
         throw cRuntimeError("Not in WAIT_IFG_STATE at the end of IFG period");

@@ -67,12 +67,12 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
   protected:
     // event handlers
     virtual void handleSelfMessage(cMessage *msg) override;
-    virtual void handleEndIFGPeriod();
+//    virtual void handleEndIFGPeriod();
     virtual void handleEndPausePeriod();
     virtual void handleEndTxPeriod();
 //    virtual void handleEndRxPeriod();
     virtual void handleEndBackoffPeriod();
-    virtual void handleEndJammingPeriod();
+//    virtual void handleEndJammingPeriod();
     virtual void handleRetransmission();
 
     // helpers
@@ -80,7 +80,7 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
 //    virtual void readChannelParameters(bool errorWhenAsymmetric) override;
     virtual void handleUpperPacket(Packet *msg) override;
     virtual void processMsgFromNetwork(Packet *msg);
-    virtual void scheduleEndIFGPeriod();
+//    virtual void scheduleEndIFGPeriod();
     virtual void fillIFGInBurst();
     virtual void scheduleEndPausePeriod(int pauseUnits);
     virtual void beginSendFrames();

@@ -34,10 +34,10 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
   public:
     enum MacTransmitState {
         TX_IDLE_STATE = 1,
-        WAIT_IFG_STATE,
-        SEND_IFG_STATE,
+//        WAIT_IFG_STATE,
+//        SEND_IFG_STATE,
         TRANSMITTING_STATE,
-        JAMMING_STATE,
+//        JAMMING_STATE,
         BACKOFF_STATE,
         PAUSE_STATE
         // FIXME add TX_OFF_STATE
@@ -98,7 +98,7 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
 
     // self messages
     cMessage *endTxTimer = nullptr;
-    cMessage *endIfgTimer = nullptr;
+//    cMessage *endIfgTimer = nullptr;
     cMessage *endPauseTimer = nullptr;
 
     // RX / TX signals:

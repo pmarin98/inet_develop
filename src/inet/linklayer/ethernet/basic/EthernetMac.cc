@@ -80,8 +80,8 @@ void EthernetMac::handleSelfMessage(cMessage *msg)
 
     if (msg == endTxTimer)
         handleEndTxPeriod();
-    else if (msg == endIfgTimer)
-        handleEndIFGPeriod();
+//    else if (msg == endIfgTimer)
+//        handleEndIFGPeriod();
     else if (msg == endPauseTimer)
         handleEndPausePeriod();
     else
@@ -232,21 +232,21 @@ void EthernetMac::processMsgFromNetwork(Signal *signal)
     }
 }
 
-void EthernetMac::handleEndIFGPeriod()
-{
-    ASSERT(nullptr == currentTxFrame);
-    if (transmitState != WAIT_IFG_STATE)
-        throw cRuntimeError("Not in WAIT_IFG_STATE at the end of IFG period");
-
-    // End of IFG period, okay to transmit
-    EV_DETAIL << "IFG elapsed" << endl;
-    changeTransmissionState(TX_IDLE_STATE);
-
-    if (canDequeuePacket()) {
-        Packet *packet = dequeuePacket();
-        handleUpperPacket(packet);
-    }
-}
+//void EthernetMac::handleEndIFGPeriod()
+//{
+//    ASSERT(nullptr == currentTxFrame);
+//    if (transmitState != WAIT_IFG_STATE)
+//        throw cRuntimeError("Not in WAIT_IFG_STATE at the end of IFG period");
+//
+//    // End of IFG period, okay to transmit
+//    EV_DETAIL << "IFG elapsed" << endl;
+//    changeTransmissionState(TX_IDLE_STATE);
+//
+//    if (canDequeuePacket()) {
+//        Packet *packet = dequeuePacket();
+//        handleUpperPacket(packet);
+//    }
+//}
 
 void EthernetMac::handleEndTxPeriod()
 {
@@ -285,10 +285,10 @@ void EthernetMac::handleEndTxPeriod()
         scheduleEndPausePeriod(pauseUnitsRequested);
         pauseUnitsRequested = 0;
     }
-    else {
-        EV_DETAIL << "Start IFG period\n";
-        scheduleEndIFGPeriod();
-    }
+//    else {
+//        EV_DETAIL << "Start IFG period\n";
+//        scheduleEndIFGPeriod();
+//    }
 }
 
 void EthernetMac::finish()
@@ -362,13 +362,13 @@ void EthernetMac::processPauseCommand(int pauseUnits)
     }
 }
 
-void EthernetMac::scheduleEndIFGPeriod()
-{
-    ASSERT(nullptr == currentTxFrame);
-    changeTransmissionState(WAIT_IFG_STATE);
-    simtime_t endIFGTime = simTime() + (b(INTERFRAME_GAP_BITS).get() / curEtherDescr->txrate);
-    scheduleAt(endIFGTime, endIfgTimer);
-}
+//void EthernetMac::scheduleEndIFGPeriod()
+//{
+//    ASSERT(nullptr == currentTxFrame);
+//    changeTransmissionState(WAIT_IFG_STATE);
+//    simtime_t endIFGTime = simTime() + (b(INTERFRAME_GAP_BITS).get() / curEtherDescr->txrate);
+//    scheduleAt(endIFGTime, endIfgTimer);
+//}
 
 void EthernetMac::scheduleEndPausePeriod(int pauseUnits)
 {

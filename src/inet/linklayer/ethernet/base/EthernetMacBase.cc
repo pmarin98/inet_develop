@@ -181,7 +181,7 @@ EthernetMacBase::~EthernetMacBase()
 {
     delete curTxSignal;
     cancelAndDelete(endTxTimer);
-    cancelAndDelete(endIfgTimer);
+//    cancelAndDelete(endIfgTimer);
     cancelAndDelete(endPauseTimer);
 }
 
@@ -206,7 +206,7 @@ void EthernetMacBase::initialize(int stage)
 
         // initialize self messages
         endTxTimer = new cMessage("EndTransmission", ENDTRANSMISSION);
-        endIfgTimer = new cMessage("EndIFG", ENDIFG);
+//        endIfgTimer = new cMessage("EndIFG", ENDIFG);
         endPauseTimer = new cMessage("EndPause", ENDPAUSE);
 
         // initialize states
@@ -599,8 +599,6 @@ void EthernetMacBase::refreshDisplay() const
 
     if (transmitState == TRANSMITTING_STATE)
         color = "yellow";
-    else if (transmitState == JAMMING_STATE)
-        color = "red";
     else if (transmitState == BACKOFF_STATE)
         color = "white";
     else if (transmitState == PAUSE_STATE)

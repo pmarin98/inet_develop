@@ -37,7 +37,7 @@ class INET_API EthernetMac : public EthernetMacBase
     virtual void finish() override;
 
     // event handlers
-    virtual void handleEndIFGPeriod();
+//    virtual void handleEndIFGPeriod();
     virtual void handleEndTxPeriod();
     virtual void handleEndPausePeriod();
     virtual void handleSelfMessage(cMessage *msg) override;
@@ -48,7 +48,7 @@ class INET_API EthernetMac : public EthernetMacBase
     virtual void processMsgFromNetwork(Signal *signal);
     virtual void processReceivedDataFrame(Packet *packet, const Ptr<const EthernetMacHeader>& frame);
     virtual void processPauseCommand(int pauseUnits);
-    virtual void scheduleEndIFGPeriod();
+//    virtual void scheduleEndIFGPeriod();
     virtual void scheduleEndPausePeriod(int pauseUnits);
     virtual void beginSendFrames();
 
