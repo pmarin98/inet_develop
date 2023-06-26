@@ -188,8 +188,8 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
     virtual void refreshDisplay() const override;
 
     // model change related functions
-    virtual void receiveSignal(cComponent *src, simsignal_t signalId, cObject *obj, cObject *details) override;
-    virtual void refreshConnection();
+//    virtual void receiveSignal(cComponent *src, simsignal_t signalId, cObject *obj, cObject *details) override;
+//    virtual void refreshConnection();
 
     void changeTransmissionState(MacTransmitState newState);
 

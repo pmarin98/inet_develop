@@ -323,28 +323,28 @@ void EthernetMacBase::processAtHandleMessageFinished()
     }
 }
 
-void EthernetMacBase::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj, cObject *details)
-{
-    Enter_Method("%s", cComponent::getSignalName(signalID));
-
-    MacProtocolBase::receiveSignal(source, signalID, obj, details);
-
-    if (signalID == POST_MODEL_CHANGE) {
-        if (auto gcobj = dynamic_cast<cPostPathCreateNotification *>(obj)) {
-            if ((physOutGate == gcobj->pathStartGate) || (physInGate == gcobj->pathEndGate))
-                refreshConnection();
-        }
-        else if (auto gcobj = dynamic_cast<cPostPathCutNotification *>(obj)) {
-            if ((physOutGate == gcobj->pathStartGate) || (physInGate == gcobj->pathEndGate))
-                refreshConnection();
-        }
-        else if (transmissionChannel && dynamic_cast<cPostParameterChangeNotification *>(obj)) { // note: we are subscribed to the channel object too
-            cPostParameterChangeNotification *gcobj = static_cast<cPostParameterChangeNotification *>(obj);
-            if (transmissionChannel == gcobj->par->getOwner())
-                refreshConnection();
-        }
-    }
-}
+//void EthernetMacBase::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj, cObject *details)
+//{
+//    Enter_Method("%s", cComponent::getSignalName(signalID));
+//
+//    MacProtocolBase::receiveSignal(source, signalID, obj, details);
+//
+//    if (signalID == POST_MODEL_CHANGE) {
+//        if (auto gcobj = dynamic_cast<cPostPathCreateNotification *>(obj)) {
+//            if ((physOutGate == gcobj->pathStartGate) || (physInGate == gcobj->pathEndGate))
+//                refreshConnection();
+//        }
+//        else if (auto gcobj = dynamic_cast<cPostPathCutNotification *>(obj)) {
+//            if ((physOutGate == gcobj->pathStartGate) || (physInGate == gcobj->pathEndGate))
+//                refreshConnection();
+//        }
+//        else if (transmissionChannel && dynamic_cast<cPostParameterChangeNotification *>(obj)) { // note: we are subscribed to the channel object too
+//            cPostParameterChangeNotification *gcobj = static_cast<cPostParameterChangeNotification *>(obj);
+//            if (transmissionChannel == gcobj->par->getOwner())
+//                refreshConnection();
+//        }
+//    }
+//}
 
 // TODO REFACTOR
 //void EthernetMacBase::processConnectDisconnect()
@@ -440,18 +440,18 @@ bool EthernetMacBase::verifyCrcAndLength(Packet *packet)
     return true;
 }
 
-void EthernetMacBase::refreshConnection()
-{
-    Enter_Method("refreshConnection");
-
-    bool oldConn = connected;
-// TODO REFACTOR
-//    readChannelParameters(false);
-
-// TODO REFACTOR
-//    if (oldConn != connected)
-//        processConnectDisconnect();
-}
+//void EthernetMacBase::refreshConnection()
+//{
+//    Enter_Method("refreshConnection");
+//
+//    bool oldConn = connected;
+//// TODO REFACTOR
+////    readChannelParameters(false);
+//
+//// TODO REFACTOR
+////    if (oldConn != connected)
+////        processConnectDisconnect();
+//}
 
 bool EthernetMacBase::dropFrameNotForUs(Packet *packet, const Ptr<const EthernetMacHeader>& frame)
 {
