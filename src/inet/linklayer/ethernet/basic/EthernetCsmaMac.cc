@@ -122,15 +122,16 @@ void EthernetCsmaMac::processConnectDisconnect()
     }
 }
 
-void EthernetCsmaMac::readChannelParameters(bool errorWhenAsymmetric)
-{
-    EthernetMacBase::readChannelParameters(errorWhenAsymmetric);
-
-    if (connected && !duplexMode) {
-        if (curEtherDescr->halfDuplexFrameMinBytes < B(0))
-            throw cRuntimeError("%g bps Ethernet only supports full-duplex links", curEtherDescr->txrate);
-    }
-}
+// TODO REFACTOR
+//void EthernetCsmaMac::readChannelParameters(bool errorWhenAsymmetric)
+//{
+//    EthernetMacBase::readChannelParameters(errorWhenAsymmetric);
+//
+//    if (connected && !duplexMode) {
+//        if (curEtherDescr->halfDuplexFrameMinBytes < B(0))
+//            throw cRuntimeError("%g bps Ethernet only supports full-duplex links", curEtherDescr->txrate);
+//    }
+//}
 
 void EthernetCsmaMac::handleSelfMessage(cMessage *msg)
 {
@@ -169,8 +170,9 @@ void EthernetCsmaMac::handleSelfMessage(cMessage *msg)
 
 void EthernetCsmaMac::handleMessageWhenUp(cMessage *msg)
 {
-    if (channelsDiffer)
-        readChannelParameters(true);
+    // TODO REFACTOR
+//    if (channelsDiffer)
+//        readChannelParameters(true);
 
     printState();
 

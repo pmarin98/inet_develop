@@ -86,7 +86,8 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
     virtual void handleRetransmission();
 
     // helpers
-    virtual void readChannelParameters(bool errorWhenAsymmetric) override;
+    // TODO REFACTOR
+//    virtual void readChannelParameters(bool errorWhenAsymmetric) override;
     virtual void handleUpperPacket(Packet *msg) override;
     virtual void processMsgFromNetwork(EthernetSignalBase *msg);
     virtual void scheduleEndIFGPeriod();

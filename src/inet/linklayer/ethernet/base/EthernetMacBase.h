@@ -178,7 +178,8 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
      * Calculates datarates, etc. Verifies the datarates on the incoming/outgoing channels,
      * and throws error when they differ and the parameter errorWhenAsymmetric is true.
      */
-    virtual void readChannelParameters(bool errorWhenAsymmetric);
+// TODO REFACTOR
+//    virtual void readChannelParameters(bool errorWhenAsymmetric);
     virtual void printParameters();
 
     // helpers

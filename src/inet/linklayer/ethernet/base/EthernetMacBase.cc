@@ -281,7 +281,8 @@ void EthernetMacBase::handleStartOperation(LifecycleOperation *operation)
 {
     networkInterface->setState(NetworkInterface::State::UP);
     initializeFlags();
-    readChannelParameters(true);
+// TODO REFACTOR
+//    readChannelParameters(true);
 }
 
 void EthernetMacBase::handleStopOperation(LifecycleOperation *operation)
@@ -456,7 +457,8 @@ void EthernetMacBase::refreshConnection()
     Enter_Method("refreshConnection");
 
     bool oldConn = connected;
-    readChannelParameters(false);
+// TODO REFACTOR
+//    readChannelParameters(false);
 
     if (oldConn != connected)
         processConnectDisconnect();
@@ -501,73 +503,74 @@ bool EthernetMacBase::dropFrameNotForUs(Packet *packet, const Ptr<const Ethernet
     return true;
 }
 
-void EthernetMacBase::readChannelParameters(bool errorWhenAsymmetric)
-{
-    // When the connected channels change at runtime, we'll receive
-    // two separate notifications (one for the rx channel and one for the tx one),
-    // so we cannot immediately raise an error when they differ. Rather, we'll need
-    // to verify at the next opportunity (event) that the two channels have eventually
-    // been set to the same value.
-
-    cDatarateChannel *outTrChannel = check_and_cast_nullable<cDatarateChannel *>(physOutGate->findTransmissionChannel());
-    cDatarateChannel *inTrChannel = check_and_cast_nullable<cDatarateChannel *>(physInGate->findIncomingTransmissionChannel());
-
-    connected = physOutGate->getPathEndGate()->isConnected() && physInGate->getPathStartGate()->isConnected();
-
-    if (connected && ((!outTrChannel) || (!inTrChannel)))
-        throw cRuntimeError("Ethernet phys gate must be connected using a transmission channel");
-
-    double txRate = outTrChannel ? outTrChannel->getNominalDatarate() : 0.0;
-    double rxRate = inTrChannel ? inTrChannel->getNominalDatarate() : 0.0;
-
-    bool rxDisabled = !inTrChannel || inTrChannel->isDisabled();
-    bool txDisabled = !outTrChannel || outTrChannel->isDisabled();
-
-    if (errorWhenAsymmetric && (rxDisabled != txDisabled))
-        throw cRuntimeError("The enablements of the input/output channels differ (rx=%s vs tx=%s)", rxDisabled ? "off" : "on", txDisabled ? "off" : "on");
-
-    if (txDisabled)
-        connected = false;
-
-    bool dataratesDiffer;
-    if (!connected) {
-        curEtherDescr = &nullEtherDescr;
-        dataratesDiffer = false;
-        if (!outTrChannel)
-            transmissionChannel = nullptr;
-        if (networkInterface) {
-            networkInterface->setCarrier(false);
-            networkInterface->setDatarate(0);
-        }
-    }
-    else {
-        if (outTrChannel && !transmissionChannel)
-            outTrChannel->subscribe(POST_MODEL_CHANGE, this);
-        transmissionChannel = outTrChannel;
-        dataratesDiffer = (txRate != rxRate);
-    }
-
-    channelsDiffer = dataratesDiffer || (rxDisabled != txDisabled);
-
-    if (errorWhenAsymmetric && dataratesDiffer)
-        throw cRuntimeError("The input/output datarates differ (rx=%g bps vs tx=%g bps)", rxRate, txRate);
-
-    if (connected) {
-        // Check valid speeds
-        for (auto& etherDescr : etherDescrs) {
-            if (txRate == etherDescr.txrate) {
-                curEtherDescr = &(etherDescr);
-                if (networkInterface) {
-                    networkInterface->setCarrier(true);
-                    networkInterface->setDatarate(txRate);
-                }
-                return;
-            }
-        }
-        throw cRuntimeError("Invalid transmission rate %g bps on channel %s at module %s",
-                txRate, transmissionChannel->getFullPath().c_str(), getFullPath().c_str());
-    }
-}
+// TODO REFACTOR
+//void EthernetMacBase::readChannelParameters(bool errorWhenAsymmetric)
+//{
+//    // When the connected channels change at runtime, we'll receive
+//    // two separate notifications (one for the rx channel and one for the tx one),
+//    // so we cannot immediately raise an error when they differ. Rather, we'll need
+//    // to verify at the next opportunity (event) that the two channels have eventually
+//    // been set to the same value.
+//
+//    cDatarateChannel *outTrChannel = check_and_cast_nullable<cDatarateChannel *>(physOutGate->findTransmissionChannel());
+//    cDatarateChannel *inTrChannel = check_and_cast_nullable<cDatarateChannel *>(physInGate->findIncomingTransmissionChannel());
+//
+//    connected = physOutGate->getPathEndGate()->isConnected() && physInGate->getPathStartGate()->isConnected();
+//
+//    if (connected && ((!outTrChannel) || (!inTrChannel)))
+//        throw cRuntimeError("Ethernet phys gate must be connected using a transmission channel");
+//
+//    double txRate = outTrChannel ? outTrChannel->getNominalDatarate() : 0.0;
+//    double rxRate = inTrChannel ? inTrChannel->getNominalDatarate() : 0.0;
+//
+//    bool rxDisabled = !inTrChannel || inTrChannel->isDisabled();
+//    bool txDisabled = !outTrChannel || outTrChannel->isDisabled();
+//
+//    if (errorWhenAsymmetric && (rxDisabled != txDisabled))
+//        throw cRuntimeError("The enablements of the input/output channels differ (rx=%s vs tx=%s)", rxDisabled ? "off" : "on", txDisabled ? "off" : "on");
+//
+//    if (txDisabled)
+//        connected = false;
+//
+//    bool dataratesDiffer;
+//    if (!connected) {
+//        curEtherDescr = &nullEtherDescr;
+//        dataratesDiffer = false;
+//        if (!outTrChannel)
+//            transmissionChannel = nullptr;
+//        if (networkInterface) {
+//            networkInterface->setCarrier(false);
+//            networkInterface->setDatarate(0);
+//        }
+//    }
+//    else {
+//        if (outTrChannel && !transmissionChannel)
+//            outTrChannel->subscribe(POST_MODEL_CHANGE, this);
+//        transmissionChannel = outTrChannel;
+//        dataratesDiffer = (txRate != rxRate);
+//    }
+//
+//    channelsDiffer = dataratesDiffer || (rxDisabled != txDisabled);
+//
+//    if (errorWhenAsymmetric && dataratesDiffer)
+//        throw cRuntimeError("The input/output datarates differ (rx=%g bps vs tx=%g bps)", rxRate, txRate);
+//
+//    if (connected) {
+//        // Check valid speeds
+//        for (auto& etherDescr : etherDescrs) {
+//            if (txRate == etherDescr.txrate) {
+//                curEtherDescr = &(etherDescr);
+//                if (networkInterface) {
+//                    networkInterface->setCarrier(true);
+//                    networkInterface->setDatarate(txRate);
+//                }
+//                return;
+//            }
+//        }
+//        throw cRuntimeError("Invalid transmission rate %g bps on channel %s at module %s",
+//                txRate, transmissionChannel->getFullPath().c_str(), getFullPath().c_str());
+//    }
+//}
 
 void EthernetMacBase::printParameters()
 {

@@ -59,8 +59,9 @@ void EthernetMac::initializeFlags()
 
 void EthernetMac::handleMessageWhenUp(cMessage *msg)
 {
-    if (channelsDiffer)
-        readChannelParameters(true);
+// TODO REFACTOR
+//    if (channelsDiffer)
+//        readChannelParameters(true);
 
     if (msg->isSelfMessage())
         handleSelfMessage(msg);
