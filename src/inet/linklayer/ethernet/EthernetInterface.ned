@@ -10,9 +10,9 @@ package inet.linklayer.ethernet;
 import inet.linklayer.contract.IEtherMac;
 import inet.linklayer.contract.IEthernetInterface;
 import inet.networklayer.common.NetworkInterface;
+import inet.physicallayer.wired.ethernet.IEthernetPhy;
 import inet.queueing.contract.IPacketQueue;
 import inet.queueing.contract.ITrafficConditioner;
-
 
 //
 // This module represents an Ethernet network interface.
@@ -56,12 +56,19 @@ module EthernetInterface extends NetworkInterface like IEthernetInterface
             parameters:
                 @display("p=500,300");
         }
+        phy: <default("EthernetCsmaPhy")> like IEthernetPhy {
+            parameters:
+                @display("p=500,450");
+        }
     connections:
         upperLayerIn --> { @display("m=n"); } --> egressTC.in;
         egressTC.out --> queue.in;
         queue.out --> mac.upperLayerIn;
 
-        mac.phys <--> { @display("m=s"); } <--> phys;
+        mac.phys$o --> phy.upperLayerIn;
+        phy.upperLayerOut --> mac.phys$i;
+
+        phy.phys <--> { @display("m=s"); } <--> phys;
 
         mac.upperLayerOut --> ingressTC.in;
         ingressTC.out --> { @display("m=n"); } --> upperLayerOut;

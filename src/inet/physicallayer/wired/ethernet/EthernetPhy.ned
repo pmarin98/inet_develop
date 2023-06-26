@@ -7,7 +7,7 @@
 
 package inet.physicallayer.wired.ethernet;
 
-simple EthernetPhy
+simple EthernetPhy like IEthernetPhy
 {
     parameters:
         @display("i=block/rxtx");
