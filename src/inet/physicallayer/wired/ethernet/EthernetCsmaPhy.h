@@ -51,11 +51,9 @@ class INET_API EthernetCsmaPhy : public EthernetPhyBase
 
   protected:
     // states
-    int backoffs = 0; // value of backoff for exponential back-off algorithm
     cFSM fsm;
 
     cMessage *endRxTimer = nullptr;
-    cMessage *endBackoffTimer = nullptr;
     cMessage *endJammingTimer = nullptr;
 
     // list of receptions during reconnect state; an additional special entry (with packetTreeId=-1)
@@ -71,23 +69,18 @@ class INET_API EthernetCsmaPhy : public EthernetPhyBase
     simtime_t totalSuccessfulRxTxTime; // total duration of successful transmissions on channel
     simtime_t channelBusySince; // needed for computing totalCollisionTime/totalSuccessfulRxTxTime
     unsigned long numCollisions = 0; // collisions (NOT number of collided frames!) sensed
-//    unsigned long numBackoffs = 0; // number of retransmissions
     int framesSentInBurst = 0; // Number of frames send out in current frame burst
     B bytesSentInBurst = B(0); // Number of bytes transmitted in current frame burst
 
     static simsignal_t collisionSignal;
-    static simsignal_t backoffSlotsGeneratedSignal;
 
   protected:
     // event handlers
     virtual void handleSelfMessage(cMessage *msg) override;
     virtual void handleEndIFGPeriod();
-//    virtual void handleEndPausePeriod();
     virtual void handleEndTxPeriod();
     virtual void handleEndRxPeriod();
-//    virtual void handleEndBackoffPeriod();
     virtual void handleEndJammingPeriod();
-//    virtual void handleRetransmission();
     virtual void handleWithFsm();
 
     // helpers
@@ -96,7 +89,6 @@ class INET_API EthernetCsmaPhy : public EthernetPhyBase
     virtual void processMsgFromNetwork(EthernetSignalBase *msg);
     virtual void scheduleEndIFGPeriod();
     virtual void fillIFGInBurst();
-//    virtual void scheduleEndPausePeriod(int pauseUnits);
     virtual void beginSendFrames();
     virtual void sendJamSignal();
     virtual void startFrameTransmission();

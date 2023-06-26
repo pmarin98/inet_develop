@@ -36,8 +36,6 @@ class INET_API EthernetPhyBase : public PhyProtocolBase, public queueing::IActiv
         SEND_IFG_STATE,
         TRANSMITTING_STATE,
         JAMMING_STATE,
-//        BACKOFF_STATE,
-//        PAUSE_STATE
         // FIXME add TX_OFF_STATE
     };
 
@@ -54,10 +52,8 @@ class INET_API EthernetPhyBase : public PhyProtocolBase, public queueing::IActiv
     enum SelfMsgKindValues {
         ENDIFG = 100,
         ENDRECEPTION,
-        ENDBACKOFF,
         ENDTRANSMISSION,
         ENDJAMMING,
-        ENDPAUSE
     };
 
     enum {
@@ -104,7 +100,6 @@ class INET_API EthernetPhyBase : public PhyProtocolBase, public queueing::IActiv
     // self messages
     cMessage *endTxTimer = nullptr;
     cMessage *endIfgTimer = nullptr;
-    cMessage *endPauseTimer = nullptr;
 
     // RX / TX signals:
     EthernetSignalBase *curTxSignal = nullptr;
@@ -120,12 +115,8 @@ class INET_API EthernetPhyBase : public PhyProtocolBase, public queueing::IActiv
     unsigned long numDroppedBitError = 0; // frames dropped because of bit errors
     unsigned long numDroppedNotForUs = 0; // frames dropped because destination address didn't match
     unsigned long numFramesPassedToHL = 0; // frames passed to higher layer
-    unsigned long numPauseFramesRcvd = 0; // PAUSE frames received from network
-    unsigned long numPauseFramesSent = 0; // PAUSE frames sent
 
     static simsignal_t rxPkOkSignal;
-    static simsignal_t txPausePkUnitsSignal;
-    static simsignal_t rxPausePkUnitsSignal;
 
     static simsignal_t transmissionStateChangedSignal;
     static simsignal_t receptionStateChangedSignal;

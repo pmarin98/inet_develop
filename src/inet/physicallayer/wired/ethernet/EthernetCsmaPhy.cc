@@ -36,14 +36,12 @@ static std::ostream& operator<<(std::ostream& out, cMessage *msg)
 Define_Module(EthernetCsmaPhy);
 
 simsignal_t EthernetCsmaPhy::collisionSignal = registerSignal("collision");
-simsignal_t EthernetCsmaPhy::backoffSlotsGeneratedSignal = registerSignal("backoffSlotsGenerated");
 
 EthernetCsmaPhy::~EthernetCsmaPhy()
 {
     for (auto& rx : rxSignals)
         delete rx.signal;
     cancelAndDelete(endRxTimer);
-    cancelAndDelete(endBackoffTimer);
     cancelAndDelete(endJammingTimer);
 }
 
@@ -53,14 +51,10 @@ void EthernetCsmaPhy::initialize(int stage)
 
     if (stage == INITSTAGE_LOCAL) {
         endRxTimer = new cMessage("EndReception", ENDRECEPTION);
-        endBackoffTimer = new cMessage("EndBackoff", ENDBACKOFF);
         endJammingTimer = new cMessage("EndJamming", ENDJAMMING);
 
         // initialize state info
-        backoffs = 0;
         setTxUpdateSupport(true);
-
-        WATCH(backoffs);
     }
 }
 
@@ -80,7 +74,6 @@ void EthernetCsmaPhy::initializeStatistics()
     numCollisions = 0;
 
     WATCH(numCollisions);
-//    WATCH(numBackoffs);
 }
 
 void EthernetCsmaPhy::initializeFlags()
@@ -99,7 +92,6 @@ void EthernetCsmaPhy::processConnectDisconnect()
             delete rx.signal;
         rxSignals.clear();
         cancelEvent(endRxTimer);
-        cancelEvent(endBackoffTimer);
         cancelEvent(endJammingTimer);
         bytesSentInBurst = B(0);
         framesSentInBurst = 0;
@@ -151,16 +143,8 @@ void EthernetCsmaPhy::handleSelfMessage(cMessage *msg)
             handleEndRxPeriod();
             break;
 
-        case ENDBACKOFF:
-//            handleEndBackoffPeriod0();
-            break;
-
         case ENDJAMMING:
             handleEndJammingPeriod();
-            break;
-
-        case ENDPAUSE:
-//            handleEndPausePeriod();
             break;
 
         default:
@@ -470,22 +454,11 @@ void EthernetCsmaPhy::handleEndTxPeriod()
         totalSuccessfulRxTxTime += dt;
     }
 
-    backoffs = 0;
-
-    // check for and obey received PAUSE frames after each transmission
-//    if (pauseUnitsRequested > 0) {
-//        // if we received a PAUSE frame recently, go into PAUSE state
-//        EV_DETAIL << "Going to PAUSE mode for " << pauseUnitsRequested << " time units\n";
-//        scheduleEndPausePeriod(pauseUnitsRequested);
-//        pauseUnitsRequested = 0;
-//    }
-//    else {
-        EV_DETAIL << "Start IFG period\n";
-        if (canContinueBurst(INTERFRAME_GAP_BITS))
-            fillIFGInBurst();
-        else
-            scheduleEndIFGPeriod();
-//    }
+    EV_DETAIL << "Start IFG period\n";
+    if (canContinueBurst(INTERFRAME_GAP_BITS))
+        fillIFGInBurst();
+    else
+        scheduleEndIFGPeriod();
 }
 
 void EthernetCsmaPhy::handleEndRxPeriod()
@@ -557,24 +530,6 @@ void EthernetCsmaPhy::handleWithFsm()
     }
 }
 
-//void EthernetCsmaPhy::handleEndBackoffPeriod()
-//{
-//    if (transmitState != BACKOFF_STATE)
-//        throw cRuntimeError("At end of BACKOFF and not in BACKOFF_STATE");
-//
-//    if (currentTxFrame == nullptr)
-//        throw cRuntimeError("At end of BACKOFF and no frame to transmit");
-//
-//    if (receiveState == RX_IDLE_STATE) {
-//        EV_DETAIL << "Backoff period ended, wait IFG\n";
-//        scheduleEndIFGPeriod();
-//    }
-//    else {
-//        EV_DETAIL << "Backoff period ended but channel is not free, idling\n";
-//        changeTransmissionState(TX_IDLE_STATE);
-//    }
-//}
-
 void EthernetCsmaPhy::sendSignal(EthernetSignalBase *signal, simtime_t_cref duration)
 {
     ASSERT(curTxSignal == nullptr);
@@ -613,39 +568,8 @@ void EthernetCsmaPhy::handleEndJammingPeriod()
 
     emit(transmissionEndedSignal, curTxSignal);
     txFinished();
-    EV_DETAIL << "Jamming finished, executing backoff\n";
-//    handleRetransmission();
+    EV_DETAIL << "Jamming finished\n";
 }
-
-//void EthernetCsmaPhy::handleRetransmission()
-//{
-//    if (++backoffs > MAX_ATTEMPTS) {
-//        EV_DETAIL << "Number of retransmit attempts of frame exceeds maximum, cancelling transmission of frame\n";
-//        PacketDropDetails details;
-//        details.setReason(RETRY_LIMIT_REACHED);
-//        details.setLimit(MAX_ATTEMPTS);
-//        dropCurrentTxFrame(details);
-//        changeTransmissionState(TX_IDLE_STATE);
-//        backoffs = 0;
-//
-//// TODO REFACTOR
-////        if (canDequeuePacket()) {
-////            Packet *packet = dequeuePacket();
-////            handleUpperPacket(packet);
-////        }
-//        return;
-//    }
-//
-//    int backoffRange = (backoffs >= BACKOFF_RANGE_LIMIT) ? 1024 : (1 << backoffs);
-//    int slotNumber = intuniform(0, backoffRange - 1);
-//    EV_DETAIL << "Executing backoff procedure (slotNumber=" << slotNumber << ", backoffRange=[0," << backoffRange - 1 << "]" << endl;
-//
-//    scheduleAfter(slotNumber * curEtherDescr->slotTime, endBackoffTimer);
-//    changeTransmissionState(BACKOFF_STATE);
-//    emit(backoffSlotsGeneratedSignal, slotNumber);
-//
-//    numBackoffs++;
-//}
 
 void EthernetCsmaPhy::printState()
 {
@@ -659,8 +583,6 @@ void EthernetCsmaPhy::printState()
         CASE(SEND_IFG_STATE);
         CASE(TRANSMITTING_STATE);
         CASE(JAMMING_STATE);
-//        CASE(BACKOFF_STATE);
-//        CASE(PAUSE_STATE);
     }
 
     EV_DETAIL << ",  receiveState: ";
@@ -671,7 +593,6 @@ void EthernetCsmaPhy::printState()
         CASE(RX_RECONNECT_STATE);
     }
 
-    EV_DETAIL << ",  backoffs: " << backoffs;
     EV_DETAIL << ",  numConcurrentRxTransmissions: " << rxSignals.size();
     EV_DETAIL << endl;
 
@@ -688,17 +609,7 @@ void EthernetCsmaPhy::finish()
     recordScalar("rx channel utilization (%)", 100 * (totalSuccessfulRxTxTime / t));
     recordScalar("rx channel collision (%)", 100 * (totalCollisionTime / t));
     recordScalar("collisions", numCollisions);
-//    recordScalar("backoffs", numBackoffs);
 }
-
-//void EthernetCsmaPhy::handleEndPausePeriod()
-//{
-//    if (transmitState != PAUSE_STATE)
-//        throw cRuntimeError("At end of PAUSE and not in PAUSE_STATE");
-//
-//    EV_DETAIL << "Pause finished, resuming transmissions\n";
-//    beginSendFrames();
-//}
 
 void EthernetCsmaPhy::frameReceptionComplete()
 {
@@ -788,14 +699,6 @@ bool EthernetCsmaPhy::canContinueBurst(b remainingGapLength)
 //    }
     return false;
 }
-
-//void EthernetCsmaPhy::scheduleEndPausePeriod(int pauseUnits)
-//{
-//    // length is interpreted as 512-bit-time units
-//    simtime_t pausePeriod = pauseUnits * PAUSE_UNIT_BITS / curEtherDescr->txrate;
-//    scheduleAfter(pausePeriod, endPauseTimer);
-//    changeTransmissionState(PAUSE_STATE);
-//}
 
 void EthernetCsmaPhy::beginSendFrames()
 {

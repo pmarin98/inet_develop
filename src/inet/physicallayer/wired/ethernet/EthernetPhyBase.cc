@@ -167,8 +167,6 @@ static int compareEthernetFrameType(Packet *a, Packet *b)
 Register_Packet_Comparator_Function(EthernetFrameTypeComparator, compareEthernetFrameType);
 
 simsignal_t EthernetPhyBase::rxPkOkSignal = registerSignal("rxPkOk");
-simsignal_t EthernetPhyBase::txPausePkUnitsSignal = registerSignal("txPausePkUnits");
-simsignal_t EthernetPhyBase::rxPausePkUnitsSignal = registerSignal("rxPausePkUnits");
 
 simsignal_t EthernetPhyBase::transmissionStateChangedSignal = registerSignal("transmissionStateChanged");
 simsignal_t EthernetPhyBase::receptionStateChangedSignal = registerSignal("receptionStateChanged");
@@ -184,7 +182,6 @@ EthernetPhyBase::~EthernetPhyBase()
     delete curTxSignal;
     cancelAndDelete(endTxTimer);
     cancelAndDelete(endIfgTimer);
-    cancelAndDelete(endPauseTimer);
 }
 
 void EthernetPhyBase::initialize(int stage)
@@ -207,7 +204,6 @@ void EthernetPhyBase::initialize(int stage)
         // initialize self messages
         endTxTimer = new cMessage("EndTransmission", ENDTRANSMISSION);
         endIfgTimer = new cMessage("EndIFG", ENDIFG);
-        endPauseTimer = new cMessage("EndPause", ENDPAUSE);
 
         // initialize states
         transmitState = TX_IDLE_STATE;
@@ -246,7 +242,6 @@ void EthernetPhyBase::initializeStatistics()
     numFramesSent = numFramesReceivedOK = numBytesSent = numBytesReceivedOK = 0;
     numFramesPassedToHL = numDroppedBitError = numDroppedNotForUs = 0;
     numFramesFromHL = numDroppedIfaceDown = numDroppedPkFromHLIfaceDown = 0;
-    numPauseFramesRcvd = numPauseFramesSent = 0;
 
     WATCH(numFramesSent);
     WATCH(numFramesReceivedOK);
@@ -258,8 +253,6 @@ void EthernetPhyBase::initializeStatistics()
     WATCH(numDroppedBitError);
     WATCH(numDroppedNotForUs);
     WATCH(numFramesPassedToHL);
-    WATCH(numPauseFramesRcvd);
-    WATCH(numPauseFramesSent);
 }
 
 void EthernetPhyBase::configureNetworkInterface()
@@ -345,7 +338,6 @@ void EthernetPhyBase::processConnectDisconnect()
 {
     if (!connected) {
         cancelEvent(endIfgTimer);
-        cancelEvent(endPauseTimer);
 
         if (curTxSignal) {
 #if OMNETPP_BUILDNUM < 2001
@@ -560,10 +552,6 @@ void EthernetPhyBase::refreshDisplay() const
         color = "red";
     else if (receiveState == RECEIVING_STATE)
         color = "#4040ff";
-//    else if (transmitState == BACKOFF_STATE)
-//        color = "white";
-//    else if (transmitState == PAUSE_STATE)
-//        color = "gray";
     else
         color = "";
 
