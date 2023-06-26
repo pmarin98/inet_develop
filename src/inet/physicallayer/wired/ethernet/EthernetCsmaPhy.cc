@@ -527,6 +527,36 @@ void EthernetCsmaPhy::handleEndRxPeriod()
     }
 }
 
+void EthernetCsmaPhy::handleWithFsm()
+{
+    FSMA_Switch(fsm)
+    {
+        FSMA_State(TX_IDLE_STATE)
+        {
+            FSMA_Event_Transition(Transmit,
+                                  true,
+                                  WAIT_IFG_STATE,
+            );
+        }
+        FSMA_State(WAIT_IFG_STATE)
+        {
+
+        }
+        FSMA_State(SEND_IFG_STATE)
+        {
+
+        }
+        FSMA_State(TRANSMITTING_STATE)
+        {
+
+        }
+        FSMA_State(JAMMING_STATE)
+        {
+
+        }
+    }
+}
+
 //void EthernetCsmaPhy::handleEndBackoffPeriod()
 //{
 //    if (transmitState != BACKOFF_STATE)

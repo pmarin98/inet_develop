@@ -7,6 +7,7 @@
 #ifndef __INET_ETHERNETCSMAMAC_H
 #define __INET_ETHERNETCSMAMAC_H
 
+#include "inet/common/FSMA.h"
 #include "inet/common/packet/Packet.h"
 #include "inet/linklayer/ethernet/base/EthernetMacBase.h"
 
@@ -39,6 +40,7 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
   protected:
     // states
     int backoffs = 0; // value of backoff for exponential back-off algorithm
+    cFSM fsm;
 
     cMessage *endRxTimer = nullptr;
     cMessage *endBackoffTimer = nullptr;
@@ -74,6 +76,7 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
     virtual void handleEndBackoffPeriod();
 //    virtual void handleEndJammingPeriod();
     virtual void handleRetransmission();
+    virtual void handleWithFsm();
 
     // helpers
     // TODO REFACTOR

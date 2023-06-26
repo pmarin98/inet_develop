@@ -236,6 +236,32 @@ void EthernetCsmaMac::handleUpperPacket(Packet *packet)
     startFrameTransmission();
 }
 
+void EthernetCsmaMac::handleWithFsm()
+{
+    FSMA_Switch(fsm)
+    {
+        FSMA_State(TX_IDLE_STATE)
+        {
+            FSMA_Event_Transition(Transmit,
+                                  true,
+                                  TRANSMITTING_STATE,
+            );
+        }
+        FSMA_State(TRANSMITTING_STATE)
+        {
+
+        }
+        FSMA_State(BACKOFF_STATE)
+        {
+
+        }
+        FSMA_State(PAUSE_STATE)
+        {
+
+        }
+    }
+}
+
 void EthernetCsmaMac::processMsgFromNetwork(Packet *signal)
 {
 //    simtime_t endRxTime = simTime() + signal->getRemainingDuration();

@@ -7,6 +7,7 @@
 #ifndef __INET_ETHERNETCSMAPHY_H
 #define __INET_ETHERNETCSMAPHY_H
 
+#include "inet/common/FSMA.h"
 #include "inet/common/packet/Packet.h"
 #include "inet/physicallayer/wired/ethernet/EthernetPhyBase.h"
 
@@ -51,6 +52,7 @@ class INET_API EthernetCsmaPhy : public EthernetPhyBase
   protected:
     // states
     int backoffs = 0; // value of backoff for exponential back-off algorithm
+    cFSM fsm;
 
     cMessage *endRxTimer = nullptr;
     cMessage *endBackoffTimer = nullptr;
@@ -86,6 +88,7 @@ class INET_API EthernetCsmaPhy : public EthernetPhyBase
 //    virtual void handleEndBackoffPeriod();
     virtual void handleEndJammingPeriod();
 //    virtual void handleRetransmission();
+    virtual void handleWithFsm();
 
     // helpers
     virtual void readChannelParameters(bool errorWhenAsymmetric) override;
