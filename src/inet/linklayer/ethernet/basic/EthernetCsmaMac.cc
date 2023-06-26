@@ -39,8 +39,6 @@ simsignal_t EthernetCsmaMac::backoffSlotsGeneratedSignal = registerSignal("backo
 
 EthernetCsmaMac::~EthernetCsmaMac()
 {
-    for (auto& rx : rxSignals)
-        delete rx.signal;
     cancelAndDelete(endRxTimer);
     cancelAndDelete(endBackoffTimer);
     cancelAndDelete(endJammingTimer);
@@ -186,7 +184,7 @@ void EthernetCsmaMac::handleMessageWhenUp(cMessage *msg)
     else if (msg->getArrivalGateId() == upperLayerInGateId)
         handleUpperPacket(check_and_cast<Packet *>(msg));
     else if (msg->getArrivalGate() == physInGate)
-        handleSignalFromNetwork(check_and_cast<EthernetSignalBase *>(msg));
+        handleSignalFromNetwork(check_and_cast<Packet *>(msg));
     else
         throw cRuntimeError("Message received from unknown gate");
 
@@ -194,48 +192,11 @@ void EthernetCsmaMac::handleMessageWhenUp(cMessage *msg)
     printState();
 }
 
-void EthernetCsmaMac::handleSignalFromNetwork(EthernetSignalBase *signal)
+void EthernetCsmaMac::handleSignalFromNetwork(Packet *signal)
 {
     EV_DETAIL << "Received " << signal << " from network.\n";
 
-    if (!connected) {
-        EV_WARN << "Interface is not connected -- dropping signal " << signal << endl;
-        if (!signal->isUpdate() && dynamic_cast<EthernetSignal *>(signal)) { // count only signal starts, do not count JAM and IFG packets
-            auto packet = check_and_cast<Packet *>(signal->decapsulate());
-            delete signal;
-            PacketDropDetails details;
-            details.setReason(INTERFACE_DOWN);
-            emit(packetDroppedSignal, packet, &details);
-            delete packet;
-            numDroppedIfaceDown++;
-        }
-        else
-            delete signal;
-        return;
-    }
-
-    // detect cable length violation in half-duplex mode
-    if (!duplexMode) {
-        simtime_t propagationTime = simTime() - signal->getSendingTime();
-        if (propagationTime >= curEtherDescr->maxPropagationDelay) {
-            throw cRuntimeError("Very long frame propagation time detected, maybe cable exceeds "
-                                "maximum allowed length? (%s s corresponds to an approx. %s m cable)",
-                    SIMTIME_STR(propagationTime),
-                    SIMTIME_STR(propagationTime * SPEED_OF_LIGHT_IN_CABLE));
-        }
-    }
-
-    EthernetJamSignal *jamSignal = dynamic_cast<EthernetJamSignal *>(signal);
-
-    if (duplexMode && jamSignal)
-        throw cRuntimeError("Stray jam signal arrived in full-duplex mode");
-
-    if (dynamic_cast<EthernetJamSignal *>(signal)) {
-        updateRxSignals(signal, simTime() + signal->getRemainingDuration());
-        processDetectedCollision();
-    }
-    else
-        processMsgFromNetwork(signal);
+    processMsgFromNetwork(signal);
 }
 
 void EthernetCsmaMac::handleUpperPacket(Packet *packet)
@@ -275,17 +236,17 @@ void EthernetCsmaMac::handleUpperPacket(Packet *packet)
     startFrameTransmission();
 }
 
-void EthernetCsmaMac::processMsgFromNetwork(EthernetSignalBase *signal)
+void EthernetCsmaMac::processMsgFromNetwork(Packet *signal)
 {
-    simtime_t endRxTime = simTime() + signal->getRemainingDuration();
+//    simtime_t endRxTime = simTime() + signal->getRemainingDuration();
 
     if (!duplexMode && receiveState == RX_RECONNECT_STATE) {
-        updateRxSignals(signal, endRxTime);
+//        updateRxSignals(signal, endRxTime);
     }
     else if (!duplexMode && (transmitState == TRANSMITTING_STATE || transmitState == SEND_IFG_STATE)) {
         // since we're half-duplex, receiveState must be RX_IDLE_STATE (asserted at top of handleMessage)
         // set receive state and schedule end of reception
-        updateRxSignals(signal, endRxTime);
+//        updateRxSignals(signal, endRxTime);
         changeReceptionState(RX_COLLISION_STATE);
 
         EV_DETAIL << "Transmission interrupted by incoming frame, handling collision\n";
@@ -301,8 +262,8 @@ void EthernetCsmaMac::processMsgFromNetwork(EthernetSignalBase *signal)
         ASSERT(!signal->isUpdate());
         channelBusySince = simTime();
         EV_INFO << "Reception of " << signal << " started.\n";
-        emit(receptionStartedSignal, signal);
-        updateRxSignals(signal, endRxTime);
+//        emit(receptionStartedSignal, signal);
+//        updateRxSignals(signal, endRxTime);
         changeReceptionState(RECEIVING_STATE);
     }
     else if (!signal->isUpdate() && receiveState == RECEIVING_STATE && endRxTimer->getArrivalTime() - simTime() < curEtherDescr->halfBitTime) {
@@ -315,24 +276,24 @@ void EthernetCsmaMac::processMsgFromNetwork(EthernetSignalBase *signal)
 
         // complete reception of previous frame
         cancelEvent(endRxTimer);
-        frameReceptionComplete();
+        frameReceptionComplete(signal);
 
         // calculate usability
         totalSuccessfulRxTxTime += simTime() - channelBusySince;
         channelBusySince = simTime();
 
         // start receiving next frame
-        updateRxSignals(signal, endRxTime);
+//        updateRxSignals(signal, endRxTime);
         changeReceptionState(RECEIVING_STATE);
     }
     else { // (receiveState==RECEIVING_STATE || receiveState==RX_COLLISION_STATE)
            // handle overlapping receptions
         // EtherFrame or EtherPauseFrame
-        updateRxSignals(signal, endRxTime);
-        if (rxSignals.size() > 1) {
-            EV_DETAIL << "Overlapping receptions -- setting collision state\n";
-            processDetectedCollision();
-        }
+//        updateRxSignals(signal, endRxTime);
+//        if (rxSignals.size() > 1) {
+//            EV_DETAIL << "Overlapping receptions -- setting collision state\n";
+//            processDetectedCollision();
+//        }
     }
 }
 
@@ -509,25 +470,26 @@ void EthernetCsmaMac::handleEndRxPeriod()
 
     switch (receiveState) {
         case RECEIVING_STATE:
-            frameReceptionComplete();
+            // TODO REFACTOR
+//            frameReceptionComplete();
             totalSuccessfulRxTxTime += dt;
             break;
 
         case RX_COLLISION_STATE:
             EV_DETAIL << "Incoming signals finished after collision\n";
             totalCollisionTime += dt;
-            for (auto& rx : rxSignals) {
-                delete rx.signal;
-            }
-            rxSignals.clear();
+//            for (auto& rx : rxSignals) {
+//                delete rx.signal;
+//            }
+//            rxSignals.clear();
             break;
 
         case RX_RECONNECT_STATE:
             EV_DETAIL << "Incoming signals finished or reconnect time elapsed after reconnect\n";
-            for (auto& rx : rxSignals) {
-                delete rx.signal;
-            }
-            rxSignals.clear();
+//            for (auto& rx : rxSignals) {
+//                delete rx.signal;
+//            }
+//            rxSignals.clear();
             break;
 
         default:
@@ -658,7 +620,7 @@ void EthernetCsmaMac::printState()
     }
 
     EV_DETAIL << ",  backoffs: " << backoffs;
-    EV_DETAIL << ",  numConcurrentRxTransmissions: " << rxSignals.size();
+//    EV_DETAIL << ",  numConcurrentRxTransmissions: " << rxSignals.size();
     EV_DETAIL << ",  queueLength: " << txQueue->getNumPackets();
     EV_DETAIL << endl;
 
@@ -687,24 +649,10 @@ void EthernetCsmaMac::handleEndPausePeriod()
     beginSendFrames();
 }
 
-void EthernetCsmaMac::frameReceptionComplete()
+void EthernetCsmaMac::frameReceptionComplete(Packet *packet)
 {
-    ASSERT(rxSignals.size() == 1);
-    EthernetSignalBase *signal = rxSignals[0].signal;
-    rxSignals.clear();
-
-    if (dynamic_cast<EthernetFilledIfgSignal *>(signal) != nullptr) {
-        delete signal;
-        return;
-    }
-    if (signal->getSrcMacFullDuplex() != duplexMode)
-        throw cRuntimeError("Ethernet misconfiguration: MACs on the same link must be all in full duplex mode, or all in half-duplex mode");
-
-    emit(receptionEndedSignal, signal);
-
-    bool hasBitError = signal->hasBitError();
-    auto packet = check_and_cast<Packet *>(signal->decapsulate());
-    delete signal;
+    bool hasBitError = packet->hasBitError();
+    delete packet;
     emit(packetReceivedFromLowerSignal, packet);
 
     if (hasBitError || !verifyCrcAndLength(packet)) {
@@ -841,34 +789,6 @@ void EthernetCsmaMac::beginSendFrames()
         // No more frames, set transmitter to idle
         changeTransmissionState(TX_IDLE_STATE);
         EV_DETAIL << "No more frames to send, transmitter set to idle\n";
-    }
-}
-
-void EthernetCsmaMac::updateRxSignals(EthernetSignalBase *signal, simtime_t endRxTime)
-{
-    simtime_t maxEndRxTime = endRxTime;
-    bool found = false;
-    bool isUpdate = signal->isUpdate();
-    long signalTransmissionId = signal->getTransmissionId();
-
-    for (auto& rx : rxSignals) {
-        if (isUpdate && rx.transmissionId == signalTransmissionId) {
-            ASSERT(!found);
-            found = true;
-            delete rx.signal;
-            rx.signal = signal;
-            rx.endRxTime = endRxTime;
-        }
-
-        if (rx.endRxTime > maxEndRxTime)
-            maxEndRxTime = rx.endRxTime;
-    }
-
-    if (!found)
-        rxSignals.push_back(RxSignal(signalTransmissionId, signal, endRxTime));
-
-    if (endRxTimer->getArrivalTime() != maxEndRxTime || endRxTime == maxEndRxTime) {
-        rescheduleAt(maxEndRxTime, endRxTimer);
     }
 }
 

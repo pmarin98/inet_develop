@@ -37,16 +37,6 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
     virtual void finish() override;
 
   protected:
-    class INET_API RxSignal {
-      public:
-        long transmissionId = -1;
-        EthernetSignalBase *signal = nullptr;
-        simtime_t endRxTime;
-        RxSignal(long transmissionId, EthernetSignalBase *signal, simtime_t_cref endRxTime) : transmissionId(transmissionId), signal(signal), endRxTime(endRxTime) {}
-    };
-    std::vector<RxSignal> rxSignals;
-
-  protected:
     // states
     int backoffs = 0; // value of backoff for exponential back-off algorithm
 
@@ -89,22 +79,22 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
     // TODO REFACTOR
 //    virtual void readChannelParameters(bool errorWhenAsymmetric) override;
     virtual void handleUpperPacket(Packet *msg) override;
-    virtual void processMsgFromNetwork(EthernetSignalBase *msg);
+    virtual void processMsgFromNetwork(Packet *msg);
     virtual void scheduleEndIFGPeriod();
     virtual void fillIFGInBurst();
     virtual void scheduleEndPausePeriod(int pauseUnits);
     virtual void beginSendFrames();
     virtual void sendJamSignal();
     virtual void startFrameTransmission();
-    virtual void frameReceptionComplete();
+    virtual void frameReceptionComplete(Packet *packet);
     virtual void processReceivedDataFrame(Packet *frame);
     virtual void processReceivedControlFrame(Packet *packet);
     // TODO REFACTOR
 //    virtual void processConnectDisconnect() override;
     virtual void processDetectedCollision();
     virtual void sendSignal(Packet *packet);
-    virtual void handleSignalFromNetwork(EthernetSignalBase *signal);
-    virtual void updateRxSignals(EthernetSignalBase *signal, simtime_t endRxTime);
+    virtual void handleSignalFromNetwork(Packet *signal);
+//    virtual void updateRxSignals(EthernetSignalBase *signal, simtime_t endRxTime);
     virtual void dropCurrentTxFrame(PacketDropDetails& details) override;
     bool canContinueBurst(b remainingGapLength);
 
