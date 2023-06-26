@@ -36,8 +36,8 @@ class INET_API EthernetPhyBase : public PhyProtocolBase, public queueing::IActiv
         SEND_IFG_STATE,
         TRANSMITTING_STATE,
         JAMMING_STATE,
-        BACKOFF_STATE,
-        PAUSE_STATE
+//        BACKOFF_STATE,
+//        PAUSE_STATE
         // FIXME add TX_OFF_STATE
     };
 
@@ -100,7 +100,6 @@ class INET_API EthernetPhyBase : public PhyProtocolBase, public queueing::IActiv
     MacTransmitState transmitState = static_cast<MacTransmitState>(-1); // "transmit state" of the MAC
     MacReceiveState receiveState = static_cast<MacReceiveState>(-1); // "receive state" of the MAC
     simtime_t lastTxFinishTime; // time of finishing the last transmission
-    int pauseUnitsRequested = 0; // requested pause duration, or zero -- examined at endTx
 
     // self messages
     cMessage *endTxTimer = nullptr;

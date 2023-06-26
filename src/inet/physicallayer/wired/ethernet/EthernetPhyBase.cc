@@ -213,9 +213,6 @@ void EthernetPhyBase::initialize(int stage)
         transmitState = TX_IDLE_STATE;
         receiveState = RX_IDLE_STATE;
 
-        // initialize pause
-        pauseUnitsRequested = 0;
-
         subscribe(POST_MODEL_CHANGE, this);
 
         WATCH(transmitState);
@@ -223,7 +220,6 @@ void EthernetPhyBase::initialize(int stage)
         WATCH(connected);
         WATCH(frameBursting);
         WATCH(promiscuous);
-        WATCH(pauseUnitsRequested);
     }
 }
 
@@ -564,10 +560,10 @@ void EthernetPhyBase::refreshDisplay() const
         color = "red";
     else if (receiveState == RECEIVING_STATE)
         color = "#4040ff";
-    else if (transmitState == BACKOFF_STATE)
-        color = "white";
-    else if (transmitState == PAUSE_STATE)
-        color = "gray";
+//    else if (transmitState == BACKOFF_STATE)
+//        color = "white";
+//    else if (transmitState == PAUSE_STATE)
+//        color = "gray";
     else
         color = "";
 
