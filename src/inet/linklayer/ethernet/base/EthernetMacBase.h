@@ -109,7 +109,7 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
     cMessage *endPauseTimer = nullptr;
 
     // RX / TX signals:
-    EthernetSignalBase *curTxSignal = nullptr;
+    Packet *curTxSignal = nullptr;
 
     // statistics
     unsigned long numFramesSent = 0;
@@ -183,7 +183,8 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
     virtual void printParameters();
 
     // helpers
-    virtual void processConnectDisconnect();
+// TODO REFACTOR
+//    virtual void processConnectDisconnect();
     virtual void encapsulate(Packet *packet);
     virtual void decapsulate(Packet *packet);
 

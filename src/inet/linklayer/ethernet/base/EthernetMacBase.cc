@@ -303,7 +303,8 @@ void EthernetMacBase::handleCrashOperation(LifecycleOperation *operation)
 //    clearQueue();
     connected = false;
     networkInterface->setCarrier(false);
-    processConnectDisconnect();
+// TODO REFACTOR
+//    processConnectDisconnect();
     networkInterface->setState(NetworkInterface::State::DOWN);
 }
 
@@ -315,7 +316,8 @@ void EthernetMacBase::processAtHandleMessageFinished()
             EV << "Ethernet Queue is empty, MAC stopped\n";
             connected = false;
             networkInterface->setCarrier(false);
-            processConnectDisconnect();
+// TODO REFACTOR
+//            processConnectDisconnect();
             networkInterface->setState(NetworkInterface::State::DOWN);
             startActiveOperationExtraTimeOrFinish(par("stopOperationExtraTime"));
         }
@@ -345,57 +347,58 @@ void EthernetMacBase::receiveSignal(cComponent *source, simsignal_t signalID, cO
     }
 }
 
-void EthernetMacBase::processConnectDisconnect()
-{
-    if (!connected) {
-        cancelEvent(endIfgTimer);
-        cancelEvent(endPauseTimer);
-
-        if (curTxSignal) {
-#if OMNETPP_BUILDNUM < 2001
-            if (getSimulation()->getSimulationStage() == STAGE(EVENT) && physOutGate->getPathEndGate()->isConnected()) {
-#else
-            if (getSimulation()->getStage() == STAGE(EVENT) && physOutGate->getPathEndGate()->isConnected()) {
-#endif
-                ASSERT(endTxTimer->isScheduled());
-                curTxSignal->setDuration(endTxTimer->getArrivalTime() - curTxSignal->getCreationTime());
-                simtime_t duration = simTime() - curTxSignal->getCreationTime(); // TODO save and use start tx time
-                cutEthernetSignalEnd(curTxSignal, duration);
-                emit(transmissionEndedSignal, curTxSignal);
-                send(curTxSignal, SendOptions().finishTx(curTxSignal->getId()), physOutGate);
-            }
-            else
-                delete curTxSignal;
-            curTxSignal = nullptr;
-            cancelEvent(endTxTimer);
-        }
-        ASSERT(!endTxTimer->isScheduled());
-
-        if (currentTxFrame) {
-            EV_DETAIL << "Interface is not connected, dropping packet " << currentTxFrame << endl;
-            numDroppedPkFromHLIfaceDown++;
-            PacketDropDetails details;
-            details.setReason(INTERFACE_DOWN);
-            dropCurrentTxFrame(details);
-            lastTxFinishTime = -1.0; // so that it never equals to the current simtime, used for Burst mode detection.
-        }
-
-        // Clear queue
-        while (canDequeuePacket()) {
-            Packet *msg = dequeuePacket();
-            EV_DETAIL << "Interface is not connected, dropping packet " << msg << endl;
-            numDroppedPkFromHLIfaceDown++;
-            PacketDropDetails details;
-            details.setReason(INTERFACE_DOWN);
-            emit(packetDroppedSignal, msg, &details);
-            delete msg;
-        }
-
-        changeTransmissionState(TX_IDLE_STATE); // FIXME replace status to OFF
-        changeReceptionState(RX_IDLE_STATE);
-    }
-    // FIXME when connect, set statuses to RECONNECT or IDLE
-}
+// TODO REFACTOR
+//void EthernetMacBase::processConnectDisconnect()
+//{
+//    if (!connected) {
+//        cancelEvent(endIfgTimer);
+//        cancelEvent(endPauseTimer);
+//
+//        if (curTxSignal) {
+//#if OMNETPP_BUILDNUM < 2001
+//            if (getSimulation()->getSimulationStage() == STAGE(EVENT) && physOutGate->getPathEndGate()->isConnected()) {
+//#else
+//            if (getSimulation()->getStage() == STAGE(EVENT) && physOutGate->getPathEndGate()->isConnected()) {
+//#endif
+//                ASSERT(endTxTimer->isScheduled());
+//                curTxSignal->setDuration(endTxTimer->getArrivalTime() - curTxSignal->getCreationTime());
+//                simtime_t duration = simTime() - curTxSignal->getCreationTime(); // TODO save and use start tx time
+//                cutEthernetSignalEnd(curTxSignal, duration);
+//                emit(transmissionEndedSignal, curTxSignal);
+//                send(curTxSignal, SendOptions().finishTx(curTxSignal->getId()), physOutGate);
+//            }
+//            else
+//                delete curTxSignal;
+//            curTxSignal = nullptr;
+//            cancelEvent(endTxTimer);
+//        }
+//        ASSERT(!endTxTimer->isScheduled());
+//
+//        if (currentTxFrame) {
+//            EV_DETAIL << "Interface is not connected, dropping packet " << currentTxFrame << endl;
+//            numDroppedPkFromHLIfaceDown++;
+//            PacketDropDetails details;
+//            details.setReason(INTERFACE_DOWN);
+//            dropCurrentTxFrame(details);
+//            lastTxFinishTime = -1.0; // so that it never equals to the current simtime, used for Burst mode detection.
+//        }
+//
+//        // Clear queue
+//        while (canDequeuePacket()) {
+//            Packet *msg = dequeuePacket();
+//            EV_DETAIL << "Interface is not connected, dropping packet " << msg << endl;
+//            numDroppedPkFromHLIfaceDown++;
+//            PacketDropDetails details;
+//            details.setReason(INTERFACE_DOWN);
+//            emit(packetDroppedSignal, msg, &details);
+//            delete msg;
+//        }
+//
+//        changeTransmissionState(TX_IDLE_STATE); // FIXME replace status to OFF
+//        changeReceptionState(RX_IDLE_STATE);
+//    }
+//    // FIXME when connect, set statuses to RECONNECT or IDLE
+//}
 
 void EthernetMacBase::encapsulate(Packet *frame)
 {
@@ -460,8 +463,9 @@ void EthernetMacBase::refreshConnection()
 // TODO REFACTOR
 //    readChannelParameters(false);
 
-    if (oldConn != connected)
-        processConnectDisconnect();
+// TODO REFACTOR
+//    if (oldConn != connected)
+//        processConnectDisconnect();
 }
 
 bool EthernetMacBase::dropFrameNotForUs(Packet *packet, const Ptr<const EthernetMacHeader>& frame)

@@ -99,9 +99,10 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
     virtual void frameReceptionComplete();
     virtual void processReceivedDataFrame(Packet *frame);
     virtual void processReceivedControlFrame(Packet *packet);
-    virtual void processConnectDisconnect() override;
+    // TODO REFACTOR
+//    virtual void processConnectDisconnect() override;
     virtual void processDetectedCollision();
-    virtual void sendSignal(EthernetSignalBase *signal, simtime_t_cref duration);
+    virtual void sendSignal(Packet *packet);
     virtual void handleSignalFromNetwork(EthernetSignalBase *signal);
     virtual void updateRxSignals(EthernetSignalBase *signal, simtime_t endRxTime);
     virtual void dropCurrentTxFrame(PacketDropDetails& details) override;

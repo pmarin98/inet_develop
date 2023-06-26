@@ -107,19 +107,20 @@ void EthernetMac::startFrameTransmission()
     auto newPacketProtocolTag = frame->addTag<PacketProtocolTag>();
     *newPacketProtocolTag = *oldPacketProtocolTag;
     EV_INFO << "Transmission of " << frame << " started.\n";
-    auto signal = new EthernetSignal(frame->getName());
-    signal->setSrcMacFullDuplex(duplexMode);
-    signal->setBitrate(curEtherDescr->txrate);
-    if (sendRawBytes) {
-        auto bytes = frame->peekDataAsBytes();
-        frame->eraseAll();
-        frame->insertAtFront(bytes);
-    }
-    signal->encapsulate(frame);
+// TODO REFACTOR
+//    auto signal = new EthernetSignal(frame->getName());
+//    signal->setSrcMacFullDuplex(duplexMode);
+//    signal->setBitrate(curEtherDescr->txrate);
+//    if (sendRawBytes) {
+//        auto bytes = frame->peekDataAsBytes();
+//        frame->eraseAll();
+//        frame->insertAtFront(bytes);
+//    }
+//    signal->encapsulate(frame);
     ASSERT(curTxSignal == nullptr);
-    curTxSignal = signal->dup();
-    emit(transmissionStartedSignal, signal);
-    send(signal, SendOptions().transmissionId(curTxSignal->getId()), physOutGate);
+    curTxSignal = frame->dup();
+    emit(transmissionStartedSignal, frame);
+    send(frame, SendOptions().transmissionId(curTxSignal->getId()), physOutGate);
     scheduleAt(transmissionChannel->getTransmissionFinishTime(), endTxTimer);
     changeTransmissionState(TRANSMITTING_STATE);
 }

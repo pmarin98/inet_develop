@@ -91,36 +91,37 @@ void EthernetCsmaMac::initializeFlags()
     physInGate->setDeliverImmediately(true);
 }
 
-void EthernetCsmaMac::processConnectDisconnect()
-{
-    if (!connected) {
-        for (auto& rx : rxSignals)
-            delete rx.signal;
-        rxSignals.clear();
-        cancelEvent(endRxTimer);
-        cancelEvent(endBackoffTimer);
-        cancelEvent(endJammingTimer);
-        bytesSentInBurst = B(0);
-        framesSentInBurst = 0;
-    }
-
-    EthernetMacBase::processConnectDisconnect();
-
-    if (connected) {
-        if (!duplexMode) {
-            // start RX_RECONNECT_STATE
-            changeReceptionState(RX_RECONNECT_STATE);
-            simtime_t reconnectEndTime = simTime() + b(MAX_ETHERNET_FRAME_BYTES + JAM_SIGNAL_BYTES).get() / curEtherDescr->txrate;
-            for (auto& rx : rxSignals)
-                delete rx.signal;
-            rxSignals.clear();
-            EthernetSignalBase *signal = new EthernetSignalBase("RECONNECT");
-            signal->setBitError(true);
-            signal->setDuration(reconnectEndTime);
-            updateRxSignals(signal, reconnectEndTime);
-        }
-    }
-}
+// TODO REFACTOR
+//void EthernetCsmaMac::processConnectDisconnect()
+//{
+//    if (!connected) {
+//        for (auto& rx : rxSignals)
+//            delete rx.signal;
+//        rxSignals.clear();
+//        cancelEvent(endRxTimer);
+//        cancelEvent(endBackoffTimer);
+//        cancelEvent(endJammingTimer);
+//        bytesSentInBurst = B(0);
+//        framesSentInBurst = 0;
+//    }
+//
+//    EthernetMacBase::processConnectDisconnect();
+//
+//    if (connected) {
+//        if (!duplexMode) {
+//            // start RX_RECONNECT_STATE
+//            changeReceptionState(RX_RECONNECT_STATE);
+//            simtime_t reconnectEndTime = simTime() + b(MAX_ETHERNET_FRAME_BYTES + JAM_SIGNAL_BYTES).get() / curEtherDescr->txrate;
+//            for (auto& rx : rxSignals)
+//                delete rx.signal;
+//            rxSignals.clear();
+//            EthernetSignalBase *signal = new EthernetSignalBase("RECONNECT");
+//            signal->setBitError(true);
+//            signal->setDuration(reconnectEndTime);
+//            updateRxSignals(signal, reconnectEndTime);
+//        }
+//    }
+//}
 
 // TODO REFACTOR
 //void EthernetCsmaMac::readChannelParameters(bool errorWhenAsymmetric)
@@ -406,19 +407,19 @@ void EthernetCsmaMac::startFrameTransmission()
     auto newPacketProtocolTag = frame->addTag<PacketProtocolTag>();
     *newPacketProtocolTag = *oldPacketProtocolTag;
     EV_INFO << "Transmission of " << frame << " started.\n";
-    auto signal = new EthernetSignal(frame->getName());
-    signal->setSrcMacFullDuplex(duplexMode);
-    signal->setBitrate(curEtherDescr->txrate);
-    if (sendRawBytes) {
-        auto bytes = frame->peekDataAsBytes();
-        frame->eraseAll();
-        frame->insertAtFront(bytes);
-    }
-    signal->encapsulate(frame);
-    signal->addByteLength(extensionLength.get());
-    simtime_t duration = signal->getBitLength() / this->curEtherDescr->txrate;
+//    auto signal = new EthernetSignal(frame->getName());
+//    signal->setSrcMacFullDuplex(duplexMode);
+//    signal->setBitrate(curEtherDescr->txrate);
+//    if (sendRawBytes) {
+//        auto bytes = frame->peekDataAsBytes();
+//        frame->eraseAll();
+//        frame->insertAtFront(bytes);
+//    }
+//    signal->encapsulate(frame);
+//    signal->addByteLength(extensionLength.get());
+//    simtime_t duration = frame->getBitLength() / this->curEtherDescr->txrate;
 
-    sendSignal(signal, duration);
+    sendSignal(frame);
 
     // check for collisions (there might be an ongoing reception which we don't know about, see below)
     if (!duplexMode && receiveState != RX_IDLE_STATE) {
@@ -444,7 +445,8 @@ void EthernetCsmaMac::startFrameTransmission()
             framesSentInBurst++;
         }
 
-        scheduleAfter(duration, endTxTimer);
+// TODO REFACTOR
+//        scheduleAfter(duration, endTxTimer);
         changeTransmissionState(TRANSMITTING_STATE);
 
         // only count transmissions in totalSuccessfulRxTxTime if channel is half-duplex
@@ -566,35 +568,37 @@ void EthernetCsmaMac::handleEndBackoffPeriod()
     }
 }
 
-void EthernetCsmaMac::sendSignal(EthernetSignalBase *signal, simtime_t_cref duration)
+void EthernetCsmaMac::sendSignal(Packet *packet)
 {
     ASSERT(curTxSignal == nullptr);
-    signal->setDuration(duration);
-    curTxSignal = signal->dup();
-    emit(transmissionStartedSignal, curTxSignal);
-    send(signal, SendOptions().transmissionId(curTxSignal->getId()).duration(duration), physOutGate);
+    // TODO REFACTOR
+//    packet->setDuration(duration);
+    curTxSignal = packet->dup();
+//    emit(transmissionStartedSignal, curTxSignal);
+    send(packet, SendOptions().transmissionId(curTxSignal->getId()), physOutGate);
 }
 
 void EthernetCsmaMac::sendJamSignal()
 {
-    // abort current transmission
-    ASSERT(curTxSignal != nullptr);
-    simtime_t duration = simTime() - curTxSignal->getCreationTime(); // TODO save and use start tx time
-    cutEthernetSignalEnd(curTxSignal, duration); // TODO save and use start tx time
-    emit(transmissionEndedSignal, curTxSignal);
-    send(curTxSignal, SendOptions().finishTx(curTxSignal->getId()), physOutGate);
-    curTxSignal = nullptr;
-
-    // send JAM
-    EthernetJamSignal *jam = new EthernetJamSignal("JAM_SIGNAL");
-    jam->setByteLength(B(JAM_SIGNAL_BYTES).get());
-    jam->setBitrate(curEtherDescr->txrate);
-//    emit(packetSentToLowerSignal, jam);
-    duration = jam->getBitLength() / this->curEtherDescr->txrate;
-    sendSignal(jam, duration);
-
-    scheduleAfter(duration, endJammingTimer);
-    changeTransmissionState(JAMMING_STATE);
+// TODO REFACTOR
+//    // abort current transmission
+//    ASSERT(curTxSignal != nullptr);
+//    simtime_t duration = simTime() - curTxSignal->getCreationTime(); // TODO save and use start tx time
+//    cutEthernetSignalEnd(curTxSignal, duration); // TODO save and use start tx time
+//    emit(transmissionEndedSignal, curTxSignal);
+//    send(curTxSignal, SendOptions().finishTx(curTxSignal->getId()), physOutGate);
+//    curTxSignal = nullptr;
+//
+//    // send JAM
+//    EthernetJamSignal *jam = new EthernetJamSignal("JAM_SIGNAL");
+//    jam->setByteLength(B(JAM_SIGNAL_BYTES).get());
+//    jam->setBitrate(curEtherDescr->txrate);
+////    emit(packetSentToLowerSignal, jam);
+//    duration = jam->getBitLength() / this->curEtherDescr->txrate;
+//    sendSignal(jam, duration);
+//
+//    scheduleAfter(duration, endJammingTimer);
+//    changeTransmissionState(JAMMING_STATE);
 }
 
 void EthernetCsmaMac::handleEndJammingPeriod()
@@ -803,15 +807,16 @@ void EthernetCsmaMac::scheduleEndIFGPeriod()
 
 void EthernetCsmaMac::fillIFGInBurst()
 {
-    EV_TRACE << "fillIFGInBurst(): t=" << simTime() << ", framesSentInBurst=" << framesSentInBurst << ", bytesSentInBurst=" << bytesSentInBurst << endl;
-
-    EthernetFilledIfgSignal *gap = new EthernetFilledIfgSignal("FilledIFG");
-    gap->setBitrate(curEtherDescr->txrate);
-    bytesSentInBurst += B(gap->getByteLength());
-    simtime_t duration = gap->getBitLength() / this->curEtherDescr->txrate;
-    sendSignal(gap, duration);
-    scheduleAfter(duration, endIfgTimer);
-    changeTransmissionState(SEND_IFG_STATE);
+// TODO REFACTOR
+//    EV_TRACE << "fillIFGInBurst(): t=" << simTime() << ", framesSentInBurst=" << framesSentInBurst << ", bytesSentInBurst=" << bytesSentInBurst << endl;
+//
+//    EthernetFilledIfgSignal *gap = new EthernetFilledIfgSignal("FilledIFG");
+//    gap->setBitrate(curEtherDescr->txrate);
+//    bytesSentInBurst += B(gap->getByteLength());
+//    simtime_t duration = gap->getBitLength() / this->curEtherDescr->txrate;
+//    sendSignal(gap, duration);
+//    scheduleAfter(duration, endIfgTimer);
+//    changeTransmissionState(SEND_IFG_STATE);
 }
 
 bool EthernetCsmaMac::canContinueBurst(b remainingGapLength)
