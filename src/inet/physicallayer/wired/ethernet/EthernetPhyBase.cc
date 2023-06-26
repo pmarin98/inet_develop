@@ -197,7 +197,6 @@ void EthernetPhyBase::initialize(int stage)
         lowerLayerInGateId = physInGate->getId();
         lowerLayerOutGateId = physOutGate->getId();
         transmissionChannel = nullptr;
-        txQueue = getQueue(gate(upperLayerInGateId));
 
         initializeFlags();
 
@@ -288,7 +287,7 @@ void EthernetPhyBase::handleStartOperation(LifecycleOperation *operation)
 
 void EthernetPhyBase::handleStopOperation(LifecycleOperation *operation)
 {
-    if (currentTxFrame != nullptr || !txQueue->isEmpty()) {
+    if (currentTxFrame != nullptr) {
         networkInterface->setState(NetworkInterface::State::GOING_DOWN);
         delayActiveOperationFinish(par("stopOperationTimeout"));
     }
@@ -312,7 +311,7 @@ void EthernetPhyBase::handleCrashOperation(LifecycleOperation *operation)
 void EthernetPhyBase::processAtHandleMessageFinished()
 {
     if (operationalState == State::STOPPING_OPERATION) {
-        if (currentTxFrame == nullptr && txQueue->isEmpty()) {
+        if (currentTxFrame == nullptr) {
             EV << "Ethernet Queue is empty, MAC stopped\n";
             connected = false;
             networkInterface->setCarrier(false);
@@ -379,17 +378,6 @@ void EthernetPhyBase::processConnectDisconnect()
             details.setReason(INTERFACE_DOWN);
             dropCurrentTxFrame(details);
             lastTxFinishTime = -1.0; // so that it never equals to the current simtime, used for Burst mode detection.
-        }
-
-        // Clear queue
-        while (canDequeuePacket()) {
-            Packet *msg = dequeuePacket();
-            EV_DETAIL << "Interface is not connected, dropping packet " << msg << endl;
-            numDroppedPkFromHLIfaceDown++;
-            PacketDropDetails details;
-            details.setReason(INTERFACE_DOWN);
-            emit(packetDroppedSignal, msg, &details);
-            delete msg;
         }
 
         changeTransmissionState(TX_IDLE_STATE); // FIXME replace status to OFF
@@ -635,8 +623,6 @@ void EthernetPhyBase::refreshDisplay() const
                 return std::to_string(numFramesReceivedOK);
             case 'd':
                 return std::to_string(numDroppedPkFromHLIfaceDown + numDroppedIfaceDown + numDroppedBitError + numDroppedNotForUs);
-            case 'q':
-                return txQueue != nullptr ? std::to_string(txQueue->getNumPackets()) : "";
             case 'b':
                 if (transmissionChannel == nullptr)
                     return "not connected";
@@ -740,7 +726,9 @@ void EthernetPhyBase::txFinished()
 
 queueing::IPassivePacketSource *EthernetPhyBase::getProvider(const cGate *gate)
 {
-    return (gate->getId() == upperLayerInGateId) ? txQueue.get() : nullptr;
+// TODO REFACTOR
+//    return (gate->getId() == upperLayerInGateId) ? txQueue.get() : nullptr;
+    return nullptr;
 }
 
 void EthernetPhyBase::handlePullPacketProcessed(Packet *packet, const cGate *gate, bool successful)

@@ -351,25 +351,27 @@ void EthernetCsmaPhy::handleEndIFGPeriod()
     EV_DETAIL << "IFG elapsed\n";
 
     if (transmitState == SEND_IFG_STATE) {
-        emit(transmissionEndedSignal, curTxSignal);
-        txFinished();
-        if (canContinueBurst(b(0))) {
-            Packet *packet = dequeuePacket();
-            handleUpperPacket(packet);
-        }
-        else
-            scheduleEndIFGPeriod();
+// TODO REFACTOR
+//        emit(transmissionEndedSignal, curTxSignal);
+//        txFinished();
+//        if (canContinueBurst(b(0))) {
+//            Packet *packet = dequeuePacket();
+//            handleUpperPacket(packet);
+//        }
+//        else
+//            scheduleEndIFGPeriod();
     }
     else if (transmitState == WAIT_IFG_STATE) {
         // End of IFG period, okay to transmit, if Rx idle OR duplexMode ( checked in startFrameTransmission(); )
-        if (currentTxFrame != nullptr)
-            startFrameTransmission();
-        else if (canDequeuePacket()) {
-            Packet *packet = dequeuePacket();
-            handleUpperPacket(packet);
-        }
-        else
-            changeTransmissionState(TX_IDLE_STATE);
+// TODO REFACTOR
+//        if (currentTxFrame != nullptr)
+//            startFrameTransmission();
+//        else if (canDequeuePacket()) {
+//            Packet *packet = dequeuePacket();
+//            handleUpperPacket(packet);
+//        }
+//        else
+//            changeTransmissionState(TX_IDLE_STATE);
     }
     else
         throw cRuntimeError("Not in WAIT_IFG_STATE at the end of IFG period");
@@ -619,10 +621,11 @@ void EthernetCsmaPhy::handleRetransmission()
         changeTransmissionState(TX_IDLE_STATE);
         backoffs = 0;
 
-        if (canDequeuePacket()) {
-            Packet *packet = dequeuePacket();
-            handleUpperPacket(packet);
-        }
+// TODO REFACTOR
+//        if (canDequeuePacket()) {
+//            Packet *packet = dequeuePacket();
+//            handleUpperPacket(packet);
+//        }
         return;
     }
 
@@ -663,7 +666,6 @@ void EthernetCsmaPhy::printState()
 
     EV_DETAIL << ",  backoffs: " << backoffs;
     EV_DETAIL << ",  numConcurrentRxTransmissions: " << rxSignals.size();
-    EV_DETAIL << ",  queueLength: " << txQueue->getNumPackets();
     EV_DETAIL << endl;
 
 #undef CASE
@@ -816,13 +818,14 @@ void EthernetCsmaPhy::fillIFGInBurst()
 
 bool EthernetCsmaPhy::canContinueBurst(b remainingGapLength)
 {
-    if ((frameBursting && framesSentInBurst > 0) && (framesSentInBurst < curEtherDescr->maxFramesInBurst)) {
-        if (Packet *pk = txQueue->canPullPacket(gate(upperLayerInGateId)->getPathStartGate())) {
-            // TODO before/after FilledIfg!!!
-            B pkLength = std::max(MIN_ETHERNET_FRAME_BYTES, B(pk->getDataLength()));
-            return (bytesSentInBurst + remainingGapLength + PREAMBLE_BYTES + SFD_BYTES + pkLength) <= curEtherDescr->maxBytesInBurst;
-        }
-    }
+// TODO REFACTOR
+//    if ((frameBursting && framesSentInBurst > 0) && (framesSentInBurst < curEtherDescr->maxFramesInBurst)) {
+//        if (Packet *pk = txQueue->canPullPacket(gate(upperLayerInGateId)->getPathStartGate())) {
+//            // TODO before/after FilledIfg!!!
+//            B pkLength = std::max(MIN_ETHERNET_FRAME_BYTES, B(pk->getDataLength()));
+//            return (bytesSentInBurst + remainingGapLength + PREAMBLE_BYTES + SFD_BYTES + pkLength) <= curEtherDescr->maxBytesInBurst;
+//        }
+//    }
     return false;
 }
 
@@ -886,12 +889,13 @@ void EthernetCsmaPhy::dropCurrentTxFrame(PacketDropDetails& details)
 void EthernetCsmaPhy::handleCanPullPacketChanged(const cGate *gate)
 {
     Enter_Method("handleCanPullPacketChanged");
-    if (duplexMode || receiveState == RX_IDLE_STATE) {
-        if (currentTxFrame == nullptr && transmitState == TX_IDLE_STATE && canDequeuePacket()) {
-            Packet *packet = dequeuePacket();
-            handleUpperPacket(packet);
-        }
-    }
+// TODO REFACTOR
+//    if (duplexMode || receiveState == RX_IDLE_STATE) {
+//        if (currentTxFrame == nullptr && transmitState == TX_IDLE_STATE && canDequeuePacket()) {
+//            Packet *packet = dequeuePacket();
+//            handleUpperPacket(packet);
+//        }
+//    }
 }
 
 } // namespace physicallayer

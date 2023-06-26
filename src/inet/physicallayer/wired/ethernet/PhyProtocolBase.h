@@ -36,9 +36,6 @@ class INET_API PhyProtocolBase : public LayeredProtocolBase, public cListener
     /** Currently transmitted frame if any */
     Packet *currentTxFrame = nullptr;
 
-    /** Messages received from upper layer and to be transmitted later */
-    opp_component_ptr<queueing::IPacketQueue> txQueue;
-
   protected:
     PhyProtocolBase();
     virtual ~PhyProtocolBase();
@@ -65,26 +62,11 @@ class INET_API PhyProtocolBase : public LayeredProtocolBase, public cListener
     virtual bool isModuleStartStage(int stage) const override { return stage == ModuleStartOperation::STAGE_LINK_LAYER; }
     virtual bool isModuleStopStage(int stage) const override { return stage == ModuleStopOperation::STAGE_LINK_LAYER; }
 
-    /**
-     * should clear queue and emit signal "packetDropped" with entire packets
-     */
-    virtual void flushQueue(PacketDropDetails& details);
-
-    /**
-     * should clear queue silently
-     */
-    virtual void clearQueue();
-
     using cListener::receiveSignal;
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj, cObject *details) override;
     virtual void handleStartOperation(LifecycleOperation *operation) override;
     virtual void handleStopOperation(LifecycleOperation *operation) override;
     virtual void handleCrashOperation(LifecycleOperation *operation) override;
-
-    queueing::IPacketQueue *getQueue(cGate *gate) const;
-
-    virtual bool canDequeuePacket() const;
-    virtual Packet *dequeuePacket();
 };
 
 } // namespace physicallayer
