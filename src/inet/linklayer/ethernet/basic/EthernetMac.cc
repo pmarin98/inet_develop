@@ -99,10 +99,6 @@ void EthernetMac::startFrameTransmission()
     ASSERT(!hdr->getSrc().isUnspecified());
 
     // send
-    auto& oldPacketProtocolTag = frame->removeTag<PacketProtocolTag>();
-    frame->clearTags();
-    auto newPacketProtocolTag = frame->addTag<PacketProtocolTag>();
-    *newPacketProtocolTag = *oldPacketProtocolTag;
     EV_INFO << "Transmission of " << frame << " started.\n";
 // TODO REFACTOR
 //    auto signal = new EthernetSignal(frame->getName());
