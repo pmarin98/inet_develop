@@ -17,6 +17,7 @@
 #include "inet/linklayer/common/MacAddress.h"
 #include "inet/linklayer/ethernet/common/EthernetMacHeader_m.h"
 #include "inet/networklayer/common/NetworkInterface.h"
+#include "inet/physicallayer/wired/ethernet/EthernetCsmaPhy.h"
 #include "inet/physicallayer/wired/ethernet/EthernetSignal_m.h"
 #include "inet/queueing/contract/IActivePacketSink.h"
 #include "inet/queueing/contract/IPacketQueue.h"
@@ -40,14 +41,6 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
         BACKOFF_STATE,
         PAUSE_STATE
         // FIXME add TX_OFF_STATE
-    };
-
-    enum MacReceiveState {
-        RX_IDLE_STATE = 1,
-        RECEIVING_STATE,
-        RX_COLLISION_STATE,
-        RX_RECONNECT_STATE
-        // FIXME add RX_OFF_STATE
     };
 
   protected:
@@ -92,6 +85,7 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
     bool frameBursting = false; // frame bursting on/off (Gigabit Ethernet)
 
     // gate pointers, etc.
+    EthernetCsmaPhy *phy;
     cChannel *transmissionChannel = nullptr; // transmission channel
     cGate *physInGate = nullptr; // pointer to the "phys$i" gate
     cGate *physOutGate = nullptr; // pointer to the "phys$o" gate
@@ -99,7 +93,6 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
     // state
     bool channelsDiffer = false; // true when tx and rx channels differ (only one of them exists, or 'datarate' or 'disable' parameters differ) (configuration error, or between changes of tx/rx channels)
     MacTransmitState transmitState = static_cast<MacTransmitState>(-1); // "transmit state" of the MAC
-    MacReceiveState receiveState = static_cast<MacReceiveState>(-1); // "receive state" of the MAC
     simtime_t lastTxFinishTime; // time of finishing the last transmission
     int pauseUnitsRequested = 0; // requested pause duration, or zero -- examined at endTx
 
@@ -145,7 +138,6 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
     bool isActive() { return connected; }
 
     MacTransmitState getTransmitState() { return transmitState; }
-    MacReceiveState getReceiveState() { return receiveState; }
 
     virtual void handleStartOperation(LifecycleOperation *operation) override;
     virtual void handleStopOperation(LifecycleOperation *operation) override;
@@ -200,7 +192,6 @@ class INET_API EthernetMacBase : public MacProtocolBase, public queueing::IActiv
     virtual void refreshConnection();
 
     void changeTransmissionState(MacTransmitState newState);
-    void changeReceptionState(MacReceiveState newState);
 
     virtual void cutEthernetSignalEnd(EthernetSignalBase *signal, simtime_t duration);
     virtual void txFinished();

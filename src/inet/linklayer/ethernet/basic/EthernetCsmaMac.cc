@@ -147,7 +147,7 @@ void EthernetCsmaMac::handleSelfMessage(cMessage *msg)
             break;
 
         case ENDRECEPTION:
-            handleEndRxPeriod();
+//            handleEndRxPeriod();
             break;
 
         case ENDBACKOFF:
@@ -176,7 +176,7 @@ void EthernetCsmaMac::handleMessageWhenUp(cMessage *msg)
     printState();
 
     // some consistency check
-    if (!duplexMode && transmitState == TRANSMITTING_STATE && receiveState != RX_IDLE_STATE)
+    if (!duplexMode && transmitState == TRANSMITTING_STATE && phy->getReceiveState() != EthernetCsmaPhy::RX_IDLE_STATE)
         throw cRuntimeError("Inconsistent state -- transmitting and receiving at the same time");
 
     if (msg->isSelfMessage())
@@ -240,72 +240,72 @@ void EthernetCsmaMac::processMsgFromNetwork(Packet *signal)
 {
 //    simtime_t endRxTime = simTime() + signal->getRemainingDuration();
 
-    if (!duplexMode && receiveState == RX_RECONNECT_STATE) {
-//        updateRxSignals(signal, endRxTime);
-    }
-    else if (!duplexMode && (transmitState == TRANSMITTING_STATE || transmitState == SEND_IFG_STATE)) {
-        // since we're half-duplex, receiveState must be RX_IDLE_STATE (asserted at top of handleMessage)
-        // set receive state and schedule end of reception
-//        updateRxSignals(signal, endRxTime);
-        changeReceptionState(RX_COLLISION_STATE);
-
-        EV_DETAIL << "Transmission interrupted by incoming frame, handling collision\n";
-        cancelEvent((transmitState == TRANSMITTING_STATE) ? endTxTimer : endIfgTimer);
-
-        EV_DETAIL << "Transmitting jam signal\n";
-        sendJamSignal(); // backoff will be executed when jamming finished
-
-        numCollisions++;
-        emit(collisionSignal, 1L);
-    }
-    else if (receiveState == RX_IDLE_STATE) {
-        ASSERT(!signal->isUpdate());
-        channelBusySince = simTime();
-        EV_INFO << "Reception of " << signal << " started.\n";
-//        emit(receptionStartedSignal, signal);
-//        updateRxSignals(signal, endRxTime);
-        changeReceptionState(RECEIVING_STATE);
-    }
-    else if (!signal->isUpdate() && receiveState == RECEIVING_STATE && endRxTimer->getArrivalTime() - simTime() < curEtherDescr->halfBitTime) {
-        // With the above condition we filter out "false" collisions that may occur with
-        // back-to-back frames. That is: when "beginning of frame" message (this one) occurs
-        // BEFORE "end of previous frame" event (endRxMsg) -- same simulation time,
-        // only wrong order.
-
-        EV_DETAIL << "Back-to-back frames: completing reception of current frame, starting reception of next one\n";
-
-        // complete reception of previous frame
-        cancelEvent(endRxTimer);
+//    if (!duplexMode && receiveState == EthernetCsmaPhy::RX_RECONNECT_STATE) {
+////        updateRxSignals(signal, endRxTime);
+//    }
+//    else if (!duplexMode && (transmitState == TRANSMITTING_STATE || transmitState == SEND_IFG_STATE)) {
+//        // since we're half-duplex, receiveState must be RX_IDLE_STATE (asserted at top of handleMessage)
+//        // set receive state and schedule end of reception
+////        updateRxSignals(signal, endRxTime);
+//        changeReceptionState(RX_COLLISION_STATE);
+//
+//        EV_DETAIL << "Transmission interrupted by incoming frame, handling collision\n";
+//        cancelEvent((transmitState == TRANSMITTING_STATE) ? endTxTimer : endIfgTimer);
+//
+//        EV_DETAIL << "Transmitting jam signal\n";
+//        sendJamSignal(); // backoff will be executed when jamming finished
+//
+//        numCollisions++;
+//        emit(collisionSignal, 1L);
+//    }
+//    else if (receiveState == RX_IDLE_STATE) {
+//        ASSERT(!signal->isUpdate());
+//        channelBusySince = simTime();
+//        EV_INFO << "Reception of " << signal << " started.\n";
+////        emit(receptionStartedSignal, signal);
+////        updateRxSignals(signal, endRxTime);
+//        changeReceptionState(RECEIVING_STATE);
+//    }
+//    else if (!signal->isUpdate() && receiveState == RECEIVING_STATE && endRxTimer->getArrivalTime() - simTime() < curEtherDescr->halfBitTime) {
+//        // With the above condition we filter out "false" collisions that may occur with
+//        // back-to-back frames. That is: when "beginning of frame" message (this one) occurs
+//        // BEFORE "end of previous frame" event (endRxMsg) -- same simulation time,
+//        // only wrong order.
+//
+//        EV_DETAIL << "Back-to-back frames: completing reception of current frame, starting reception of next one\n";
+//
+//        // complete reception of previous frame
+//        cancelEvent(endRxTimer);
         frameReceptionComplete(signal);
 
         // calculate usability
-        totalSuccessfulRxTxTime += simTime() - channelBusySince;
-        channelBusySince = simTime();
-
-        // start receiving next frame
-//        updateRxSignals(signal, endRxTime);
-        changeReceptionState(RECEIVING_STATE);
-    }
-    else { // (receiveState==RECEIVING_STATE || receiveState==RX_COLLISION_STATE)
-           // handle overlapping receptions
-        // EtherFrame or EtherPauseFrame
-//        updateRxSignals(signal, endRxTime);
-//        if (rxSignals.size() > 1) {
-//            EV_DETAIL << "Overlapping receptions -- setting collision state\n";
-//            processDetectedCollision();
-//        }
-    }
+//        totalSuccessfulRxTxTime += simTime() - channelBusySince;
+//        channelBusySince = simTime();
+//
+//        // start receiving next frame
+////        updateRxSignals(signal, endRxTime);
+//        changeReceptionState(RECEIVING_STATE);
+//    }
+//    else { // (receiveState==RECEIVING_STATE || receiveState==RX_COLLISION_STATE)
+//           // handle overlapping receptions
+//        // EtherFrame or EtherPauseFrame
+////        updateRxSignals(signal, endRxTime);
+////        if (rxSignals.size() > 1) {
+////            EV_DETAIL << "Overlapping receptions -- setting collision state\n";
+////            processDetectedCollision();
+////        }
+//    }
 }
 
-void EthernetCsmaMac::processDetectedCollision()
-{
-    if (receiveState != RX_COLLISION_STATE) {
-        numCollisions++;
-        emit(collisionSignal, 1L);
-        // go to collision state
-        changeReceptionState(RX_COLLISION_STATE);
-    }
-}
+//void EthernetCsmaMac::processDetectedCollision()
+//{
+//    if (receiveState != RX_COLLISION_STATE) {
+//        numCollisions++;
+//        emit(collisionSignal, 1L);
+//        // go to collision state
+//        changeReceptionState(RX_COLLISION_STATE);
+//    }
+//}
 
 void EthernetCsmaMac::handleEndIFGPeriod()
 {
@@ -375,7 +375,7 @@ void EthernetCsmaMac::startFrameTransmission()
     sendSignal(frame);
 
     // check for collisions (there might be an ongoing reception which we don't know about, see below)
-    if (!duplexMode && receiveState != RX_IDLE_STATE) {
+    if (!duplexMode && phy->getReceiveState() != EthernetCsmaPhy::RX_IDLE_STATE) {
         // During the IFG period the hardware cannot listen to the channel,
         // so it might happen that receptions have begun during the IFG,
         // and even collisions might be in progress.
@@ -384,7 +384,7 @@ void EthernetCsmaMac::startFrameTransmission()
         // start transmitting, immediately collide and send a jam signal.
         //
 
-        processDetectedCollision();
+//        processDetectedCollision();
         EV_DETAIL << "startFrameTransmission(): sending JAM signal.\n";
         printState();
         sendJamSignal();
@@ -413,8 +413,8 @@ void EthernetCsmaMac::handleEndTxPeriod()
     EV_DETAIL << "TX successfully finished\n";
 
     // we only get here if transmission has finished successfully, without collision
-    if (transmitState != TRANSMITTING_STATE || (!duplexMode && receiveState != RX_IDLE_STATE))
-        throw cRuntimeError("End of transmission, and incorrect state detected");
+//    if (transmitState != TRANSMITTING_STATE || (!duplexMode && receiveState != RX_IDLE_STATE))
+//        throw cRuntimeError("End of transmission, and incorrect state detected");
 
     if (currentTxFrame == nullptr)
         throw cRuntimeError("Frame under transmission cannot be found");
@@ -464,45 +464,45 @@ void EthernetCsmaMac::handleEndTxPeriod()
     }
 }
 
-void EthernetCsmaMac::handleEndRxPeriod()
-{
-    simtime_t dt = simTime() - channelBusySince;
-
-    switch (receiveState) {
-        case RECEIVING_STATE:
-            // TODO REFACTOR
-//            frameReceptionComplete();
-            totalSuccessfulRxTxTime += dt;
-            break;
-
-        case RX_COLLISION_STATE:
-            EV_DETAIL << "Incoming signals finished after collision\n";
-            totalCollisionTime += dt;
-//            for (auto& rx : rxSignals) {
-//                delete rx.signal;
-//            }
-//            rxSignals.clear();
-            break;
-
-        case RX_RECONNECT_STATE:
-            EV_DETAIL << "Incoming signals finished or reconnect time elapsed after reconnect\n";
-//            for (auto& rx : rxSignals) {
-//                delete rx.signal;
-//            }
-//            rxSignals.clear();
-            break;
-
-        default:
-            throw cRuntimeError("model error: invalid receiveState %d", receiveState);
-    }
-
-    changeReceptionState(RX_IDLE_STATE);
-
-    if (!duplexMode && transmitState == TX_IDLE_STATE) {
-        EV_DETAIL << "Start IFG period\n";
-        scheduleEndIFGPeriod();
-    }
-}
+//void EthernetCsmaMac::handleEndRxPeriod()
+//{
+//    simtime_t dt = simTime() - channelBusySince;
+//
+//    switch (receiveState) {
+//        case RECEIVING_STATE:
+//            // TODO REFACTOR
+////            frameReceptionComplete();
+//            totalSuccessfulRxTxTime += dt;
+//            break;
+//
+//        case RX_COLLISION_STATE:
+//            EV_DETAIL << "Incoming signals finished after collision\n";
+//            totalCollisionTime += dt;
+////            for (auto& rx : rxSignals) {
+////                delete rx.signal;
+////            }
+////            rxSignals.clear();
+//            break;
+//
+//        case RX_RECONNECT_STATE:
+//            EV_DETAIL << "Incoming signals finished or reconnect time elapsed after reconnect\n";
+////            for (auto& rx : rxSignals) {
+////                delete rx.signal;
+////            }
+////            rxSignals.clear();
+//            break;
+//
+//        default:
+//            throw cRuntimeError("model error: invalid receiveState %d", receiveState);
+//    }
+//
+//    changeReceptionState(RX_IDLE_STATE);
+//
+//    if (!duplexMode && transmitState == TX_IDLE_STATE) {
+//        EV_DETAIL << "Start IFG period\n";
+//        scheduleEndIFGPeriod();
+//    }
+//}
 
 void EthernetCsmaMac::handleEndBackoffPeriod()
 {
@@ -512,7 +512,7 @@ void EthernetCsmaMac::handleEndBackoffPeriod()
     if (currentTxFrame == nullptr)
         throw cRuntimeError("At end of BACKOFF and no frame to transmit");
 
-    if (receiveState == RX_IDLE_STATE) {
+    if (phy->getReceiveState() == EthernetCsmaPhy::RX_IDLE_STATE) {
         EV_DETAIL << "Backoff period ended, wait IFG\n";
         scheduleEndIFGPeriod();
     }
@@ -611,13 +611,13 @@ void EthernetCsmaMac::printState()
         CASE(PAUSE_STATE);
     }
 
-    EV_DETAIL << ",  receiveState: ";
-    switch (receiveState) {
-        CASE(RX_IDLE_STATE);
-        CASE(RECEIVING_STATE);
-        CASE(RX_COLLISION_STATE);
-        CASE(RX_RECONNECT_STATE);
-    }
+//    EV_DETAIL << ",  receiveState: ";
+//    switch (receiveState) {
+//        CASE(RX_IDLE_STATE);
+//        CASE(RECEIVING_STATE);
+//        CASE(RX_COLLISION_STATE);
+//        CASE(RX_RECONNECT_STATE);
+//    }
 
     EV_DETAIL << ",  backoffs: " << backoffs;
 //    EV_DETAIL << ",  numConcurrentRxTransmissions: " << rxSignals.size();
@@ -652,7 +652,6 @@ void EthernetCsmaMac::handleEndPausePeriod()
 void EthernetCsmaMac::frameReceptionComplete(Packet *packet)
 {
     bool hasBitError = packet->hasBitError();
-    delete packet;
     emit(packetReceivedFromLowerSignal, packet);
 
     if (hasBitError || !verifyCrcAndLength(packet)) {
@@ -802,7 +801,7 @@ void EthernetCsmaMac::dropCurrentTxFrame(PacketDropDetails& details)
 void EthernetCsmaMac::handleCanPullPacketChanged(const cGate *gate)
 {
     Enter_Method("handleCanPullPacketChanged");
-    if (duplexMode || receiveState == RX_IDLE_STATE) {
+    if (duplexMode || phy->getReceiveState() == EthernetCsmaPhy::RX_IDLE_STATE) {
         if (currentTxFrame == nullptr && transmitState == TX_IDLE_STATE && canDequeuePacket()) {
             Packet *packet = dequeuePacket();
             handleUpperPacket(packet);

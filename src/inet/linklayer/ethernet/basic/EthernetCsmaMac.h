@@ -70,7 +70,7 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
     virtual void handleEndIFGPeriod();
     virtual void handleEndPausePeriod();
     virtual void handleEndTxPeriod();
-    virtual void handleEndRxPeriod();
+//    virtual void handleEndRxPeriod();
     virtual void handleEndBackoffPeriod();
     virtual void handleEndJammingPeriod();
     virtual void handleRetransmission();
@@ -91,7 +91,7 @@ class INET_API EthernetCsmaMac : public EthernetMacBase
     virtual void processReceivedControlFrame(Packet *packet);
     // TODO REFACTOR
 //    virtual void processConnectDisconnect() override;
-    virtual void processDetectedCollision();
+//    virtual void processDetectedCollision();
     virtual void sendSignal(Packet *packet);
     virtual void handleSignalFromNetwork(Packet *signal);
 //    virtual void updateRxSignals(EthernetSignalBase *signal, simtime_t endRxTime);

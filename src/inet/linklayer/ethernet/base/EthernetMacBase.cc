@@ -189,6 +189,7 @@ void EthernetMacBase::initialize(int stage)
 {
     MacProtocolBase::initialize(stage);
     if (stage == INITSTAGE_LOCAL) {
+        phy = check_and_cast<EthernetCsmaPhy *>(getParentModule()->getSubmodule("phy"));
         fcsMode = parseFcsMode(par("fcsMode"));
         physInGate = gate("phys$i");
         physOutGate = gate("phys$o");
@@ -210,7 +211,6 @@ void EthernetMacBase::initialize(int stage)
 
         // initialize states
         transmitState = TX_IDLE_STATE;
-        receiveState = RX_IDLE_STATE;
 
         // initialize pause
         pauseUnitsRequested = 0;
@@ -218,7 +218,6 @@ void EthernetMacBase::initialize(int stage)
         subscribe(POST_MODEL_CHANGE, this);
 
         WATCH(transmitState);
-        WATCH(receiveState);
         WATCH(connected);
         WATCH(frameBursting);
         WATCH(promiscuous);
@@ -598,14 +597,10 @@ void EthernetMacBase::refreshDisplay() const
     // icon coloring
     const char *color;
 
-    if (receiveState == RX_COLLISION_STATE)
-        color = "red";
-    else if (transmitState == TRANSMITTING_STATE)
+    if (transmitState == TRANSMITTING_STATE)
         color = "yellow";
     else if (transmitState == JAMMING_STATE)
         color = "red";
-    else if (receiveState == RECEIVING_STATE)
-        color = "#4040ff";
     else if (transmitState == BACKOFF_STATE)
         color = "white";
     else if (transmitState == PAUSE_STATE)
@@ -655,12 +650,6 @@ void EthernetMacBase::changeTransmissionState(MacTransmitState newState)
 {
     transmitState = newState;
     emit(transmissionStateChangedSignal, newState);
-}
-
-void EthernetMacBase::changeReceptionState(MacReceiveState newState)
-{
-    receiveState = newState;
-    emit(receptionStateChangedSignal, newState);
 }
 
 void EthernetMacBase::addPaddingAndSetFcs(Packet *packet, B requiredMinBytes) const
