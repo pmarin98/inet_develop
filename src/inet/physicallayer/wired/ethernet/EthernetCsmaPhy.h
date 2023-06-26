@@ -99,7 +99,6 @@ class INET_API EthernetCsmaPhy : public EthernetPhyBase
     virtual void startFrameTransmission();
     virtual void frameReceptionComplete();
     virtual void processReceivedDataFrame(Packet *frame);
-    virtual void processReceivedControlFrame(Packet *packet);
     virtual void processConnectDisconnect() override;
     virtual void processDetectedCollision();
     virtual void sendSignal(EthernetSignalBase *signal, simtime_t_cref duration);

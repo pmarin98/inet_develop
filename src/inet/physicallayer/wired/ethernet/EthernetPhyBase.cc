@@ -452,45 +452,6 @@ void EthernetPhyBase::refreshConnection()
         processConnectDisconnect();
 }
 
-bool EthernetPhyBase::dropFrameNotForUs(Packet *packet, const Ptr<const EthernetMacHeader>& frame)
-{
-    // Current ethernet mac implementation does not support the configuration of multicast
-    // ethernet address groups. We rather accept all multicast frames (just like they were
-    // broadcasts) and pass it up to the higher layer where they will be dropped
-    // if not needed.
-    //
-    // PAUSE frames must be handled a bit differently because they are processed at
-    // this level. Multicast PAUSE frames should not be processed unless they have a
-    // destination of MULTICAST_PAUSE_ADDRESS. We drop all PAUSE frames that have a
-    // different muticast destination. (Note: Would the multicast ethernet addressing
-    // implemented, we could also process the PAUSE frames destined to any of our
-    // multicast adresses)
-    // All NON-PAUSE frames must be passed to the upper layer if the interface is
-    // in promiscuous mode.
-
-    if (frame->getDest().equals(getMacAddress()))
-        return false;
-
-    if (frame->getDest().isBroadcast())
-        return false;
-
-    bool isPause = (frame->getTypeOrLength() == ETHERTYPE_FLOW_CONTROL);
-
-    if (!isPause && (promiscuous || frame->getDest().isMulticast()))
-        return false;
-
-    if (isPause && frame->getDest().equals(MacAddress::MULTICAST_PAUSE_ADDRESS))
-        return false;
-
-    EV_WARN << "Frame `" << packet->getName() << "' not destined to us, discarding\n";
-    numDroppedNotForUs++;
-    PacketDropDetails details;
-    details.setReason(NOT_ADDRESSED_TO_US);
-    emit(packetDroppedSignal, packet, &details);
-    delete packet;
-    return true;
-}
-
 void EthernetPhyBase::readChannelParameters(bool errorWhenAsymmetric)
 {
     // When the connected channels change at runtime, we'll receive

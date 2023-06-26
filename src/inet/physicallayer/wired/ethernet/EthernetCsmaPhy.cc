@@ -16,7 +16,6 @@
 #include "inet/linklayer/common/MacAddressTag_m.h"
 #include "inet/linklayer/ethernet/common/Ethernet.h"
 #include "inet/linklayer/ethernet/common/EthernetControlFrame_m.h"
-#include "inet/linklayer/ethernet/common/EthernetMacHeader_m.h"
 #include "inet/networklayer/common/NetworkInterface.h"
 #include "inet/physicallayer/wired/ethernet/EthernetSignal_m.h"
 
@@ -244,14 +243,6 @@ void EthernetCsmaPhy::handleUpperPacket(Packet *packet)
 
     numFramesFromHL++;
 
-    MacAddress address = getMacAddress();
-
-    const auto& macHeader = packet->peekAtFront<EthernetMacHeader>();
-    if (macHeader->getDest().equals(address)) {
-        throw cRuntimeError("Logic error: frame %s from higher layer has local MAC address as dest (%s)",
-                packet->getFullName(), macHeader->getDest().str().c_str());
-    }
-
     if (packet->getDataLength() > MAX_ETHERNET_FRAME_BYTES) {
         throw cRuntimeError("Packet length from higher layer (%s) exceeds maximum Ethernet frame size (%s)",
                 packet->getDataLength().str().c_str(), MAX_ETHERNET_FRAME_BYTES.str().c_str());
@@ -392,10 +383,6 @@ void EthernetCsmaPhy::startFrameTransmission()
 
     Packet *frame = currentTxFrame->dup();
 
-    const auto& hdr = frame->peekAtFront<EthernetMacHeader>();
-    ASSERT(hdr);
-    ASSERT(!hdr->getSrc().isUnspecified());
-
     B minFrameLengthWithExtension = calculateMinFrameLength();
     B extensionLength = minFrameLengthWithExtension > frame->getDataLength() ? (minFrameLengthWithExtension - frame->getDataLength()) : B(0);
 
@@ -472,16 +459,6 @@ void EthernetCsmaPhy::handleEndTxPeriod()
 
     emit(transmissionEndedSignal, curTxSignal);
     txFinished();
-
-    const auto& header = currentTxFrame->peekAtFront<EthernetMacHeader>();
-    if (header->getTypeOrLength() == ETHERTYPE_FLOW_CONTROL) {
-        const auto& controlFrame = currentTxFrame->peekDataAt<EthernetControlFrameBase>(header->getChunkLength(), b(-1));
-        if (controlFrame->getOpCode() == ETHERNET_CONTROL_PAUSE) {
-            const auto& pauseFrame = dynamicPtrCast<const EthernetPauseFrame>(controlFrame);
-            numPauseFramesSent++;
-            emit(txPausePkUnitsSignal, pauseFrame->getPauseTime());
-        }
-    }
 
     EV_INFO << "Transmission of " << currentTxFrame << " successfully completed.\n";
     deleteCurrentTxFrame();
@@ -723,20 +700,8 @@ void EthernetCsmaPhy::frameReceptionComplete()
         return;
     }
 
-    const auto& frame = packet->peekAtFront<EthernetMacHeader>();
-    auto macAddressInd = packet->addTag<MacAddressInd>();
-    macAddressInd->setSrcAddress(frame->getSrc());
-    macAddressInd->setDestAddress(frame->getDest());
-    if (dropFrameNotForUs(packet, frame))
-        return;
-
-    if (frame->getTypeOrLength() == ETHERTYPE_FLOW_CONTROL) {
-        processReceivedControlFrame(packet);
-    }
-    else {
-        EV_INFO << "Reception of " << packet << " successfully completed.\n";
-        processReceivedDataFrame(packet);
-    }
+    EV_INFO << "Reception of " << packet << " successfully completed.\n";
+    processReceivedDataFrame(packet);
 }
 
 void EthernetCsmaPhy::processReceivedDataFrame(Packet *packet)
@@ -757,41 +722,6 @@ void EthernetCsmaPhy::processReceivedDataFrame(Packet *packet)
     // pass up to upper layer
     EV_INFO << "Sending " << packet << " to upper layer.\n";
     send(packet, "upperLayerOut");
-}
-
-void EthernetCsmaPhy::processReceivedControlFrame(Packet *packet)
-{
-    packet->popAtFront<EthernetMacHeader>();
-    const auto& controlFrame = packet->peekAtFront<EthernetControlFrameBase>();
-
-    if (controlFrame->getOpCode() == ETHERNET_CONTROL_PAUSE) {
-        const auto& pauseFrame = packet->peekAtFront<EthernetPauseFrame>();
-        int pauseUnits = pauseFrame->getPauseTime();
-
-        numPauseFramesRcvd++;
-        emit(rxPausePkUnitsSignal, pauseUnits);
-
-        if (transmitState == TX_IDLE_STATE) {
-            EV_DETAIL << "PAUSE frame received, pausing for " << pauseUnitsRequested << " time units\n";
-            if (pauseUnits > 0)
-                scheduleEndPausePeriod(pauseUnits);
-        }
-        else if (transmitState == PAUSE_STATE) {
-            EV_DETAIL << "PAUSE frame received, pausing for " << pauseUnitsRequested
-                      << " more time units from now\n";
-            cancelEvent(endPauseTimer);
-
-            if (pauseUnits > 0)
-                scheduleEndPausePeriod(pauseUnits);
-        }
-        else {
-            // transmitter busy -- wait until it finishes with current frame (endTx)
-            // and then it'll go to PAUSE state
-            EV_DETAIL << "PAUSE frame received, storing pause request\n";
-            pauseUnitsRequested = pauseUnits;
-        }
-    }
-    delete packet;
 }
 
 void EthernetCsmaPhy::scheduleEndIFGPeriod()

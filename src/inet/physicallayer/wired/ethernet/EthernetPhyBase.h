@@ -15,7 +15,6 @@
 #include "inet/physicallayer/wired/ethernet/PhyProtocolBase.h"
 #include "inet/linklayer/common/FcsMode_m.h"
 #include "inet/linklayer/common/MacAddress.h"
-#include "inet/linklayer/ethernet/common/EthernetMacHeader_m.h"
 #include "inet/networklayer/common/NetworkInterface.h"
 #include "inet/physicallayer/wired/ethernet/EthernetSignal_m.h"
 #include "inet/queueing/contract/IActivePacketSink.h"
@@ -170,9 +169,6 @@ class INET_API EthernetPhyBase : public PhyProtocolBase, public queueing::IActiv
 
     // finish
     virtual void finish() override;
-
-    /** Checks destination address and drops the frame when frame is not for us; returns true if frame is dropped */
-    virtual bool dropFrameNotForUs(Packet *packet, const Ptr<const EthernetMacHeader>& frame);
 
     /**
      * Calculates datarates, etc. Verifies the datarates on the incoming/outgoing channels,
