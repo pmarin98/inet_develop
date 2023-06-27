@@ -192,8 +192,8 @@ void EthernetMacBase::initialize(int stage)
         fcsMode = parseFcsMode(par("fcsMode"));
         physInGate = getParentModule()->getSubmodule("phy")->gate("phys$i");
         physOutGate = getParentModule()->getSubmodule("phy")->gate("phys$o");
-        lowerLayerInGateId = gate("phys$i")->getId();
-        lowerLayerOutGateId = gate("phys$o")->getId();
+        lowerLayerInGateId = gate("lowerLayerIn")->getId();
+        lowerLayerOutGateId = gate("lowerLayerOut")->getId();
         transmissionChannel = nullptr;
         txQueue = getQueue(gate(upperLayerInGateId));
 

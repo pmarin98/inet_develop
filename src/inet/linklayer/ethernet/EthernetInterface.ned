@@ -65,8 +65,8 @@ module EthernetInterface extends NetworkInterface like IEthernetInterface
         egressTC.out --> queue.in;
         queue.out --> mac.upperLayerIn;
 
-        mac.phys$o --> phy.upperLayerIn;
-        phy.upperLayerOut --> mac.phys$i;
+        mac.lowerLayerOut --> phy.upperLayerIn;
+        phy.upperLayerOut --> mac.lowerLayerIn;
 
         phy.phys <--> { @display("m=s"); } <--> phys;
 

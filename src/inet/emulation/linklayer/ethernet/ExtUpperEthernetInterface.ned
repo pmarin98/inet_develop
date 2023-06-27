@@ -10,6 +10,7 @@ package inet.emulation.linklayer.ethernet;
 import inet.emulation.common.ExtInterface;
 import inet.linklayer.contract.IEtherMac;
 import inet.linklayer.contract.IEthernetInterface;
+import inet.physicallayer.wired.ethernet.IEthernetPhy;
 import inet.queueing.contract.IPacketQueue;
 
 
@@ -23,7 +24,7 @@ module ExtUpperEthernetInterface extends ExtInterface like IEthernetInterface
     parameters:
         bool csmacdSupport = default(false);  // by default CSMA/CD is turned off, so only point-to-point duplex links are supported.
         double bitrate @unit(bps) = default(nan bps);
-        @display("bgb=450,400");
+        @display("bgb=450,600");
     gates:
         input cutthroughIn @loose;
         output cutthroughOut @loose;
@@ -42,10 +43,17 @@ module ExtUpperEthernetInterface extends ExtInterface like IEthernetInterface
             parameters:
                 @display("p=350,300");
         }
+        phy: <default("EthernetCsmaPhy")> like IEthernetPhy {
+            parameters:
+                @display("p=350,450");
+        }
     connections allowunconnected:
         tap.lowerLayerOut --> queue.in;
         queue.out --> mac.upperLayerIn;
         tap.lowerLayerIn <-- mac.upperLayerOut;
-        mac.phys <--> { @display("m=s"); } <--> phys;
+        mac.lowerLayerOut --> phy.upperLayerIn;
+        phy.upperLayerOut --> mac.lowerLayerIn;
+
+        phy.phys <--> { @display("m=s"); } <--> phys;
 }
 

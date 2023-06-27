@@ -146,6 +146,7 @@ module EthernetCsmaMac like IEtherMac
     gates:
         input upperLayerIn @labels(EtherFrame);    // to ~EthernetEncapsulation or ~IMacRelayUnit
         output upperLayerOut @labels(EtherFrame);  // to ~EthernetEncapsulation or ~IMacRelayUnit
-        inout phys @labels(EthernetSignal); // to the network
+        input lowerLayerIn @labels(EtherFrame);
+        output lowerLayerOut @labels(EtherFrame);
 }
 
