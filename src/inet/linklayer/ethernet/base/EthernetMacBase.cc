@@ -190,10 +190,10 @@ void EthernetMacBase::initialize(int stage)
     MacProtocolBase::initialize(stage);
     if (stage == INITSTAGE_LOCAL) {
         fcsMode = parseFcsMode(par("fcsMode"));
-        physInGate = gate("phys$i");
-        physOutGate = gate("phys$o");
-        lowerLayerInGateId = physInGate->getId();
-        lowerLayerOutGateId = physOutGate->getId();
+        physInGate = getParentModule()->getSubmodule("phy")->gate("phys$i");
+        physOutGate = getParentModule()->getSubmodule("phy")->gate("phys$o");
+        lowerLayerInGateId = gate("phys$i")->getId();
+        lowerLayerOutGateId = gate("phys$o")->getId();
         transmissionChannel = nullptr;
         txQueue = getQueue(gate(upperLayerInGateId));
 
