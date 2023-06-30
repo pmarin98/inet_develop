@@ -15,6 +15,8 @@ applications by reducing delay and jitter.
 In this example, we will demonstrate how to use the credit-based traffic shaper
 to smooth out traffic and reduce bursting in network nodes.
 
+**TODO** add IEEE 802.1Qav
+
 .. **TODO** some interesting stuff to show? -> shaping in general increases delay even for high priority frames. but can overall decrease delay (as it decreases delay for lower priority frames)
 
 | INET version: ``4.4``
@@ -31,7 +33,7 @@ interface is currently transmitting or idle. Frame transmission is only allowed
 when the credit count is non-negative. When frames are transmitted, credit
 decreases with the channel data rate (`send slope`) until the  transmission is
 complete. When there is no transmission, credit increases with a rate called
-`idle slope`. The next frame is transmitted when the credit is zero or positive.
+`idle slope`. The next frame can begin transmitting when the credit is zero or positive.
 The idle slope controls the average outgoing data rate.
 
 In INET, the credit-based shaper is implemented by the
@@ -48,6 +50,8 @@ is shown below:
 
 .. figure:: media/timeawareshaper.png
    :align: center
+
+**TODO** annotate the CBS on the image
 
 Packets arriving in the time-aware shaper module are classified to the different
 traffic categories based on their PCP number. The priority is decided by the
