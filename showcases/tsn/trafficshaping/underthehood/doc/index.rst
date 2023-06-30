@@ -9,6 +9,12 @@ work outside the context of a network node. Doing so may facilitate assembling
 and validating specific complex scheduling and traffic shaping behaviors which
 can be difficult to replicate in a complete network.
 
+**TODO** pelda keppen ATS-t fogunk hasznalni....h legyen fogalmunk elmondjuk h mi van benne
+
+-> kiszereljuk az ats komponenseket egy networkbol -> es osszerakjuk
+
+-> standardhost/switch belseje -> 3 screenshot -> hogy itt vannak amugy
+
 | INET version: ``4.4``
 | Source files location: `inet/showcases/tsn/trafficshaping/underthehood <https://github.com/inet-framework/inet/tree/master/showcases/tsn/trafficshaping/underthehood>`__
 
@@ -22,8 +28,10 @@ is the same.
 
 .. note:: The :doc:`/showcases/tsn/trafficshaping/asynchronousshaper/doc/index` showcase demonstrates asynchronous traffic shaping in a complete network, and examines the asynchronous traffic shaper (ATS) in more detail. However, we give a quick summary of the required modules in the next section.
 
-ATS Overview
-++++++++++++
+Asynchronous Traffic Shaping Overview
++++++++++++++++++++++++++++++++++++++
+
+**TODO** add IEEE 802.1Qcr
 
 The Asynchronous Traffic Shaper (ATS) can smooth traffic by limiting it to a
 nominal data rate, while also allowing some burstiness. The ATS mechanism is
@@ -38,6 +46,10 @@ When using asynchronous shapers in a complete network, these modules are located
 in different parts of a network node (such as an Ethernet switch): the meter and
 filter modules are in the ingress filter of the bridging layer, the queue and
 gate are in an interface.
+
+**TODO** abra hogy hol vannak ezek egy standardhostban
+
+**TODO** the following not here. dont need the details -> Traffic shaping reszbe
 
 The ATS parameters are set in the :ned:`EligibilityTimeMeter` module: 
 
