@@ -4,7 +4,7 @@ Credit-Based Shaping
 Goals
 -----
 
-Credit-based shaping is a method of smoothing out traffic and reducing bursting
+**V orig** Credit-based shaping is a method of smoothing out traffic and reducing bursting
 in the outgoing interfaces of network nodes. It works by adding gaps (idle
 periods) between successive packets of an incoming packet burst. These gaps can
 be used to transmit traffic belonging to a higher priority traffic class, for
@@ -15,7 +15,13 @@ applications by reducing delay and jitter.
 In this example, we will demonstrate how to use the credit-based traffic shaper
 to smooth out traffic and reduce bursting in network nodes.
 
+**V2** Credit-Based Shaping (CBS), as defined in the IEEE 802.1Qav standard, is a
+traffic shaping mechanism that regulates the transmission rate of Ethernet
+frames to smooth out traffic and reduce bursts.
+
 **TODO** add IEEE 802.1Qav
+
+**TODO** dont need to explain cbs here; adding gaps -> not good like this;
 
 .. **TODO** some interesting stuff to show? -> shaping in general increases delay even for high priority frames. but can overall decrease delay (as it decreases delay for lower priority frames)
 
@@ -28,7 +34,7 @@ The Model
 Overview
 ~~~~~~~~
 
-The shaper maintains an amount of credit that changes depending on whether the
+**V orig** The shaper maintains an amount of credit that changes depending on whether the
 interface is currently transmitting or idle. Frame transmission is only allowed
 when the credit count is non-negative. When frames are transmitted, credit
 decreases with the channel data rate (`send slope`) until the  transmission is
@@ -36,37 +42,109 @@ complete. When there is no transmission, credit increases with a rate called
 `idle slope`. The next frame can begin transmitting when the credit is zero or positive.
 The idle slope controls the average outgoing data rate.
 
-In INET, the credit-based shaper is implemented by the
-:ned:`Ieee8021qCreditBasedShaper` simple module. This is a packet gate module
-that can be combined with a packet queue to implement the credit based shaper
-algorithm. A convenient way to combine a credit-based shaper with queues, and to
-insert it into network interfaces, is to use a :ned:`Ieee8021qTimeAwareShaper`.
-This module already has queue submodules, supports a configurable number of
-traffic classes, and fits into Ethernet interfaces by replacing the default
-packet queue module in the MAC layer of the interface. The credit-based shaper
-module takes the place of the optional ``transmissionSelectionAlgorithm``
-submodule of the time-aware shaper. The submodules of a time-aware shaper module
-is shown below:
+**V2** In CBS, each outgoing queue is associated with a credit counter. The credit
+counter accumulates credits when the queue is idle, and consumes credits when
+frames are transmitted. The rate at which credits are accumulated and consumed
+is configured using parameters such as the `idle slope` and `send slope`.
+
+When the queue contains a packet to be transmitted, the credit counter is checked. If the
+credit counter is non-negative, the frame is transmitted immediately. If the
+credit counter is negative, the frame is held back until the credit counter
+becomes non-negative.
+
+By controlling the transmission of frames based on credits, CBS introduces gaps
+between frames, smoothing the traffic and providing opportunities for
+higher-priority traffic to be transmitted. This helps in reducing latency and
+jitter.
+
+.. **V1** In INET, the credit-based shaper is implemented by the
+.. :ned:`Ieee8021qCreditBasedShaper` simple module. This is a packet gate module (i.e. it only passes packets when it is open),
+.. that can be combined with a packet queue to implement the credit based shaper
+.. algorithm. A convenient way to insert a credit-based shaper into a network interface is to add it as a submodule to a :ned:`Ieee8021qTimeAwareShaper`.
+.. The time aware shaper module has a configurable number of traffic classes, already contains queues for each, 
+.. and can be added to Ethernet interfaces by setting the TODO parameter in the network node to true. 
+.. The ``transmissionSelectionAlgorithm`` submodule of the time-aware shaper can be overriden to be a credit-based shaper.
+.. For example, here is a time-aware shaper module with credit-based shaper submodules, and two traffic classes:
+
+.. **V2** In INET, the credit-based shaper is implemented using the
+.. Ieee8021qCreditBasedShaper simple module. This module acts as a packet gate,
+.. allowing packets to pass through only when it is open. It can be combined with a
+.. packet queue to implement the credit-based shaper algorithm. To conveniently
+.. incorporate a credit-based shaper into a network interface, it can be added as a
+.. submodule to an Ieee8021qTimeAwareShaper. The Ieee8021qTimeAwareShaper module
+.. supports a configurable number of traffic classes, pre-existing queues for each class, and
+.. can be enabled for Ethernet interfaces by setting the appropriate parameter in
+.. the network node to true. To utilize a credit-based shaper, the
+.. transmissionSelectionAlgorithm submodule of the time-aware shaper can be
+.. overridden accordingly. As an example, here is a time-aware shaper module that
+.. incorporates credit-based shaper submodules and supports two traffic classes.
+
+**V3** In INET, the credit-based shaper is implemented using the
+:ned:`Ieee8021qCreditBasedShaper` simple module. This module acts as a packet gate,
+allowing packets to pass through only when it is open. It can be combined with a
+packet queue to implement the credit-based shaper algorithm. To conveniently
+incorporate a credit-based shaper into a network interface, it can be added as a
+submodule to an :ned:`Ieee8021qTimeAwareShaper`. The :ned:`Ieee8021qTimeAwareShaper` module
+supports a configurable number of traffic classes, pre-existing queues for each
+class, and can be enabled for Ethernet interfaces by setting the
+:par:`enableEgressTrafficShaping` parameter in the network node to ``true``. To utilize a
+credit-based shaper, the transmissionSelectionAlgorithm submodule of the
+time-aware shaper can be overridden accordingly. As an example, here is a
+time-aware shaper module that incorporates credit-based shaper submodules and
+supports two traffic classes:
+
+.. The credit-based shaper
+.. module takes the place of the optional ``transmissionSelectionAlgorithm``
+.. submodule of the time-aware shaper. The submodules of a time-aware shaper module
+.. is shown below:
+
+.. - the credit based shaper is a packet gate module (i.e. it only passes packets when it is open)
+.. that can be combined wit ha packet queue to implement the CBS algorithm. A convenient way to insert
+.. a CBS into a network node is as a submodule of a time aware shaper.
+.. - the time aware shaper has a configurable number of traffic classes, already contains queues for each, 
+.. and can be added to Ethernet interfaces by setting the TODO parameter in the network node to true.
+.. - then, the transmission selection algorithm submodule of the time aware shaper can be a credit based shaper
 
 .. figure:: media/timeawareshaper.png
    :align: center
 
 **TODO** annotate the CBS on the image
 
-Packets arriving in the time-aware shaper module are classified to the different
-traffic categories based on their PCP number. The priority is decided by the
-``transmissionSelection`` submodule. This is a :ned:`PriorityScheduler`
-configured to work in reverse order, i.e., priority increases with traffic class
-index (on the image above, ``video`` has priority over ``best effort``).
+.. Packets arriving in the time-aware shaper module are classified to the different
+.. traffic categories based on their PCP number. The priority is decided by the
+.. ``transmissionSelection`` submodule. This is a :ned:`PriorityScheduler`
+.. configured to work in reverse order, i.e., priority increases with traffic class
+.. index (on the image above, ``video`` has priority over ``best effort``).
 
-.. note:: By default, the time-aware shaper doesn't do any time-aware shaping, as its gates are always open. Thus it is possible to use the combined time-aware
-   shaper/credit-based shaper module as only a credit-based shaper this way, or add optional time-aware shaping as well (by specifying gate schedules).
+.. **V2**
+
+Packets entering the time-aware shaper module are classified into different
+traffic categories based on their PCP number using the
+:ned:`PcpTrafficClassClassifier`. The priority assignment is determined by the
+`transmissionSelection` submodule, which utilizes a :ned:`PriorityScheduler` configured
+to operate in reverse order, i.e. priority increases with the
+traffic class index. For example, in the provided image, video traffic takes
+precedence over best effort traffic.
+
+.. .. note:: By default, the time-aware shaper doesn't do any time-aware shaping, as its gates are always open. Thus it is possible to use the combined time-aware
+..    shaper/credit-based shaper module as only a credit-based shaper this way, or add optional time-aware shaping as well (by specifying gate schedules).
+
+**TODO** not a note, and not here.
 
 The :ned:`Ieee8021qCreditBasedShaper` module's :par:`idleSlope` parameter
 specifies the outgoing data rate of the shaper in `bps`. By default, the gate is
 open when the number of credits is zero or more. When the number of credits is
 positive, the shaper builds a burst reserve. However, by default, if there are
 no packets in the queue, the credits are set to zero.
+
+The Ieee8021qCreditBasedShaper module's idleSlope parameter determines the
+outgoing data rate of the shaper in bits per second (bps). The shaper allows
+packets to pass through when the number of credits is zero or more. When the
+number of credits is positive, the shaper accumulates a burst reserve. As
+defined in the standard, if there are no packets in the queue, the credits are
+set to zero.
+
+**TODO** other parameters as well
 
 .. note:: The :par:`idleSlope` parameter specifies the `channel data rate`. However, this is not the same as the data rate in the shaper due to protocol overhead.
           This is relevant when observing traffic in the shaper, as it isn't limited to the value of :par:`idleSlope`, but slightly less.
