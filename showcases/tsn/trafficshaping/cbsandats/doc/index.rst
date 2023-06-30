@@ -10,6 +10,8 @@ and an asynchronous traffic shaper (ATS).
 
 .. note:: Multiple traffic shapers are combined in the same traffic stream in the :doc:`/showcases/tsn/trafficshaping/cbsandtas/doc/index` showcase.
 
+**TODO** van egy masik showcase/lehet hogy erdekelne egy masik showcase -> you might be interested in looking at another showcase which ....
+
 | INET version: ``4.4``
 | Source files location: `inet/showcases/tsn/trafficshaping/mixingshapers <https://github.com/inet-framework/inet/tree/master/showcases/tsn/trafficshaping/mixingshapers>`__
 
@@ -88,6 +90,8 @@ configuration:
 - The stream encoder sets the PCP number according to the assigned stream name.
 - After transmission, the switch decodes the streams by the PCP number.
 
+**TODO** remove note and closable thing
+
 .. note::
 
    .. raw:: html
@@ -159,6 +163,8 @@ two traffic streams:
 
 .. figure:: media/shaper_both.png
    :align: center
+
+**TODO** committed information rate zorder-10
 
 The best effort traffic is shaped by the CBS. The shaper limits the data rate to
 the nominal value of 40Mbps, without bursts. The video stream is shaped by the

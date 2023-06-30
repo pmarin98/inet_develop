@@ -52,14 +52,14 @@ legend_style = [('incoming', {'linestyle': 'dashed', 'color': 'black'}),
                 ('outgoing', {'linestyle': 'solid', 'color': 'black'}),
                 ('best effort (CBS)', {'marker': 's', 'linestyle': '', 'color': default_colors[0]}),
                 ('video (ATS)', {'marker': 's', 'linestyle': '', 'color': default_colors[1]}),
-                ('committed information rate', {'linestyle': 'dashdot', 'color': 'grey'})]
+                ('committed information rate', {'linestyle': 'dashdot', 'color': 'black'})]
 
 handles, labels = inet.scave.plot.create_custom_legend(props, legend_style)
 
 plt.legend(handles, labels, ncol=3)
 
-plt.axhline(y=20.84, color='grey', linestyle='dashdot', linewidth=1.5)      # shaper data rate
-plt.axhline(y=41.68, color='grey', linestyle='dashdot', linewidth=1.5)      # shaper data rate
+plt.axhline(y=20.84, color='black', linestyle='dashdot', linewidth=0.5, zorder=-10)      # shaper data rate
+plt.axhline(y=41.68, color='black', linestyle='dashdot', linewidth=0.5, zorder=-10)      # shaper data rate
 
 plt.tight_layout()
 
