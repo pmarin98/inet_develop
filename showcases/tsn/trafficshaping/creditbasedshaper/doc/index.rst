@@ -11,10 +11,6 @@ frames to smooth out traffic and reduce bursts.
 In this showcase, we demonstrate the configuration and operation of credit-based shaping in INET
 with an example simulation.
 
-.. **TODO** add IEEE 802.1Qav
-
-.. **TODO** dont need to explain cbs here; adding gaps -> not good like this;
-
 .. **TODO** some interesting stuff to show? -> shaping in general increases delay even for high priority frames. but can overall decrease delay (as it decreases delay for lower priority frames)
 
 | INET version: ``4.4``
@@ -107,17 +103,6 @@ fluctuating traffic, which are assigned to two traffic categories. We insert
 credit-based shapers for each category into the switch's outgoing interface
 (``eth1``) to smooth traffic.
 
-   Similarly to the ``Time-Aware Shaping`` showcase, we want to observe only the
-   effect of the credit-based shaper on the traffic. Thus our goal is for the
-   traffic to only get altered in the traffic shaper, and minimize unintended
-   traffic shaping effects in other parts of the network.
-   We configure two traffic source applications in the client to create two
-   independent data streams that change sinusoidally, with ~37.7 and ~16.7 Mbps mean values,
-   respectively, but the links in the network on average are not saturated. Later
-   on, we configure the traffic shaper to limit the data rate to ~42 and ~21 Mbps
-   for the data streams, thus the incoming traffic is on average less than the
-   outgoing limit. Here is the traffic configuration:
-
 Analogous to the Time-Aware Shaping showcase, our objective is to isolate and
 observe the impact of the credit-based shaper on network traffic. To this end,
 we aim for the traffic to be only modified significantly by the credit-based
@@ -139,14 +124,6 @@ details of the traffic configuration:
 
 Traffic Shaping
 +++++++++++++++
-
-   In the client, we want to classify packets from the two packet sources into two
-   traffic classes: best effort and video. To do that, we enable IEEE 802.1 stream
-   identification and stream encoding by setting the :par:`hasOutgoingStreams`
-   parameter to ``true``. We configure the stream identifier module in the bridging
-   layer to assign the outgoing packets to named streams by their UDP destination
-   port. Then, the stream encoder sets the PCP number on the packets according to
-   the assigned stream name (using the IEEE 802.1Q header's PCP field):
 
 Within the client, our goal is to classify packets originating from the two
 packet sources into two traffic classes: `best effort` and
