@@ -172,15 +172,18 @@ void NewEthernetCsmaPhy::startTransmit(EthernetSignalBase *signal)
     signal->setDuration(duration);
     scheduleTxTimer(signal);
     currentTxSignal = signal;
+    auto packet = check_and_cast_nullable<Packet *>(currentTxSignal->getEncapsulatedPacket());
+    mac->handleTransmissionStart(packet);
     send(signal->dup(), SendOptions().transmissionId(signal->getId()).duration(duration), physOutGate);
 }
 
 void NewEthernetCsmaPhy::endTransmit()
 {
     ASSERT(currentTxSignal != nullptr);
+    auto packet = check_and_cast_nullable<Packet *>(currentTxSignal->getEncapsulatedPacket());
+    mac->handleTransmissionEnd(packet);
     delete currentTxSignal;
     currentTxSignal = nullptr;
-    mac->handleTransmissionEnd();
 }
 
 void NewEthernetCsmaPhy::startJamSignalTransmission()
@@ -228,11 +231,12 @@ void NewEthernetCsmaPhy::endSignalTransmission()
 void NewEthernetCsmaPhy::startFrameTransmission(Packet *packet)
 {
     Enter_Method("startFrameTransmission");
+    take(packet);
     encapsulate(packet);
     auto signal = new EthernetSignal(packet->getName());
     signal->setKind(DATA);
     signal->encapsulate(packet);
-    handleWithFsm(TX_START, packet);
+    handleWithFsm(TX_START, signal);
 }
 
 void NewEthernetCsmaPhy::endFrameTransmission()
@@ -244,7 +248,9 @@ void NewEthernetCsmaPhy::endFrameTransmission()
 
 void NewEthernetCsmaPhy::startReceive(EthernetSignalBase *signal)
 {
+    auto packet = check_and_cast_nullable<Packet *>(signal->getEncapsulatedPacket());
     mac->handleCarrierSenseStart();
+    mac->handleReceptionStart(packet);
     updateRxSignals(signal);
 }
 
@@ -256,7 +262,7 @@ void NewEthernetCsmaPhy::endReceive()
         if (packet != nullptr) {
             if (signal->getKind() == DATA)
                 decapsulate(packet);
-            mac->handleReceivedPacket(packet);
+            mac->handleReceptionEnd(packet);
         }
         delete signal;
     }

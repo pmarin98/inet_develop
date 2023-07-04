@@ -155,19 +155,19 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
     virtual void handleCollisionStart() override;
     virtual void handleCollisionEnd() override;
 
-    virtual void handleTransmissionEnd() override;
+    virtual void handleTransmissionStart(Packet *packet) override;
+    virtual void handleTransmissionEnd(Packet *packet) override;
 
-    virtual void handleReceivedPacket(Packet *packet) override;
+    virtual void handleReceptionStart(Packet *packet) override;
+    virtual void handleReceptionEnd(Packet *packet) override;
 
-    virtual void startJamSignalTransmission() override;
-    virtual void startBeaconSignalTransmission() override { throw cRuntimeError("TODO"); }
-    virtual void startCommitSignalTransmission() override { throw cRuntimeError("TODO"); }
-    virtual void endSignalTransmission() override { throw cRuntimeError("TODO"); }
+    virtual void startJamSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
+    virtual void startBeaconSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
+    virtual void startCommitSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
+    virtual void endSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
 
-    virtual void startFrameTransmission(Packet *packet) override { throw cRuntimeError("TODO"); }
-    virtual void endFrameTransmission() override { throw cRuntimeError("TODO"); }
-
-    virtual EthernetSignalBase *getReceivedSignal() override;
+    virtual void startFrameTransmission(Packet *packet) override;
+    virtual void endFrameTransmission() override;
 };
 
 } // namespace physicallayer

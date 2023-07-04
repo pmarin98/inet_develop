@@ -109,36 +109,47 @@ void NewEthernetPlca::handleCarrierSenseEnd()
 
 void NewEthernetPlca::handleCollisionStart()
 {
-    throw cRuntimeError("Invalid operation");
+    Enter_Method("handleCollisionStart");
 }
 
 void NewEthernetPlca::handleCollisionEnd()
 {
-    throw cRuntimeError("Invalid operation");
+    Enter_Method("handleCollisionEnd");
 }
 
-void NewEthernetPlca::handleTransmissionEnd()
+void NewEthernetPlca::handleTransmissionStart(Packet *packet)
+{
+    Enter_Method("handleTransmissionStart");
+}
+
+void NewEthernetPlca::handleTransmissionEnd(Packet *packet)
 {
     Enter_Method("handleTransmissionEnd");
-    EV_DEBUG << "Handling transmission end" << EV_ENDL;
-    mac->handleTransmissionEnd();
 }
 
-void NewEthernetPlca::handleReceivedPacket(Packet *packet)
+void NewEthernetPlca::handleReceptionStart(Packet *packet)
 {
-    Enter_Method("handleReceivedPacket");
+    Enter_Method("handleReceptionStart");
+}
+
+void NewEthernetPlca::handleReceptionEnd(Packet *packet)
+{
+    Enter_Method("handleReceptionEnd");
     EV_DEBUG << "Handling received packet" << EV_FIELD(packet) << EV_ENDL;
-    mac->handleReceivedPacket(packet);
+    mac->handleReceptionEnd(packet);
 }
 
-void NewEthernetPlca::startJamSignalTransmission()
+void NewEthernetPlca::startFrameTransmission(Packet *packet)
 {
-    throw cRuntimeError("Invalid operation");
+    Enter_Method("startFrameTransmission");
+    take(packet);
+    phy->startFrameTransmission(packet);
 }
 
-EthernetSignalBase *NewEthernetPlca::getReceivedSignal()
+void NewEthernetPlca::endFrameTransmission()
 {
-    throw cRuntimeError("Invalid operation");
+    Enter_Method("endFrameTransmission");
+    phy->endFrameTransmission();
 }
 
 void NewEthernetPlca::handleWithControlFSM()

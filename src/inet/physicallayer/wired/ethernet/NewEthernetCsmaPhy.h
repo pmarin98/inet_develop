@@ -85,17 +85,8 @@ class INET_API NewEthernetCsmaPhy : public cSimpleModule, public virtual INewEth
     virtual void startTransmit(EthernetSignalBase *signal);
     virtual void endTransmit();
 
-    virtual void startJamSignalTransmission() override;
-    virtual void startBeaconSignalTransmission() override;
-    virtual void startCommitSignalTransmission() override;
-    virtual void endSignalTransmission() override;
-
-    virtual void startFrameTransmission(Packet *packet) override;
-    virtual void endFrameTransmission() override;
-
     virtual void startReceive(EthernetSignalBase *signal);
     virtual void endReceive();
-    virtual EthernetSignalBase *getReceivedSignal() override;
 
     virtual void encapsulate(Packet *packet);
     virtual void decapsulate(Packet *packet);
@@ -104,8 +95,18 @@ class INET_API NewEthernetCsmaPhy : public cSimpleModule, public virtual INewEth
     virtual void updateRxSignals(EthernetSignalBase *signal);
     virtual void scheduleTxTimer(EthernetSignalBase *signal);
 
+    virtual EthernetSignalBase *getReceivedSignal();
+
   public:
     virtual ~NewEthernetCsmaPhy();
+
+    virtual void startJamSignalTransmission() override;
+    virtual void startBeaconSignalTransmission() override;
+    virtual void startCommitSignalTransmission() override;
+    virtual void endSignalTransmission() override;
+
+    virtual void startFrameTransmission(Packet *packet) override;
+    virtual void endFrameTransmission() override;
 };
 
 } // namespace physicallayer

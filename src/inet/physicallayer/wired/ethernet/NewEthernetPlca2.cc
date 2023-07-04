@@ -130,7 +130,12 @@ void NewEthernetPlca2::handleCollisionEnd()
     throw cRuntimeError("TODO");
 }
 
-void NewEthernetPlca2::handleTransmissionEnd()
+void NewEthernetPlca2::handleTransmissionStart(Packet *packet)
+{
+    Enter_Method("handleTransmissionStart");
+}
+
+void NewEthernetPlca2::handleTransmissionEnd(Packet *packet)
 {
     Enter_Method("handleTransmissionEnd");
     EV_DEBUG << "Handling transmission end" << EV_ENDL;
@@ -141,13 +146,18 @@ void NewEthernetPlca2::handleTransmissionEnd()
         handleCRSChanged();
     }
     else
-        mac->handleTransmissionEnd();
+        mac->handleTransmissionEnd(packet);
     scheduleAfter(to_interval, to_timer);
 }
 
-void NewEthernetPlca2::handleReceivedPacket(Packet *packet)
+void NewEthernetPlca2::handleReceptionStart(Packet *packet)
 {
-    Enter_Method("handleReceivedPacket");
+    Enter_Method("handleReceptionStart");
+}
+
+void NewEthernetPlca2::handleReceptionEnd(Packet *packet)
+{
+    Enter_Method("handleReceptionEnd");
     EV_DEBUG << "Handling received packet" << EV_FIELD(packet) << EV_ENDL;
     if (!strcmp(packet->getName(), "PLCA_BEACON")) {
         curID = 0;
@@ -155,17 +165,17 @@ void NewEthernetPlca2::handleReceivedPacket(Packet *packet)
         handleCRSChanged();
     }
     else
-        mac->handleReceivedPacket(packet);
+        mac->handleReceptionEnd(packet);
 }
 
-void NewEthernetPlca2::startJamSignalTransmission()
+void NewEthernetPlca2::startFrameTransmission(Packet *packet)
 {
-    throw cRuntimeError("Invalid operation");
+    phy->startFrameTransmission(packet);
 }
 
-EthernetSignalBase *NewEthernetPlca2::getReceivedSignal()
+void NewEthernetPlca2::endFrameTransmission()
 {
-    throw cRuntimeError("Invalid operation");
+    phy->endFrameTransmission();
 }
 
 void NewEthernetPlca2::handleCRSChanged()

@@ -64,13 +64,6 @@ void NewEthernetCsmaMac::handleLowerPacket(Packet *packet)
     handleWithFsm(LOWER_PACKET, packet);
 }
 
-void NewEthernetCsmaMac::handleReceivedPacket(Packet *packet)
-{
-    Enter_Method("handleReceivedPacket");
-    take(packet);
-    handleWithFsm(LOWER_PACKET, packet);
-}
-
 void NewEthernetCsmaMac::handleCarrierSenseStart()
 {
     Enter_Method("handleCarrierSenseStart");
@@ -99,10 +92,29 @@ void NewEthernetCsmaMac::handleCollisionEnd()
     // NOTE: this event is not needed in the FSM
 }
 
-void NewEthernetCsmaMac::handleTransmissionEnd()
+void NewEthernetCsmaMac::handleTransmissionStart(Packet *packet)
+{
+    Enter_Method("handleTransmissionStart");
+    // NOTE: this event is not needed in the FSM
+}
+
+void NewEthernetCsmaMac::handleTransmissionEnd(Packet *packet)
 {
     Enter_Method("handleTransmissionEnd");
-    handleWithFsm(TX_END, nullptr);
+    handleWithFsm(TX_END, packet);
+}
+
+void NewEthernetCsmaMac::handleReceptionStart(Packet *packet)
+{
+    Enter_Method("handleReceptionStart");
+    // NOTE: this event is not needed in the FSM
+}
+
+void NewEthernetCsmaMac::handleReceptionEnd(Packet *packet)
+{
+    Enter_Method("handleReceptionEnd");
+    take(packet);
+    handleWithFsm(LOWER_PACKET, packet);
 }
 
 void NewEthernetCsmaMac::handleWithFsm(int event, cMessage *message)

@@ -100,15 +100,17 @@ class INET_API NewEthernetCsmaMac : public MacProtocolBase, public virtual INewE
     virtual void handleUpperPacket(Packet *packet) override;
     virtual void handleLowerPacket(Packet *packet) override;
 
-    virtual void handleReceivedPacket(Packet *packet) override;
-
     virtual void handleCarrierSenseStart() override;
     virtual void handleCarrierSenseEnd() override;
 
     virtual void handleCollisionStart() override;
     virtual void handleCollisionEnd() override;
 
-    virtual void handleTransmissionEnd() override;
+    virtual void handleTransmissionStart(Packet *packet) override;
+    virtual void handleTransmissionEnd(Packet *packet) override;
+
+    virtual void handleReceptionStart(Packet *packet) override;
+    virtual void handleReceptionEnd(Packet *packet) override;
 
     virtual IPassivePacketSource *getProvider(const cGate *gate) override;
     virtual void handleCanPullPacketChanged(const cGate *gate) override;
