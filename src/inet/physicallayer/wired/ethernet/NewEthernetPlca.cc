@@ -131,12 +131,7 @@ void NewEthernetPlca::handleReceivedPacket(Packet *packet)
     mac->handleReceivedPacket(packet);
 }
 
-void NewEthernetPlca::transmitJamSignal()
-{
-    throw cRuntimeError("Invalid operation");
-}
-
-void NewEthernetPlca::transmitPlcaBeacon()
+void NewEthernetPlca::startJamSignalTransmission()
 {
     throw cRuntimeError("Invalid operation");
 }
@@ -152,7 +147,7 @@ void NewEthernetPlca::handleWithControlFSM()
     FSMA_Switch(controlFsm) {
         FSMA_State(CS_DISABLE) {
             FSMA_Enter(
-                tx_cmd = "NONE";
+                phy->endSignalTransmission();
                 committed = false;
                 curID = 0;
                 plca_active = false;
@@ -215,7 +210,7 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_SEND_BEACON) {
             FSMA_Enter(
                 scheduleAfter(20 / 100E+6, beacon_timer);
-                phy->transmitPlcaBeacon();
+                phy->startBeaconSignalTransmission();
                 plca_active = true;
             );
             FSMA_Transition(TRANSITION1,
@@ -234,7 +229,7 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_SYNCING) {
             FSMA_Enter(
                 curID = 0;
-                tx_cmd = "NONE";
+                phy->endSignalTransmission();
                 plca_active = true;
                 if (local_nodeID != 0 && rx_cmd != "BEACON")
                     scheduleAfter(4000E-9, invalid_beacon_timer);
@@ -313,7 +308,7 @@ void NewEthernetPlca::handleWithControlFSM()
         }
         FSMA_State(CS_COMMIT) {
             FSMA_Enter(
-                tx_cmd = "COMMIT";
+                phy->startCommitSignalTransmission();
                 committed = true;
                 cancelEvent(to_timer);
                 bc = 0;
@@ -369,7 +364,7 @@ void NewEthernetPlca::handleWithControlFSM()
         }
         FSMA_State(CS_TRANSMIT) {
             FSMA_Enter(
-                tx_cmd = "NONE";
+                phy->endSignalTransmission();
                 if (bc >= max_bc)
                     committed = false;
             );
@@ -393,7 +388,7 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_BURST) {
             FSMA_Enter(
                 bc = bc + 1;
-                tx_cmd = "COMMIT";
+                phy->startCommitSignalTransmission();
                 scheduleAfter(burst_interval, burst_timer);
             );
             FSMA_Transition(TRANSITION1,
@@ -415,7 +410,7 @@ void NewEthernetPlca::handleWithControlFSM()
         }
         FSMA_State(CS_ABORT) {
             FSMA_Enter(
-                tx_cmd = "NONE";
+                phy->endSignalTransmission();
             );
             FSMA_Transition(TRANSITION1,
                             !CRS,

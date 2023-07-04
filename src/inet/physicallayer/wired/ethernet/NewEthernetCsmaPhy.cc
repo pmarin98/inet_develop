@@ -61,7 +61,7 @@ void NewEthernetCsmaPhy::handleSelfMessage(cMessage *message)
 
 void NewEthernetCsmaPhy::handleUpperPacket(Packet *packet)
 {
-    handleWithFsm(TX_START, packet);
+    startFrameTransmission(packet);
 }
 
 void NewEthernetCsmaPhy::handleEthernetSignal(EthernetSignalBase *signal)
@@ -76,7 +76,7 @@ void NewEthernetCsmaPhy::handleWithFsm(int event, cMessage *message)
             FSMA_Event_Transition(TX_START,
                                   event == TX_START,
                                   TRANSMITTING,
-                startTransmit(check_and_cast<Packet *>(message));
+                startTransmit(check_and_cast<EthernetSignalBase *>(message));
             );
             FSMA_Event_Transition(RX_START,
                                   event == RX_START,
@@ -119,7 +119,7 @@ void NewEthernetCsmaPhy::handleWithFsm(int event, cMessage *message)
                                   event == TX_START,
                                   COLLISION,
                 // KLUDGE TODO this is needed for fingerprint compatibility
-                startTransmit(check_and_cast<Packet *>(message));
+                startTransmit(check_and_cast<EthernetSignalBase *>(message));
                 mac->handleCollisionStart();
             );
             FSMA_Fail_On_Unhandled_Event();
@@ -162,15 +162,13 @@ void NewEthernetCsmaPhy::handleWithFsm(int event, cMessage *message)
     }
 }
 
-void NewEthernetCsmaPhy::startTransmit(Packet *packet)
+void NewEthernetCsmaPhy::startTransmit(EthernetSignalBase *signal)
 {
     ASSERT(currentTxSignal == nullptr);
-    encapsulate(packet);
-    auto signal = new EthernetSignal(packet->getName());
+    auto bitrate = 100E+6; // TODO curEtherDescr->txrate);
+    auto duration = signal->getBitLength() / bitrate;
     signal->setSrcMacFullDuplex(false);
-    signal->encapsulate(packet);
-    signal->setBitrate(100E+6); // TODO curEtherDescr->txrate);
-    auto duration = signal->getBitLength() / 100E+6; // TODO this->curEtherDescr->txrate);
+    signal->setBitrate(bitrate);
     signal->setDuration(duration);
     scheduleTxTimer(signal);
     currentTxSignal = signal;
@@ -185,7 +183,7 @@ void NewEthernetCsmaPhy::endTransmit()
     mac->handleTransmissionEnd();
 }
 
-void NewEthernetCsmaPhy::transmitJamSignal()
+void NewEthernetCsmaPhy::startJamSignalTransmission()
 {
     Enter_Method("transmitJamSignal");
     if (currentTxSignal != nullptr) {
@@ -195,29 +193,53 @@ void NewEthernetCsmaPhy::transmitJamSignal()
         send(currentTxSignal, SendOptions().finishTx(currentTxSignal->getId()), physOutGate);
         currentTxSignal = nullptr;
     }
-    auto signal = new EthernetJamSignal("JAM_SIGNAL");
-    signal->setSrcMacFullDuplex(false);
+    auto signal = new EthernetSignal("Jam");
+    signal->setKind(JAM);
     signal->setByteLength(B(JAM_SIGNAL_BYTES).get());
-    signal->setBitrate(100E+6); // TODO curEtherDescr->txrate);
-    simtime_t duration = signal->getBitLength() / 100E+6; // TODO this->curEtherDescr->txrate;
-    signal->setDuration(duration);
     cancelEvent(txTimer);
-    scheduleTxTimer(signal);
-    currentTxSignal = signal;
-    send(signal->dup(), SendOptions().transmissionId(signal->getId()).duration(duration), physOutGate);
+    handleWithFsm(TX_START, signal);
 }
 
-void NewEthernetCsmaPhy::transmitPlcaBeacon()
+void NewEthernetCsmaPhy::startBeaconSignalTransmission()
 {
-    Enter_Method("transmitPlcaBeacon");
-    auto signal = new EthernetSignal("PLCA_BEACON");
-    signal->setSrcMacFullDuplex(false);
+    Enter_Method("startBeaconSignalTransmission");
+    auto signal = new EthernetSignal("Beacon");
+    signal->setKind(BEACON);
     signal->setBitLength(20);
-    signal->setBitrate(100E+6); // TODO curEtherDescr->txrate);
-    simtime_t duration = signal->getBitLength() / 100E+6; // TODO this->curEtherDescr->txrate;
-    signal->setDuration(duration);
-    currentTxSignal = signal;
-    send(signal->dup(), SendOptions().transmissionId(signal->getId()).duration(duration), physOutGate);
+    handleWithFsm(TX_START, signal);
+}
+
+void NewEthernetCsmaPhy::startCommitSignalTransmission()
+{
+    Enter_Method("startCommitSignalTransmission");
+    auto signal = new EthernetSignal("Commit");
+    signal->setKind(COMMIT);
+    signal->setBitLength(20);
+    handleWithFsm(TX_START, signal);
+}
+
+void NewEthernetCsmaPhy::endSignalTransmission()
+{
+    Enter_Method("endSignalTransmission");
+    cancelEvent(txTimer);
+    handleWithFsm(TX_END, currentTxSignal);
+}
+
+void NewEthernetCsmaPhy::startFrameTransmission(Packet *packet)
+{
+    Enter_Method("startFrameTransmission");
+    encapsulate(packet);
+    auto signal = new EthernetSignal(packet->getName());
+    signal->setKind(DATA);
+    signal->encapsulate(packet);
+    handleWithFsm(TX_START, packet);
+}
+
+void NewEthernetCsmaPhy::endFrameTransmission()
+{
+    Enter_Method("endFrameTransmission");
+    cancelEvent(txTimer);
+    handleWithFsm(TX_END, currentTxSignal);
 }
 
 void NewEthernetCsmaPhy::startReceive(EthernetSignalBase *signal)
@@ -231,11 +253,12 @@ void NewEthernetCsmaPhy::endReceive()
     if (rxSignals.size() == 1) {
         EthernetSignalBase *signal = rxSignals[0].signal;
         auto packet = check_and_cast_nullable<Packet *>(signal->decapsulate());
-        delete signal;
         if (packet != nullptr) {
-            decapsulate(packet);
+            if (signal->getKind() == DATA)
+                decapsulate(packet);
             mac->handleReceivedPacket(packet);
         }
+        delete signal;
     }
     rxSignals.clear();
     mac->handleCarrierSenseEnd();

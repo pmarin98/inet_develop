@@ -159,8 +159,13 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
 
     virtual void handleReceivedPacket(Packet *packet) override;
 
-    virtual void transmitJamSignal() override;
-    virtual void transmitPlcaBeacon() override;
+    virtual void startJamSignalTransmission() override;
+    virtual void startBeaconSignalTransmission() override { throw cRuntimeError("TODO"); }
+    virtual void startCommitSignalTransmission() override { throw cRuntimeError("TODO"); }
+    virtual void endSignalTransmission() override { throw cRuntimeError("TODO"); }
+
+    virtual void startFrameTransmission(Packet *packet) override { throw cRuntimeError("TODO"); }
+    virtual void endFrameTransmission() override { throw cRuntimeError("TODO"); }
 
     virtual EthernetSignalBase *getReceivedSignal() override;
 };

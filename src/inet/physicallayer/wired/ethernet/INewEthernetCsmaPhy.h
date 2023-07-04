@@ -17,11 +17,13 @@ namespace physicallayer {
 class INET_API INewEthernetCsmaPhy
 {
   public:
-    virtual void transmitJamSignal() = 0;
+    virtual void startJamSignalTransmission() = 0;
+    virtual void startBeaconSignalTransmission() = 0;
+    virtual void startCommitSignalTransmission() = 0;
+    virtual void endSignalTransmission() = 0;
 
-    virtual void transmitPlcaBeacon() = 0;
-
-//    virtual void transmitFrame(Packet *frame) = 0;
+    virtual void startFrameTransmission(Packet *packet) = 0;
+    virtual void endFrameTransmission() = 0;
 
     virtual EthernetSignalBase *getReceivedSignal() = 0;
 };

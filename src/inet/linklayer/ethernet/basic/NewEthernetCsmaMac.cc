@@ -153,7 +153,7 @@ void NewEthernetCsmaMac::handleWithFsm(int event, cMessage *message)
             FSMA_Event_Transition(COLLISION_START,
                                   event == COLLISION_START,
                                   JAMMING,
-                phy->transmitJamSignal();
+                phy->startJamSignalTransmission();
             );
             FSMA_Ignore_Event(event == CARRIER_SENSE_START);
             FSMA_Fail_On_Unhandled_Event();
@@ -221,7 +221,7 @@ void NewEthernetCsmaMac::startTransmission()
                 currentTxFrame->getDataLength().str().c_str(), MAX_ETHERNET_FRAME_BYTES.str().c_str());
     }
     addPaddingAndSetFcs(currentTxFrame, MIN_ETHERNET_FRAME_BYTES);
-    sendDown(currentTxFrame->dup());
+    phy->startFrameTransmission(currentTxFrame->dup());
 }
 
 void NewEthernetCsmaMac::endTransmission()
