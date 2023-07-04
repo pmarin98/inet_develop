@@ -22,8 +22,6 @@ frames to smooth out traffic and reduce bursts.
 In this showcase, we demonstrate the configuration and operation of credit-based shaping in INET
 with an example simulation.
 
-
-
 .. **TODO** add IEEE 802.1Qav
 
 .. **TODO** dont need to explain cbs here; adding gaps -> not good like this;
@@ -36,13 +34,22 @@ with an example simulation.
 Credit-Based Shaping Overview
 -----------------------------
 
-   The shaper maintains an amount of credit that changes depending on whether the
-   interface is currently transmitting or idle. Frame transmission is only allowed
-   when the credit count is non-negative. When frames are transmitted, credit
-   decreases with the channel data rate (`send slope`) until the  transmission is
-   complete. When there is no transmission, credit increases with a rate called
-   `idle slope`. The next frame can begin transmitting when the credit is zero or positive.
-   The idle slope controls the average outgoing data rate.
+   .. The shaper maintains an amount of credit that changes depending on whether the
+   .. interface is currently transmitting or idle. Frame transmission is only allowed
+   .. when the credit count is non-negative. When frames are transmitted, credit
+   .. decreases with the channel data rate (`send slope`) until the  transmission is
+   .. complete. When there is no transmission, credit increases with a rate called
+   .. `idle slope`. The next frame can begin transmitting when the credit is zero or positive.
+   .. The idle slope controls the average outgoing data rate.
+
+.. **TODO** melyik layerben van es mi celja;
+
+The Credit Based Shaping (CBS) is an algorithm designed for
+network traffic management. Its core function is to limit the bandwidth a
+Traffic Class queue can transmit, ensuring optimal bandwidth distribution.
+It helps smoothing out bursts by delaying the transmission of successive
+frames. CBS helps in mitigating network
+congestion in bridges and enhancing overall network performance.
 
 In CBS, each outgoing queue is associated with a credit counter. The credit
 counter accumulates credits when the queue is idle, and consumes credits when
@@ -53,11 +60,6 @@ When the queue contains a packet to be transmitted, the credit counter is checke
 credit counter is non-negative, the frame is transmitted immediately. If the
 credit counter is negative, the frame is held back until the credit counter
 becomes non-negative.
-
-By controlling the transmission of frames based on credits, CBS introduces gaps
-between frames, smoothing the traffic and providing opportunities for
-higher-priority traffic to be transmitted. This helps in reducing latency and
-jitter.
 
 .. **V1** In INET, the credit-based shaper is implemented by the
 .. :ned:`Ieee8021qCreditBasedShaper` simple module. This is a packet gate module (i.e. it only passes packets when it is open),
@@ -87,16 +89,33 @@ CBS Implementation in INET
 In INET, the credit-based shaper is implemented by the
 :ned:`Ieee8021qCreditBasedShaper` simple module. This module acts as a packet gate,
 allowing packets to pass through only when it is open. It can be combined with a
-packet queue to implement the credit-based shaper algorithm. To conveniently
-incorporate a credit-based shaper into a network interface, it can be added as a
-submodule to an :ned:`Ieee8021qTimeAwareShaper`. The :ned:`Ieee8021qTimeAwareShaper` module
-supports a configurable number of traffic classes, pre-existing queues for each
-class, and can be enabled for Ethernet interfaces by setting the
-:par:`enableEgressTrafficShaping` parameter in the network node to ``true``. To utilize a
-credit-based shaper, the ``transmissionSelectionAlgorithm`` submodule of the
-time-aware shaper can be overridden accordingly. As an example, here is a
-time-aware shaper module that incorporates credit-based shaper submodules and
-supports two traffic classes:
+packet queue to implement the credit-based shaper algorithm. 
+
+The :ned:`Ieee8021qCreditBasedShaper` module has the following parameters:
+
+- :par:`idleSlope`: Determines the outgoing data rate of the shaper, measured in bits per second
+- :par:`sendSlope`: The consumption rate of credits during transmission, measured in bits per second (default: idleSlope - channel bitrate)
+- :par:`transmitCreditLimit`: credit limit above which the gate is open, measured in bits (default: 0)
+- :par:`minCredit` and :par:`maxCredit`: a minimum and maximum limit for credits, measured in bits (default: no limit)
+
+The :par:`idleSlope` parameter determines the data rate at which the traffic will be limited, `as measured
+in the Ethernet channel` (thus including protocol overhead). Typically, this is the only parameter that needs to be set,
+as the others have reasonable defaults.
+
+The shaper allows packets to pass through when the number of credits is zero or
+more. When the number of credits is positive, the shaper accumulates a burst
+reserve. As defined in the standard, if there are no packets in the queue, the
+credits are set to zero.
+
+To conveniently incorporate a credit-based shaper into a network interface, it
+can be added as a submodule to an :ned:`Ieee8021qTimeAwareShaper`. The
+:ned:`Ieee8021qTimeAwareShaper` module supports a configurable number of traffic
+classes, pre-existing queues for each class, and can be enabled for Ethernet
+interfaces by setting the :par:`enableEgressTrafficShaping` parameter in the
+network node to ``true``. To utilize a credit-based shaper, the
+``transmissionSelectionAlgorithm`` submodule of the time-aware shaper can be
+overridden accordingly. As an example, here is a time-aware shaper module that
+incorporates credit-based shaper submodules and supports two traffic classes:
 
 .. The credit-based shaper
 .. module takes the place of the optional ``transmissionSelectionAlgorithm``
@@ -142,40 +161,7 @@ precedence over best effort traffic.
    positive, the shaper builds a burst reserve. However, by default, if there are
    no packets in the queue, the credits are set to zero.
 
-The :par:`idleSlope` parameter of the :par:`Ieee8021qCreditBasedShaper` module determines the
-outgoing data rate of the shaper, measured in bits per second. The specified
-value determines the data rate to which the traffic will be limited, `as measured
-in the Ethernet channel` (thus including protocol overhead). The shaper allows
-packets to pass through when the number of credits is zero or more. When the
-number of credits is positive, the shaper accumulates a burst reserve. As
-defined in the standard, if there are no packets in the queue, the credits are
-set to zero.
-
-.. The idleSlope parameter of the Ieee8021qCreditBasedShaper module determines the
-.. outgoing data rate of the shaper, measured in bits per second, within the
-.. channel. This parameter defines the data rate at which the shaper limits traffic.
-
-.. The idleSlope parameter of the Ieee8021qCreditBasedShaper module determines the
-.. outgoing data rate of the shaper, measured in bits per second within the
-.. channel. This parameter defines the data rate at which the shaper limits the
-.. traffic.
-
-.. when specifying the idleslop, note that this value will be measured 
-
-.. the value to which traffic will be limited is measured on the channel
-
-.. The specified value determines the data rate to which the traffic will be limited to,
-.. as measured in the Ethernet channel (thus including protocol orverheads).
-
-.. .. note:: The value specified with the :par:`idleSlope` represents the shaper's outgoing data rate
-..           as measured in the channel. However, the actual data
-..           rate within the shaper may be slightly lower due to protocol overhead. -> so is this needed?
-
-Other parameters include the following:
-
-- :par:`sendSlope`: The consumption rate of credits during transmission (default: idleSlope - channel bitrate)
-- :par:`transmitCreditLimit`: credit limit above which the gate is open (default: 0)
-- :par:`minCredit` and :par:`maxCredit`: a minimum and maximum limit for credits (default: no limit)
+.. **TODO** az idleslope-ot erdemes beallitani mert at obbire van reasonable default;
 
 .. **TODO** other parameters as well; min and max credits
 
@@ -186,15 +172,16 @@ Other parameters include the following:
             as measured in the channel. However, the actual data
             rate within the shaper may be slightly lower due to protocol overhead. -> i guess this not here
 
-The Configuration
------------------
+The Model
+---------
 
 The Network
 +++++++++++
 
-The network contains three network nodes. The client and the server (:ned:`TsnDevice`)
-are connected through the switch (:ned:`TsnSwitch`), with 100Mbps EthernetLink
-channels:
+We demonstrate the operation of CBS using a network containing a client, a server and a switch.
+The client and the server (:ned:`TsnDevice`)
+are connected through the switch (:ned:`TsnSwitch`), with 100Mbps Ethernet
+links:
 
 .. figure:: media/Network.png
    :align: center
