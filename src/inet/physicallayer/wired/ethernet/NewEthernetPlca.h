@@ -18,10 +18,13 @@ namespace inet {
 
 namespace physicallayer {
 
+/**
+ * This class implements Physical Layer Collision Avoidance (PLCA) from IEEE Std 802.3cg-2019.
+ */
 class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthernetCsmaMac, public virtual INewEthernetCsmaPhy
 {
   protected:
-    // 148.4.4.6 State diagram of IEEE Std 802.3cg-2019
+    // 148.4.4.6 State diagram from IEEE Std 802.3cg-2019
     enum ControlState {
         CS_DISABLE,
         CS_RESYNC,
@@ -39,6 +42,7 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
         CS_NEXT_TX_OPPORTUNITY,
     };
 
+    // 148.4.5.7 State diagram from IEEE Std 802.3cg-2019
     enum DataState {
         DS_NORMAL,
         DS_WAIT_IDLE,
@@ -54,39 +58,28 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
         DS_FLUSH,
     };
 
-    // 148.4.6.5 State diagram of IEEE Std 802.3cg-2019
+    // 148.4.6.5 State diagram from IEEE Std 802.3cg-2019
     enum StatusState {
         SS_INACTIVE,
         SS_ACTIVE,
         SS_HYSTERESIS,
     };
 
-    enum Event {
-        BEACON_TIMER_DONE,
-        BEACON_DET_TIMER_DONE,
-        INVALID_BEACON_TIMER_DONE,
-        BURST_TIMER_DONE,
-        TO_TIMER_DONE,
-        PENDING_TIMER_DONE,
-        COMMIT_TIMER_DONE,
-        PLCA_STATUS_TIMER_DONE,
-        CRS_CHANGED,
-    };
-
   protected:
-    // parameters
+    // parameters which can be configured from the NED/INI files
     bool plca_en = false;
     int plca_node_count = -1;
     int local_nodeID = -1;
     int max_bc = -1;
+    int delay_line_length = -1;
     simtime_t to_interval;
     simtime_t burst_interval;
 
-    // environment
+    // environment for external communication
     INewEthernetCsmaPhy *phy = nullptr;
     INewEthernetCsmaMac *mac = nullptr;
 
-    // state
+    // state machines
     cFSM controlFsm;
     cFSM dataFsm;
     cFSM statusFsm;
@@ -110,24 +103,30 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
     int b = -1;
     int bc = 0;
     int curID = -1;
-    int delay_line_length = -1;
-    std::string CARRIER_STATUS;
+    Packet *plca_txd = nullptr;
+    Packet *TXD = nullptr;
+    std::string CARRIER_STATUS = "CARRIER_OFF";
     std::string rx_cmd; // possible values "NONE", "BEACON", "COMMIT"
-    std::string SIGNAL_STATUS;
+    std::string SIGNAL_STATUS = "NO_SIGNAL_ERROR";
     std::string tx_cmd; // possible values "NONE", "BEACON", "COMMIT"
 
-    // control timers
+    // additional state variables
+    bool old_carrier_sense_signal = false;
+    bool old_collision_signal = false;
+
+    // control state machine timers
     cMessage *beacon_timer = nullptr;
     cMessage *beacon_det_timer = nullptr;
     cMessage *invalid_beacon_timer = nullptr;
     cMessage *burst_timer = nullptr;
     cMessage *to_timer = nullptr;
 
-    // data timers
+    // data state machine timers
+    cMessage *hold_timer = nullptr; // additional timer not present in the standard to avoid looping per bit
     cMessage *pending_timer = nullptr;
     cMessage *commit_timer = nullptr;
 
-    // status timers
+    // status state machine timers
     cMessage *plca_status_timer = nullptr;
 
     // statistics
@@ -144,7 +143,7 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
     virtual void handleWithDataFSM();
     virtual void handleWithStatusFSM();
 
-    virtual void handleWithFSM();
+    virtual void handleWithFSMs();
 
   public:
     virtual ~NewEthernetPlca();
@@ -155,16 +154,14 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
     virtual void handleCollisionStart() override;
     virtual void handleCollisionEnd() override;
 
-    virtual void handleTransmissionStart(int signalType, Packet *packet) override;
-    virtual void handleTransmissionEnd(int signalType, Packet *packet) override;
+    virtual void handleTransmissionStart(SignalType signalType, Packet *packet) override;
+    virtual void handleTransmissionEnd(SignalType signalType, Packet *packet) override;
 
-    virtual void handleReceptionStart(int signalType, Packet *packet) override;
-    virtual void handleReceptionEnd(int signalType, Packet *packet) override;
+    virtual void handleReceptionStart(SignalType signalType, Packet *packet) override;
+    virtual void handleReceptionEnd(SignalType signalType, Packet *packet) override;
 
-    virtual void startJamSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
-    virtual void startBeaconSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
-    virtual void startCommitSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
-    virtual void endSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
+    virtual void startSignalTransmission(SignalType signalType) override;
+    virtual void endSignalTransmission() override;
 
     virtual void startFrameTransmission(Packet *packet) override;
     virtual void endFrameTransmission() override;

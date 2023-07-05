@@ -64,15 +64,13 @@ class INET_API NewEthernetPlca2 : public cSimpleModule, public virtual INewEther
     virtual void handleCollisionStart() override;
     virtual void handleCollisionEnd() override;
 
-    virtual void handleTransmissionStart(int signalType, Packet *packet) override;
-    virtual void handleTransmissionEnd(int signalType, Packet *packet) override;
+    virtual void handleTransmissionStart(SignalType signalType, Packet *packet) override;
+    virtual void handleTransmissionEnd(SignalType signalType, Packet *packet) override;
 
-    virtual void handleReceptionStart(int signalType, Packet *packet) override;
-    virtual void handleReceptionEnd(int signalType, Packet *packet) override;
+    virtual void handleReceptionStart(SignalType signalType, Packet *packet) override;
+    virtual void handleReceptionEnd(SignalType signalType, Packet *packet) override;
 
-    virtual void startJamSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
-    virtual void startBeaconSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
-    virtual void startCommitSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
+    virtual void startSignalTransmission(SignalType signalType) override { throw cRuntimeError("Invalid operation"); }
     virtual void endSignalTransmission() override { throw cRuntimeError("Invalid operation"); }
 
     virtual void startFrameTransmission(Packet *packet) override;

@@ -56,16 +56,19 @@ void NewEthernetCsmaPhy::handleMessage(cMessage *message)
 
 void NewEthernetCsmaPhy::handleSelfMessage(cMessage *message)
 {
+    EV_DEBUG << "Handling self message" << EV_FIELD(message) << EV_ENDL;
     handleWithFsm(message->getKind(), message);
 }
 
 void NewEthernetCsmaPhy::handleUpperPacket(Packet *packet)
 {
+    EV_DEBUG << "Handling upper packet" << EV_FIELD(packet) << EV_ENDL;
     startFrameTransmission(packet);
 }
 
 void NewEthernetCsmaPhy::handleEthernetSignal(EthernetSignalBase *signal)
 {
+    EV_DEBUG << "Handling Ethernet signal" << EV_FIELD(signal) << EV_ENDL;
     handleWithFsm(signal->isUpdate() ? RX_UPDATE : RX_START, signal);
 }
 
@@ -165,6 +168,7 @@ void NewEthernetCsmaPhy::handleWithFsm(int event, cMessage *message)
 void NewEthernetCsmaPhy::startTransmit(EthernetSignalBase *signal)
 {
     ASSERT(currentTxSignal == nullptr);
+    EV_DEBUG << "Starting transmission" << EV_FIELD(signal) << EV_ENDL;
     auto bitrate = 100E+6; // TODO curEtherDescr->txrate);
     auto duration = signal->getBitLength() / bitrate;
     signal->setSrcMacFullDuplex(false);
@@ -173,15 +177,16 @@ void NewEthernetCsmaPhy::startTransmit(EthernetSignalBase *signal)
     scheduleTxTimer(signal);
     currentTxSignal = signal;
     auto packet = check_and_cast_nullable<Packet *>(currentTxSignal->getEncapsulatedPacket());
-    mac->handleTransmissionStart(currentTxSignal->getKind(), packet);
+    mac->handleTransmissionStart(static_cast<SignalType>(currentTxSignal->getKind()), packet);
     send(signal->dup(), SendOptions().transmissionId(signal->getId()).duration(duration), physOutGate);
 }
 
 void NewEthernetCsmaPhy::endTransmit()
 {
     ASSERT(currentTxSignal != nullptr);
+    EV_DEBUG << "Ending transmission" << EV_ENDL;
     auto packet = check_and_cast_nullable<Packet *>(currentTxSignal->getEncapsulatedPacket());
-    mac->handleTransmissionEnd(currentTxSignal->getKind(), packet);
+    mac->handleTransmissionEnd(static_cast<SignalType>(currentTxSignal->getKind()), packet);
     delete currentTxSignal;
     currentTxSignal = nullptr;
 }
@@ -189,6 +194,7 @@ void NewEthernetCsmaPhy::endTransmit()
 void NewEthernetCsmaPhy::startJamSignalTransmission()
 {
     Enter_Method("transmitJamSignal");
+    EV_DEBUG << "Starting jam signal transmission" << EV_ENDL;
     if (currentTxSignal != nullptr) {
         simtime_t duration = simTime() - currentTxSignal->getCreationTime(); // TODO save and use start tx time
         cutEthernetSignalEnd(currentTxSignal, duration); // TODO save and use start tx time
@@ -206,6 +212,7 @@ void NewEthernetCsmaPhy::startJamSignalTransmission()
 void NewEthernetCsmaPhy::startBeaconSignalTransmission()
 {
     Enter_Method("startBeaconSignalTransmission");
+    EV_DEBUG << "Starting beacon signal transmission" << EV_ENDL;
     auto signal = new EthernetSignal("Beacon");
     signal->setKind(BEACON);
     signal->setBitLength(20);
@@ -215,15 +222,28 @@ void NewEthernetCsmaPhy::startBeaconSignalTransmission()
 void NewEthernetCsmaPhy::startCommitSignalTransmission()
 {
     Enter_Method("startCommitSignalTransmission");
+    EV_DEBUG << "Starting commit signal transmission" << EV_ENDL;
     auto signal = new EthernetSignal("Commit");
     signal->setKind(COMMIT);
+    // TODO: make it indefinite long?
     signal->setBitLength(20);
     handleWithFsm(TX_START, signal);
+}
+
+void NewEthernetCsmaPhy::startSignalTransmission(SignalType signalType)
+{
+    switch (signalType) {
+        case JAM: startJamSignalTransmission(); break;
+        case BEACON: startBeaconSignalTransmission(); break;
+        case COMMIT: startCommitSignalTransmission(); break;
+        default: throw cRuntimeError("Unknown signal type");
+    }
 }
 
 void NewEthernetCsmaPhy::endSignalTransmission()
 {
     Enter_Method("endSignalTransmission");
+    EV_DEBUG << "Ending signal transmission" << EV_ENDL;
     cancelEvent(txTimer);
     handleWithFsm(TX_END, currentTxSignal);
 }
@@ -231,6 +251,7 @@ void NewEthernetCsmaPhy::endSignalTransmission()
 void NewEthernetCsmaPhy::startFrameTransmission(Packet *packet)
 {
     Enter_Method("startFrameTransmission");
+    EV_DEBUG << "Starting frame transmission" << EV_FIELD(packet) << EV_ENDL;
     take(packet);
     encapsulate(packet);
     auto signal = new EthernetSignal(packet->getName());
@@ -242,6 +263,7 @@ void NewEthernetCsmaPhy::startFrameTransmission(Packet *packet)
 void NewEthernetCsmaPhy::endFrameTransmission()
 {
     Enter_Method("endFrameTransmission");
+    EV_DEBUG << "Ending frame transmission" << EV_ENDL;
     cancelEvent(txTimer);
     handleWithFsm(TX_END, currentTxSignal);
 }
@@ -250,7 +272,7 @@ void NewEthernetCsmaPhy::startReceive(EthernetSignalBase *signal)
 {
     auto packet = check_and_cast_nullable<Packet *>(signal->getEncapsulatedPacket());
     mac->handleCarrierSenseStart();
-    mac->handleReceptionStart(signal->getKind(), packet);
+    mac->handleReceptionStart(static_cast<SignalType>(signal->getKind()), packet);
     updateRxSignals(signal);
 }
 
@@ -262,7 +284,7 @@ void NewEthernetCsmaPhy::endReceive()
         if (packet != nullptr) {
             if (signal->getKind() == DATA)
                 decapsulate(packet);
-            mac->handleReceptionEnd(signal->getKind(), packet);
+            mac->handleReceptionEnd(static_cast<SignalType>(signal->getKind()), packet);
         }
         delete signal;
     }

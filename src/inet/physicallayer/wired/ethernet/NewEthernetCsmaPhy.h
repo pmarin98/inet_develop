@@ -36,13 +36,6 @@ class INET_API NewEthernetCsmaPhy : public cSimpleModule, public virtual INewEth
         RX_CHANNEL_IDLE, // end of the last overlapping Ethernet signal
     };
 
-    enum SignalType {
-        DATA,
-        JAM,
-        BEACON,
-        COMMIT,
-    };
-
     class INET_API RxSignal {
       public:
         EthernetSignalBase *signal = nullptr;
@@ -95,14 +88,16 @@ class INET_API NewEthernetCsmaPhy : public cSimpleModule, public virtual INewEth
     virtual void updateRxSignals(EthernetSignalBase *signal);
     virtual void scheduleTxTimer(EthernetSignalBase *signal);
 
+    virtual void startJamSignalTransmission();
+    virtual void startBeaconSignalTransmission();
+    virtual void startCommitSignalTransmission();
+
     virtual EthernetSignalBase *getReceivedSignal();
 
   public:
     virtual ~NewEthernetCsmaPhy();
 
-    virtual void startJamSignalTransmission() override;
-    virtual void startBeaconSignalTransmission() override;
-    virtual void startCommitSignalTransmission() override;
+    virtual void startSignalTransmission(SignalType signalType) override;
     virtual void endSignalTransmission() override;
 
     virtual void startFrameTransmission(Packet *packet) override;

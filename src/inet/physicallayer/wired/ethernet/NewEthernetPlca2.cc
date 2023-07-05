@@ -40,7 +40,7 @@ void NewEthernetPlca2::initialize(int stage)
     else if (stage == INITSTAGE_PHYSICAL_LAYER) {
         if (local_nodeID == 0) {
             sendingBeacon = true;
-            phy->startBeaconSignalTransmission();
+            phy->startSignalTransmission(BEACON);
         }
     }
 }
@@ -77,7 +77,7 @@ void NewEthernetPlca2::handleSelfMessage(cMessage *message)
             emit(curIDSignal, curID);
             if (local_nodeID == 0) {
                 sendingBeacon = true;
-                phy->startBeaconSignalTransmission();
+                phy->startSignalTransmission(BEACON);
                 // TODO phy->endSignalTransmission();
             }
         }
@@ -130,12 +130,12 @@ void NewEthernetPlca2::handleCollisionEnd()
     throw cRuntimeError("TODO");
 }
 
-void NewEthernetPlca2::handleTransmissionStart(int signalType, Packet *packet)
+void NewEthernetPlca2::handleTransmissionStart(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionStart");
 }
 
-void NewEthernetPlca2::handleTransmissionEnd(int signalType, Packet *packet)
+void NewEthernetPlca2::handleTransmissionEnd(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionEnd");
     EV_DEBUG << "Handling transmission end" << EV_ENDL;
@@ -150,12 +150,12 @@ void NewEthernetPlca2::handleTransmissionEnd(int signalType, Packet *packet)
     scheduleAfter(to_interval, to_timer);
 }
 
-void NewEthernetPlca2::handleReceptionStart(int signalType, Packet *packet)
+void NewEthernetPlca2::handleReceptionStart(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleReceptionStart");
 }
 
-void NewEthernetPlca2::handleReceptionEnd(int signalType, Packet *packet)
+void NewEthernetPlca2::handleReceptionEnd(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleReceptionEnd");
     EV_DEBUG << "Handling received packet" << EV_FIELD(packet) << EV_ENDL;

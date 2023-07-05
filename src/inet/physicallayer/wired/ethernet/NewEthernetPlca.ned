@@ -16,6 +16,7 @@ simple NewEthernetPlca like IProtocolLayer
         int plca_node_count;
         int local_nodeID;
         int max_bc = default(10);
+        int delay_line_length = default(100);
         double to_interval @unit(s);
         double burst_interval @unit(s);
         @display("i=block/rxtx");

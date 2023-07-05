@@ -26,6 +26,7 @@ NewEthernetPlca::~NewEthernetPlca()
     cancelAndDelete(invalid_beacon_timer);
     cancelAndDelete(burst_timer);
     cancelAndDelete(to_timer);
+    cancelAndDelete(hold_timer);
     cancelAndDelete(pending_timer);
     cancelAndDelete(commit_timer);
     cancelAndDelete(plca_status_timer);
@@ -39,24 +40,26 @@ void NewEthernetPlca::initialize(int stage)
         plca_node_count = par("plca_node_count");
         local_nodeID = par("local_nodeID");
         max_bc = par("max_bc");
+        delay_line_length = par("delay_line_length");
         to_interval = par("to_interval");
         burst_interval = par("burst_interval");
         phy = getConnectedModule<INewEthernetCsmaPhy>(gate("lowerLayerOut"));
         mac = getConnectedModule<INewEthernetCsmaMac>(gate("upperLayerOut"));
-        beacon_timer = new cMessage("beacon_timer", BEACON_TIMER_DONE);
-        beacon_det_timer = new cMessage("beacon_det_timer", BEACON_DET_TIMER_DONE);
-        invalid_beacon_timer = new cMessage("invalid_beacon_timer", INVALID_BEACON_TIMER_DONE);
-        burst_timer = new cMessage("burst_timer", BURST_TIMER_DONE);
-        to_timer = new cMessage("to_timer", TO_TIMER_DONE);
-        pending_timer = new cMessage("pending_timer", PENDING_TIMER_DONE);
-        commit_timer = new cMessage("commit_timer", COMMIT_TIMER_DONE);
-        plca_status_timer = new cMessage("plca_status_timer", PLCA_STATUS_TIMER_DONE);
+        beacon_timer = new cMessage("beacon_timer");
+        beacon_det_timer = new cMessage("beacon_det_timer");
+        invalid_beacon_timer = new cMessage("invalid_beacon_timer");
+        burst_timer = new cMessage("burst_timer");
+        to_timer = new cMessage("to_timer");
+        hold_timer = new cMessage("hold_timer");
+        pending_timer = new cMessage("pending_timer");
+        commit_timer = new cMessage("commit_timer");
+        plca_status_timer = new cMessage("plca_status_timer");
     }
     else if (stage == INITSTAGE_PHYSICAL_LAYER) {
         controlFsm.setState(CS_DISABLE, "CS_DISABLE");
         dataFsm.setState(DS_NORMAL, "DS_NORMAL");
         statusFsm.setState(SS_INACTIVE, "SS_INACTIVE");
-        handleWithFSM();
+        handleWithFSMs();
     }
 }
 
@@ -86,70 +89,117 @@ void NewEthernetPlca::handleMessage(cMessage *message)
 void NewEthernetPlca::handleSelfMessage(cMessage *message)
 {
     EV_DEBUG << "Handling self message" << EV_FIELD(message) << EV_ENDL;
-    handleWithFSM();
+    handleWithFSMs();
 }
 
 void NewEthernetPlca::handleCarrierSenseStart()
 {
     Enter_Method("handleCarrierSenseStart");
     ASSERT(!CRS);
+    EV_DEBUG << "Handling carrier sense start" << EV_ENDL;
     CRS = true;
-    EV_DEBUG << "Handling carrier sense start" << EV_FIELD(CRS) << EV_ENDL;
-    handleWithFSM();
+    handleWithFSMs();
 }
 
 void NewEthernetPlca::handleCarrierSenseEnd()
 {
     Enter_Method("handleCarrierSenseEnd");
     ASSERT(CRS);
+    EV_DEBUG << "Handling carrier sense end" << EV_ENDL;
     CRS = false;
-    EV_DEBUG << "Handling carrier sense end" << EV_FIELD(CRS) << EV_ENDL;
-    handleWithFSM();
+    handleWithFSMs();
 }
 
 void NewEthernetPlca::handleCollisionStart()
 {
     Enter_Method("handleCollisionStart");
+    ASSERT(!COL);
+    EV_DEBUG << "Handling collision start" << EV_ENDL;
+    COL = true;
+    handleWithFSMs();
 }
 
 void NewEthernetPlca::handleCollisionEnd()
 {
     Enter_Method("handleCollisionEnd");
+    ASSERT(COL);
+    EV_DEBUG << "Handling collision end" << EV_ENDL;
+    COL = false;
+    handleWithFSMs();
 }
 
-void NewEthernetPlca::handleTransmissionStart(int signalType, Packet *packet)
+void NewEthernetPlca::handleTransmissionStart(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionStart");
+    EV_DEBUG << "Handling transmission start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
 }
 
-void NewEthernetPlca::handleTransmissionEnd(int signalType, Packet *packet)
+void NewEthernetPlca::handleTransmissionEnd(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionEnd");
+    EV_DEBUG << "Handling transmission end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
+    if (signalType == DATA || signalType == JAM)
+        mac->handleTransmissionEnd(signalType, packet);
+    else if (signalType == BEACON || signalType == COMMIT)
+        ; // these signals are not known by the MAC
+    else
+        throw cRuntimeError("Unknown signal type");
 }
 
-void NewEthernetPlca::handleReceptionStart(int signalType, Packet *packet)
+void NewEthernetPlca::handleReceptionStart(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleReceptionStart");
+    EV_DEBUG << "Handling reception start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
+    mac->handleReceptionStart(signalType, packet);
 }
 
-void NewEthernetPlca::handleReceptionEnd(int signalType, Packet *packet)
+void NewEthernetPlca::handleReceptionEnd(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleReceptionEnd");
-    EV_DEBUG << "Handling received packet" << EV_FIELD(packet) << EV_ENDL;
+    EV_DEBUG << "Handling reception end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
     mac->handleReceptionEnd(signalType, packet);
+}
+
+void NewEthernetPlca::startSignalTransmission(SignalType signalType)
+{
+    Enter_Method("startSignalTransmission");
+    if (signalType == JAM) {
+        EV_DEBUG << "Starting jam signal transmission" << EV_ENDL;
+        plca_txen = true;
+        plca_txd = nullptr; // TODO ?
+        phy->startSignalTransmission(JAM);
+        handleWithFSMs();
+    }
+    else
+        throw cRuntimeError("Invalid operation");
+}
+
+void NewEthernetPlca::endSignalTransmission()
+{
+    Enter_Method("endSignalTransmission");
+    EV_DEBUG << "Ending signal transmission" << EV_ENDL;
+    plca_txen = false;
+    plca_txd = nullptr;
+    handleWithFSMs();
 }
 
 void NewEthernetPlca::startFrameTransmission(Packet *packet)
 {
     Enter_Method("startFrameTransmission");
+    EV_DEBUG << "Starting frame transmission" << EV_FIELD(packet) << EV_ENDL;
     take(packet);
-    phy->startFrameTransmission(packet);
+    plca_txen = true;
+    plca_txd = packet;
+    handleWithFSMs();
 }
 
 void NewEthernetPlca::endFrameTransmission()
 {
     Enter_Method("endFrameTransmission");
-    phy->endFrameTransmission();
+    EV_DEBUG << "Ending frame transmission" << EV_ENDL;
+    plca_txen = false;
+    plca_txd = nullptr;
+    handleWithFSMs();
 }
 
 void NewEthernetPlca::handleWithControlFSM()
@@ -221,7 +271,7 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_SEND_BEACON) {
             FSMA_Enter(
                 scheduleAfter(20 / 100E+6, beacon_timer);
-                phy->startBeaconSignalTransmission();
+                phy->startSignalTransmission(BEACON);
                 plca_active = true;
             );
             FSMA_Transition(TRANSITION1,
@@ -240,10 +290,10 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_SYNCING) {
             FSMA_Enter(
                 curID = 0;
-                phy->endSignalTransmission();
+//                phy->endSignalTransmission();
                 plca_active = true;
                 if (local_nodeID != 0 && rx_cmd != "BEACON")
-                    scheduleAfter(4000E-9, invalid_beacon_timer);
+                    rescheduleAfter(4000E-9, invalid_beacon_timer);
             );
             FSMA_Transition(TRANSITION1,
                             !CRS,
@@ -319,7 +369,7 @@ void NewEthernetPlca::handleWithControlFSM()
         }
         FSMA_State(CS_COMMIT) {
             FSMA_Enter(
-                phy->startCommitSignalTransmission();
+                phy->startSignalTransmission(COMMIT);
                 committed = true;
                 cancelEvent(to_timer);
                 bc = 0;
@@ -399,7 +449,7 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_BURST) {
             FSMA_Enter(
                 bc = bc + 1;
-                phy->startCommitSignalTransmission();
+                phy->startSignalTransmission(COMMIT);
                 scheduleAfter(burst_interval, burst_timer);
             );
             FSMA_Transition(TRANSITION1,
@@ -472,7 +522,7 @@ void NewEthernetPlca::handleWithDataFSM()
                     CARRIER_STATUS = "CARRIER_ON";
                 else
                     CARRIER_STATUS = "CARRIER_OFF";
-//                    TXD = plca_txd
+                TXD = plca_txd;
                 TX_EN = plca_txen;
                 TX_ER = plca_txer;
                 if (COL)
@@ -582,17 +632,18 @@ void NewEthernetPlca::handleWithDataFSM()
                 a = a + 1;
 //                    TX_ER = ENCODE_TXER(tx_cmd_sync)
 //                    TXD = ENCODE_TXD(tx_cmd_sync)
+                scheduleAfter(delay_line_length / 100E+6, hold_timer);
             );
-            FSMA_Transition(TRANSITION1,
-                            MCD && !committed && !plca_txer && !receiving && a < delay_line_length,
-                            DS_HOLD,
-            );
+//            FSMA_Transition(TRANSITION1,
+//                            MCD && !committed && !plca_txer && !receiving && /*a < delay_line_length*/ hold_timer->isScheduled(),
+//                            DS_HOLD,
+//            );
             FSMA_Transition(TRANSITION2,
-                            !plca_txer && (receiving || a > delay_line_length),
+                            !plca_txer && (receiving || /*a > delay_line_length*/ !hold_timer->isScheduled()),
                             DS_COLLIDE,
             );
             FSMA_Transition(TRANSITION3,
-                            MCD && committed && !receiving && !plca_txer && a < delay_line_length,
+                            MCD && committed && !receiving && !plca_txer && /*a < delay_line_length*/ hold_timer->isScheduled(),
                             DS_TRANSMIT,
             );
             FSMA_Transition(TRANSITION4,
@@ -713,7 +764,7 @@ void NewEthernetPlca::handleWithDataFSM()
             FSMA_Enter(
                 packetPending = false;
                 CARRIER_STATUS = "CARRIER_ON";
-//                    TXD =plca_txdn–a
+//                    TXD = plca_txdn–a
                 TX_EN = true;
                 TX_ER = plca_txer;
                 if (COL) {
@@ -723,10 +774,10 @@ void NewEthernetPlca::handleWithDataFSM()
                 else
                     SIGNAL_STATUS = "NO_SIGNAL_ERROR";
             );
-            FSMA_Transition(TRANSITION1,
-                            MCD && plca_txen,
-                            DS_TRANSMIT,
-            );
+//            FSMA_Transition(TRANSITION1,
+//                            MCD && plca_txen,
+//                            DS_TRANSMIT,
+//            );
             FSMA_Transition(TRANSITION2,
                             MCD && !plca_txen && a > 0,
                             DS_FLUSH,
@@ -752,10 +803,10 @@ void NewEthernetPlca::handleWithDataFSM()
                 else
                     SIGNAL_STATUS = "NO_SIGNAL_ERROR";
             );
-            FSMA_Transition(TRANSITION1,
-                            MCD && a != b,
-                            DS_FLUSH,
-            );
+//            FSMA_Transition(TRANSITION1,
+//                            MCD && a != b,
+//                            DS_FLUSH,
+//            );
             FSMA_Transition(TRANSITION2,
                             MCD && a == b,
                             DS_WAIT_IDLE, // C
@@ -765,6 +816,34 @@ void NewEthernetPlca::handleWithDataFSM()
                             DS_IDLE,
             );
         }
+    }
+    bool new_carrier_sense_signal;
+    if (CARRIER_STATUS == "CARRIER_OFF")
+        new_carrier_sense_signal = false;
+    else if (CARRIER_STATUS == "CARRIER_ON")
+        new_carrier_sense_signal = true;
+    else
+        throw cRuntimeError("Unknown carrier status");
+    if (new_carrier_sense_signal != old_carrier_sense_signal) {
+        old_carrier_sense_signal = new_carrier_sense_signal;
+        if (new_carrier_sense_signal)
+            mac->handleCarrierSenseStart();
+        else
+            mac->handleCarrierSenseEnd();
+    }
+    bool new_collision_signal;
+    if (SIGNAL_STATUS == "NO_SIGNAL_ERROR")
+        new_collision_signal = false;
+    else if (SIGNAL_STATUS == "SIGNAL_ERROR")
+        new_collision_signal = true;
+    else
+        throw cRuntimeError("Unknown signal status");
+    if (new_collision_signal != old_collision_signal) {
+        old_collision_signal = new_collision_signal;
+        if (new_collision_signal)
+            mac->handleCollisionStart();
+        else
+            mac->handleCollisionEnd();
     }
 }
 
@@ -818,7 +897,7 @@ void NewEthernetPlca::handleWithStatusFSM()
     }
 }
 
-void NewEthernetPlca::handleWithFSM()
+void NewEthernetPlca::handleWithFSMs()
 {
     int controlState, dataState, statusState;
     do {

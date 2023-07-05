@@ -56,11 +56,13 @@ void NewEthernetCsmaMac::handleSelfMessage(cMessage *message)
 
 void NewEthernetCsmaMac::handleUpperPacket(Packet *packet)
 {
+    EV_DEBUG << "Handling upper packet" << EV_FIELD(packet) << EV_ENDL;
     handleWithFsm(UPPER_PACKET, packet);
 }
 
 void NewEthernetCsmaMac::handleLowerPacket(Packet *packet)
 {
+    EV_DEBUG << "Handling lower packet" << EV_FIELD(packet) << EV_ENDL;
     handleWithFsm(LOWER_PACKET, packet);
 }
 
@@ -68,6 +70,7 @@ void NewEthernetCsmaMac::handleCarrierSenseStart()
 {
     Enter_Method("handleCarrierSenseStart");
     ASSERT(!carrierSense);
+    EV_DEBUG << "Handling carrier sense start" << EV_ENDL;
     carrierSense = true;
     handleWithFsm(CARRIER_SENSE_START, nullptr);
 }
@@ -76,6 +79,7 @@ void NewEthernetCsmaMac::handleCarrierSenseEnd()
 {
     Enter_Method("handleCarrierSenseEnd");
     ASSERT(carrierSense);
+    EV_DEBUG << "Handling carrier sense end" << EV_ENDL;
     carrierSense = false;
     handleWithFsm(CARRIER_SENSE_END, nullptr);
 }
@@ -83,36 +87,42 @@ void NewEthernetCsmaMac::handleCarrierSenseEnd()
 void NewEthernetCsmaMac::handleCollisionStart()
 {
     Enter_Method("handleCollisionStart");
+    EV_DEBUG << "Handling collision start" << EV_ENDL;
     handleWithFsm(COLLISION_START, nullptr);
 }
 
 void NewEthernetCsmaMac::handleCollisionEnd()
 {
     Enter_Method("handleCollisionEnd");
+    EV_DEBUG << "Handling collision end" << EV_ENDL;
     // NOTE: this event is not needed in the FSM
 }
 
-void NewEthernetCsmaMac::handleTransmissionStart(int signalType, Packet *packet)
+void NewEthernetCsmaMac::handleTransmissionStart(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionStart");
+    EV_DEBUG << "Handling transmission start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
     // NOTE: this event is not needed in the FSM
 }
 
-void NewEthernetCsmaMac::handleTransmissionEnd(int signalType, Packet *packet)
+void NewEthernetCsmaMac::handleTransmissionEnd(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionEnd");
+    EV_DEBUG << "Handling transmission end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
     handleWithFsm(TX_END, packet);
 }
 
-void NewEthernetCsmaMac::handleReceptionStart(int signalType, Packet *packet)
+void NewEthernetCsmaMac::handleReceptionStart(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleReceptionStart");
+    EV_DEBUG << "Handling reception start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
     // NOTE: this event is not needed in the FSM
 }
 
-void NewEthernetCsmaMac::handleReceptionEnd(int signalType, Packet *packet)
+void NewEthernetCsmaMac::handleReceptionEnd(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleReceptionEnd");
+    EV_DEBUG << "Handling reception end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
     take(packet);
     handleWithFsm(LOWER_PACKET, packet);
 }
@@ -165,7 +175,7 @@ void NewEthernetCsmaMac::handleWithFsm(int event, cMessage *message)
             FSMA_Event_Transition(COLLISION_START,
                                   event == COLLISION_START,
                                   JAMMING,
-                phy->startJamSignalTransmission();
+                phy->startSignalTransmission(JAM);
             );
             FSMA_Ignore_Event(event == CARRIER_SENSE_START);
             FSMA_Fail_On_Unhandled_Event();
@@ -174,6 +184,7 @@ void NewEthernetCsmaMac::handleWithFsm(int event, cMessage *message)
             FSMA_Event_Transition(TX_END,
                                   event == TX_END,
                                   BACKOFF,
+                phy->endSignalTransmission();
                 retryTransmission();
                 scheduleBackoffTimer();
             );

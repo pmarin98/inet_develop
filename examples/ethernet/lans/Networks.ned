@@ -235,27 +235,27 @@ network HubLAN
                 eth.duplexMode = false;
                 @display("p=400,200");
         }
-        hostC: EthernetHost {
-            parameters:
-                eth.duplexMode = false;
-                @display("p=250,300");
-        }
-        hostD: EthernetHost {
-            parameters:
-                eth.duplexMode = false;
-                @display("p=100,200");
-        }
+//        hostC: EthernetHost {
+//            parameters:
+//                eth.duplexMode = false;
+//                @display("p=250,300");
+//        }
+//        hostD: EthernetHost {
+//            parameters:
+//                eth.duplexMode = false;
+//                @display("p=100,200");
+//        }
         hub: EthernetHub {
             parameters:
                 @display("p=250,200");
             gates:
-                ethg[4];
+                ethg[2];
         }
     connections:
         hub.ethg[0] <--> {  delay = 1ns; datarate = 100Mbps; } <--> hostA.ethg;
         hub.ethg[1] <--> {  delay = 3ns; datarate = 100Mbps; } <--> hostB.ethg;
-        hub.ethg[2] <--> {  delay = 4ns; datarate = 100Mbps; } <--> hostC.ethg;
-        hub.ethg[3] <--> {  delay = 2ns; datarate = 100Mbps; } <--> hostD.ethg;
+//        hub.ethg[2] <--> {  delay = 4ns; datarate = 100Mbps; } <--> hostC.ethg;
+//        hub.ethg[3] <--> {  delay = 2ns; datarate = 100Mbps; } <--> hostD.ethg;
 }
 
 

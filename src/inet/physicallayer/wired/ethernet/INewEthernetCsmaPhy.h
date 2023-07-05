@@ -17,9 +17,7 @@ namespace physicallayer {
 class INET_API INewEthernetCsmaPhy
 {
   public:
-    virtual void startJamSignalTransmission() = 0; // MII TX_EN and TXD signals (tx_cmd JAM)
-    virtual void startBeaconSignalTransmission() = 0; // MII TX_EN and TXD signals (tx_cmd BEACON)
-    virtual void startCommitSignalTransmission() = 0; // MII TX_EN and TXD signals (tx_cmd COMMIT)
+    virtual void startSignalTransmission(SignalType signalType) = 0; // MII TX_EN and TXD signals (tx_cmd JAM)
     virtual void endSignalTransmission() = 0; // MII TX_EN and TXD signals (tx_cmd NONE)
 
     virtual void startFrameTransmission(Packet *packet) = 0; // MII TX_EN and TXD signals
