@@ -117,26 +117,26 @@ void NewEthernetPlca::handleCollisionEnd()
     Enter_Method("handleCollisionEnd");
 }
 
-void NewEthernetPlca::handleTransmissionStart(Packet *packet)
+void NewEthernetPlca::handleTransmissionStart(int signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionStart");
 }
 
-void NewEthernetPlca::handleTransmissionEnd(Packet *packet)
+void NewEthernetPlca::handleTransmissionEnd(int signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionEnd");
 }
 
-void NewEthernetPlca::handleReceptionStart(Packet *packet)
+void NewEthernetPlca::handleReceptionStart(int signalType, Packet *packet)
 {
     Enter_Method("handleReceptionStart");
 }
 
-void NewEthernetPlca::handleReceptionEnd(Packet *packet)
+void NewEthernetPlca::handleReceptionEnd(int signalType, Packet *packet)
 {
     Enter_Method("handleReceptionEnd");
     EV_DEBUG << "Handling received packet" << EV_FIELD(packet) << EV_ENDL;
-    mac->handleReceptionEnd(packet);
+    mac->handleReceptionEnd(signalType, packet);
 }
 
 void NewEthernetPlca::startFrameTransmission(Packet *packet)

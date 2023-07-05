@@ -130,12 +130,12 @@ void NewEthernetPlca2::handleCollisionEnd()
     throw cRuntimeError("TODO");
 }
 
-void NewEthernetPlca2::handleTransmissionStart(Packet *packet)
+void NewEthernetPlca2::handleTransmissionStart(int signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionStart");
 }
 
-void NewEthernetPlca2::handleTransmissionEnd(Packet *packet)
+void NewEthernetPlca2::handleTransmissionEnd(int signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionEnd");
     EV_DEBUG << "Handling transmission end" << EV_ENDL;
@@ -146,16 +146,16 @@ void NewEthernetPlca2::handleTransmissionEnd(Packet *packet)
         handleCRSChanged();
     }
     else
-        mac->handleTransmissionEnd(packet);
+        mac->handleTransmissionEnd(signalType, packet);
     scheduleAfter(to_interval, to_timer);
 }
 
-void NewEthernetPlca2::handleReceptionStart(Packet *packet)
+void NewEthernetPlca2::handleReceptionStart(int signalType, Packet *packet)
 {
     Enter_Method("handleReceptionStart");
 }
 
-void NewEthernetPlca2::handleReceptionEnd(Packet *packet)
+void NewEthernetPlca2::handleReceptionEnd(int signalType, Packet *packet)
 {
     Enter_Method("handleReceptionEnd");
     EV_DEBUG << "Handling received packet" << EV_FIELD(packet) << EV_ENDL;
@@ -165,7 +165,7 @@ void NewEthernetPlca2::handleReceptionEnd(Packet *packet)
         handleCRSChanged();
     }
     else
-        mac->handleReceptionEnd(packet);
+        mac->handleReceptionEnd(signalType, packet);
 }
 
 void NewEthernetPlca2::startFrameTransmission(Packet *packet)

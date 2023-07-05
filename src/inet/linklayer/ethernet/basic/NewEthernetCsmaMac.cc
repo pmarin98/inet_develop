@@ -92,25 +92,25 @@ void NewEthernetCsmaMac::handleCollisionEnd()
     // NOTE: this event is not needed in the FSM
 }
 
-void NewEthernetCsmaMac::handleTransmissionStart(Packet *packet)
+void NewEthernetCsmaMac::handleTransmissionStart(int signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionStart");
     // NOTE: this event is not needed in the FSM
 }
 
-void NewEthernetCsmaMac::handleTransmissionEnd(Packet *packet)
+void NewEthernetCsmaMac::handleTransmissionEnd(int signalType, Packet *packet)
 {
     Enter_Method("handleTransmissionEnd");
     handleWithFsm(TX_END, packet);
 }
 
-void NewEthernetCsmaMac::handleReceptionStart(Packet *packet)
+void NewEthernetCsmaMac::handleReceptionStart(int signalType, Packet *packet)
 {
     Enter_Method("handleReceptionStart");
     // NOTE: this event is not needed in the FSM
 }
 
-void NewEthernetCsmaMac::handleReceptionEnd(Packet *packet)
+void NewEthernetCsmaMac::handleReceptionEnd(int signalType, Packet *packet)
 {
     Enter_Method("handleReceptionEnd");
     take(packet);

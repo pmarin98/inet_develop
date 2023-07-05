@@ -20,11 +20,11 @@ class INET_API INewEthernetCsmaMac
     virtual void handleCollisionStart() = 0; // MII COL signal
     virtual void handleCollisionEnd() = 0; // MII COL signal
 
-    virtual void handleTransmissionStart(Packet *packet) = 0;
-    virtual void handleTransmissionEnd(Packet *packet) = 0;
+    virtual void handleTransmissionStart(int signalType, Packet *packet) = 0;
+    virtual void handleTransmissionEnd(int signalType, Packet *packet) = 0;
 
-    virtual void handleReceptionStart(Packet *packet) = 0; // MII RX_DV and RXD signals (rx_cmd)
-    virtual void handleReceptionEnd(Packet *packet) = 0; // MII RX_DV and RXD signals (rx_cmd)
+    virtual void handleReceptionStart(int signalType, Packet *packet) = 0; // MII RX_DV and RXD signals (rx_cmd)
+    virtual void handleReceptionEnd(int signalType, Packet *packet) = 0; // MII RX_DV and RXD signals (rx_cmd)
 };
 
 } // namespace inet
