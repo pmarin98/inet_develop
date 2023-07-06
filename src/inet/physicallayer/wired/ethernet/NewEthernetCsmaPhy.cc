@@ -178,6 +178,8 @@ void NewEthernetCsmaPhy::startTransmit(EthernetSignalBase *signal)
     currentTxSignal = signal;
 //    auto packet = check_and_cast_nullable<Packet *>(currentTxSignal->getEncapsulatedPacket());
 //    mac->handleTransmissionStart(static_cast<SignalType>(currentTxSignal->getKind()), packet);
+//    mac->handleCarrierSenseStart();
+    emit(transmissionStartedSignal, currentTxSignal);
     send(signal->dup(), SendOptions().transmissionId(signal->getId()).duration(duration), physOutGate);
 }
 
@@ -185,6 +187,7 @@ void NewEthernetCsmaPhy::endTransmit()
 {
     ASSERT(currentTxSignal != nullptr);
     EV_DEBUG << "Ending signal transmission" << EV_ENDL;
+    emit(transmissionEndedSignal, currentTxSignal);
     simtime_t duration = simTime() - currentTxSignal->getCreationTime(); // TODO save and use start tx time
     if (duration != currentTxSignal->getDuration()) {
         cutEthernetSignalEnd(currentTxSignal, duration); // TODO save and use start tx time
@@ -193,6 +196,7 @@ void NewEthernetCsmaPhy::endTransmit()
     }
     else
         delete currentTxSignal;
+//    mac->handleCarrierSenseEnd();
 //    auto bitrate = 100E+6; // TODO curEtherDescr->txrate);
 //    auto duration = currentTxSignal->getBitLength() / bitrate;
 //    auto packet = check_and_cast_nullable<Packet *>(currentTxSignal->getEncapsulatedPacket());

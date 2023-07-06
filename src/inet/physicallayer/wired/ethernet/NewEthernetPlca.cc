@@ -213,7 +213,10 @@ void NewEthernetPlca::handleWithControlFSM()
     FSMA_Switch(controlFsm) {
         FSMA_State(CS_DISABLE) {
             FSMA_Enter(
-                phy->endSignalTransmission();
+                if (tx_cmd != "NONE") {
+                    phy->endSignalTransmission();
+                    tx_cmd = "NONE";
+                }
                 committed = false;
                 curID = 0;
                 emit(curIDSignal, curID);
@@ -277,6 +280,7 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_SEND_BEACON) {
             FSMA_Enter(
                 scheduleAfter(20 / 100E+6, beacon_timer);
+                tx_cmd = "BEACON";
                 phy->startSignalTransmission(BEACON);
                 plca_active = true;
             );
@@ -297,7 +301,10 @@ void NewEthernetPlca::handleWithControlFSM()
             FSMA_Enter(
                 curID = 0;
                 emit(curIDSignal, curID);
-//                phy->endSignalTransmission();
+                if (tx_cmd != "NONE") {
+                    phy->endSignalTransmission();
+                    tx_cmd = "NONE";
+                }
                 plca_active = true;
                 if (local_nodeID != 0 && rx_cmd != "BEACON")
                     rescheduleAfter(4000E-9, invalid_beacon_timer);
@@ -376,6 +383,7 @@ void NewEthernetPlca::handleWithControlFSM()
         }
         FSMA_State(CS_COMMIT) {
             FSMA_Enter(
+                tx_cmd = "COMMIT";
                 phy->startSignalTransmission(COMMIT);
                 committed = true;
                 cancelEvent(to_timer);
@@ -432,7 +440,10 @@ void NewEthernetPlca::handleWithControlFSM()
         }
         FSMA_State(CS_TRANSMIT) {
             FSMA_Enter(
-                phy->endSignalTransmission();
+                if (tx_cmd != "NONE") {
+                    phy->endSignalTransmission();
+                    tx_cmd = "NONE";
+                }
                 if (bc >= max_bc)
                     committed = false;
             );
@@ -456,6 +467,7 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_BURST) {
             FSMA_Enter(
                 bc = bc + 1;
+                tx_cmd = "COMMIT";
                 phy->startSignalTransmission(COMMIT);
                 scheduleAfter(burst_interval, burst_timer);
             );
@@ -478,7 +490,10 @@ void NewEthernetPlca::handleWithControlFSM()
         }
         FSMA_State(CS_ABORT) {
             FSMA_Enter(
-                phy->endSignalTransmission();
+                if (tx_cmd != "NONE") {
+                    phy->endSignalTransmission();
+                    tx_cmd = NONE;
+                }
             );
             FSMA_Transition(T1,
                             !CRS,
@@ -772,7 +787,12 @@ void NewEthernetPlca::handleWithDataFSM()
             FSMA_Enter(
                 packetPending = false;
                 CARRIER_STATUS = "CARRIER_ON";
-//                    TXD = plca_txdn–a
+                if (tx_cmd != "NONE") { // KLUDGE: end commit signal
+                    phy->endSignalTransmission();
+                    tx_cmd = "NONE";
+                }
+                TXD = plca_txd;
+                phy->startFrameTransmission(plca_txd);
                 TX_EN = true;
                 TX_ER = plca_txer;
                 if (COL) {

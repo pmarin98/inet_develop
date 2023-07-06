@@ -109,9 +109,9 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
     Packet *plca_txd = nullptr;
     Packet *TXD = nullptr;
     std::string CARRIER_STATUS = "CARRIER_OFF";
-    std::string rx_cmd; // possible values "NONE", "BEACON", "COMMIT"
+    std::string rx_cmd = "NONE"; // possible values "NONE", "BEACON", "COMMIT"
     std::string SIGNAL_STATUS = "NO_SIGNAL_ERROR";
-    std::string tx_cmd; // possible values "NONE", "BEACON", "COMMIT"
+    std::string tx_cmd = "NONE"; // possible values "NONE", "BEACON", "COMMIT"
 
     // additional state variables
     bool old_carrier_sense_signal = false;

@@ -14,6 +14,12 @@ simple NewEthernetCsmaPhy
         @signal[receptionEnded](type=inet::physicallayer::EthernetSignalBase);
         @signal[transmissionStarted](type=inet::physicallayer::EthernetSignalBase);
         @signal[transmissionEnded](type=inet::physicallayer::EthernetSignalBase);
+        @statistic[transmitting](title="transmitting state"; type=int; source=count(transmissionStarted) - count(transmissionEnded); record=vector; interpolationmode=sample-hold);
+        @statistic[throughput](title="throughput"; unit=bps; source=throughput(transmissionEnded); record=vector,histogram; interpolationmode=linear);
+//        @statistic[utilization](title="utilization"; unit=%; source=100 * utilization(count(transmissionStarted) - count(transmissionEnded)); record=vector,histogram; interpolationmode=linear);
+        @statistic[propagationTime](title="propagation time"; unit=s);
+        @statistic[transmissionTime](title="transmission time"; unit=s; source=packetDuration(transmissionEnded); record=vector,histogram; interpolationmode=none);
+//        @statistic[flowTransmissionTime](title="flow transmission time"; unit=s; source=packetDuration(demuxFlow(transmissionEnded)); record=vector,histogram; interpolationmode=none);
         @display("i=block/rxtx");
     gates:
         input upperLayerIn @labels(EtherFrame);

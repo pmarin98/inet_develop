@@ -16,9 +16,11 @@ using namespace inet::physicallayer;
 class INET_API INewEthernetCsmaMac
 {
   public:
+    // IEEE 802.3-2018 22.2.2.11 CRS (carrier sense)
     virtual void handleCarrierSenseStart() = 0; // MII CRS signal
     virtual void handleCarrierSenseEnd() = 0; // MII CRS signal
 
+    // IEEE 802.3-2018 22.2.2.12 COL (collision detected)
     virtual void handleCollisionStart() = 0; // MII COL signal
     virtual void handleCollisionEnd() = 0; // MII COL signal
 
