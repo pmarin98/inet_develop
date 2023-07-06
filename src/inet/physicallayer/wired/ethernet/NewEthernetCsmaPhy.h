@@ -59,7 +59,6 @@ class INET_API NewEthernetCsmaPhy : public cSimpleModule, public virtual INewEth
     EthernetSignalBase *currentTxSignal = nullptr;
 
     // timers
-//    cMessage *txTimer = nullptr;
     cMessage *rxChannelIdleTimer = nullptr;
 
     // statistics
@@ -86,7 +85,6 @@ class INET_API NewEthernetCsmaPhy : public cSimpleModule, public virtual INewEth
 
     virtual void cutEthernetSignalEnd(EthernetSignalBase *signal, simtime_t duration);
     virtual void updateRxSignals(EthernetSignalBase *signal);
-//    virtual void scheduleTxTimer(EthernetSignalBase *signal);
 
     virtual void startJamSignalTransmission();
     virtual void startBeaconSignalTransmission();

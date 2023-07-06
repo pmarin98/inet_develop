@@ -103,20 +103,6 @@ void NewEthernetCsmaMac::handleCollisionEnd()
     // NOTE: this event is not needed in the FSM
 }
 
-//void NewEthernetCsmaMac::handleTransmissionStart(SignalType signalType, Packet *packet)
-//{
-//    Enter_Method("handleTransmissionStart");
-//    EV_DEBUG << "Handling transmission start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
-//    // NOTE: this event is not needed in the FSM
-//}
-//
-//void NewEthernetCsmaMac::handleTransmissionEnd(SignalType signalType, Packet *packet)
-//{
-//    Enter_Method("handleTransmissionEnd");
-//    EV_DEBUG << "Handling transmission end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
-//    handleWithFsm(TX_END, packet);
-//}
-
 void NewEthernetCsmaMac::handleReceptionStart(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleReceptionStart");

@@ -112,9 +112,6 @@ class INET_API NewEthernetCsmaMac : public MacProtocolBase, public virtual INewE
     virtual void handleCollisionStart() override;
     virtual void handleCollisionEnd() override;
 
-//    virtual void handleTransmissionStart(SignalType signalType, Packet *packet) override;
-//    virtual void handleTransmissionEnd(SignalType signalType, Packet *packet) override;
-
     virtual void handleReceptionStart(SignalType signalType, Packet *packet) override;
     virtual void handleReceptionEnd(SignalType signalType, Packet *packet) override;
 

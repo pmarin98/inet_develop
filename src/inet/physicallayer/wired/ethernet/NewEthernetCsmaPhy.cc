@@ -21,7 +21,6 @@ Define_Module(NewEthernetCsmaPhy);
 
 NewEthernetCsmaPhy::~NewEthernetCsmaPhy()
 {
-//    cancelAndDelete(txTimer);
     cancelAndDelete(rxChannelIdleTimer);
 }
 
@@ -35,7 +34,6 @@ void NewEthernetCsmaPhy::initialize(int stage)
         upperLayerInGate = gate("upperLayerIn");
         upperLayerOutGate = gate("upperLayerOut");
         mac = getConnectedModule<INewEthernetCsmaMac>(gate("upperLayerOut"));
-//        txTimer = new cMessage("TxTimer", TX_END);
         rxChannelIdleTimer = new cMessage("RxChannelIdleTimer", RX_CHANNEL_IDLE);
         fsm.setState(IDLE);
         setTxUpdateSupport(true);
@@ -121,8 +119,6 @@ void NewEthernetCsmaPhy::handleWithFsm(int event, cMessage *message)
             FSMA_Event_Transition(TX_START,
                                   event == TX_START,
                                   COLLISION,
-                // KLUDGE TODO this is needed for fingerprint compatibility
-                startTransmit(check_and_cast<EthernetSignalBase *>(message));
                 mac->handleCollisionStart();
             );
             FSMA_Fail_On_Unhandled_Event();
@@ -174,11 +170,8 @@ void NewEthernetCsmaPhy::startTransmit(EthernetSignalBase *signal)
     signal->setSrcMacFullDuplex(false);
     signal->setBitrate(bitrate);
     signal->setDuration(duration);
-//    scheduleTxTimer(signal);
     currentTxSignal = signal;
-//    auto packet = check_and_cast_nullable<Packet *>(currentTxSignal->getEncapsulatedPacket());
-//    mac->handleTransmissionStart(static_cast<SignalType>(currentTxSignal->getKind()), packet);
-//    mac->handleCarrierSenseStart();
+    mac->handleCarrierSenseStart();
     emit(transmissionStartedSignal, currentTxSignal);
     send(signal->dup(), SendOptions().transmissionId(signal->getId()).duration(duration), physOutGate);
 }
@@ -196,15 +189,7 @@ void NewEthernetCsmaPhy::endTransmit()
     }
     else
         delete currentTxSignal;
-//    mac->handleCarrierSenseEnd();
-//    auto bitrate = 100E+6; // TODO curEtherDescr->txrate);
-//    auto duration = currentTxSignal->getBitLength() / bitrate;
-//    auto packet = check_and_cast_nullable<Packet *>(currentTxSignal->getEncapsulatedPacket());
-//    mac->handleTransmissionEnd(static_cast<SignalType>(currentTxSignal->getKind()), packet);
-//    if (currentTxSignal->getDuration() != duration)
-//        send(currentTxSignal, SendOptions().updateTx(currentTxSignal->getId(), 0).duration(duration), physOutGate);
-//    else
-//        delete currentTxSignal;
+    mac->handleCarrierSenseEnd();
     currentTxSignal = nullptr;
 }
 
@@ -215,7 +200,6 @@ void NewEthernetCsmaPhy::startJamSignalTransmission()
     auto signal = new EthernetSignal("Jam");
     signal->setKind(JAM);
     signal->setByteLength(B(JAM_SIGNAL_BYTES).get());
-//    cancelEvent(txTimer);
     handleWithFsm(TX_START, signal);
 }
 
@@ -254,7 +238,6 @@ void NewEthernetCsmaPhy::endSignalTransmission()
 {
     Enter_Method("endSignalTransmission");
     EV_DEBUG << "Ending signal transmission" << EV_ENDL;
-//    cancelEvent(txTimer);
     handleWithFsm(TX_END, currentTxSignal);
 }
 
@@ -274,7 +257,6 @@ void NewEthernetCsmaPhy::endFrameTransmission()
 {
     Enter_Method("endFrameTransmission");
     EV_DEBUG << "Ending frame transmission" << EV_ENDL;
-//    cancelEvent(txTimer);
     handleWithFsm(TX_END, currentTxSignal);
 }
 
@@ -367,11 +349,6 @@ void NewEthernetCsmaPhy::updateRxSignals(EthernetSignalBase *signal)
     if (rxChannelIdleTimer->getArrivalTime() != maxEndRxTime || endRxTime == maxEndRxTime)
         rescheduleAt(maxEndRxTime, rxChannelIdleTimer);
 }
-
-//void NewEthernetCsmaPhy::scheduleTxTimer(EthernetSignalBase *signal)
-//{
-//    scheduleAfter(signal->getDuration(), txTimer);
-//}
 
 } // namespace physicallayer
 

@@ -130,24 +130,6 @@ void NewEthernetPlca::handleCollisionEnd()
     handleWithFSMs();
 }
 
-//void NewEthernetPlca::handleTransmissionStart(SignalType signalType, Packet *packet)
-//{
-//    Enter_Method("handleTransmissionStart");
-//    EV_DEBUG << "Handling transmission start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
-//}
-//
-//void NewEthernetPlca::handleTransmissionEnd(SignalType signalType, Packet *packet)
-//{
-//    Enter_Method("handleTransmissionEnd");
-//    EV_DEBUG << "Handling transmission end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
-//    if (signalType == DATA || signalType == JAM)
-//        mac->handleTransmissionEnd(signalType, packet);
-//    else if (signalType == BEACON || signalType == COMMIT)
-//        ; // these signals are not known by the MAC
-//    else
-//        throw cRuntimeError("Unknown signal type");
-//}
-
 void NewEthernetPlca::handleReceptionStart(SignalType signalType, Packet *packet)
 {
     Enter_Method("handleReceptionStart");

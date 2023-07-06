@@ -130,11 +130,6 @@ void NewEthernetPlca2::handleCollisionEnd()
     throw cRuntimeError("TODO");
 }
 
-//void NewEthernetPlca2::handleTransmissionStart(SignalType signalType, Packet *packet)
-//{
-//    Enter_Method("handleTransmissionStart");
-//}
-//
 //void NewEthernetPlca2::handleTransmissionEnd(SignalType signalType, Packet *packet)
 //{
 //    Enter_Method("handleTransmissionEnd");
