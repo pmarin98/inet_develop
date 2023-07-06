@@ -19,6 +19,8 @@ simple NewEthernetPlca like IProtocolLayer
         int delay_line_length = default(100);
         double to_interval @unit(s);
         double burst_interval @unit(s);
+        @signal[curID](type=int);
+        @statistic[curID](record=vector; interpolationmode=sample-hold);
         @display("i=block/rxtx");
     gates:
         input upperLayerIn @labels(EtherFrame);

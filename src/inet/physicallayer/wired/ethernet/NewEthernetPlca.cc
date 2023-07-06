@@ -19,6 +19,8 @@ namespace physicallayer {
 
 Define_Module(NewEthernetPlca);
 
+simsignal_t NewEthernetPlca::curIDSignal = cComponent::registerSignal("curID");
+
 NewEthernetPlca::~NewEthernetPlca()
 {
     cancelAndDelete(beacon_timer);
@@ -128,23 +130,23 @@ void NewEthernetPlca::handleCollisionEnd()
     handleWithFSMs();
 }
 
-void NewEthernetPlca::handleTransmissionStart(SignalType signalType, Packet *packet)
-{
-    Enter_Method("handleTransmissionStart");
-    EV_DEBUG << "Handling transmission start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
-}
-
-void NewEthernetPlca::handleTransmissionEnd(SignalType signalType, Packet *packet)
-{
-    Enter_Method("handleTransmissionEnd");
-    EV_DEBUG << "Handling transmission end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
-    if (signalType == DATA || signalType == JAM)
-        mac->handleTransmissionEnd(signalType, packet);
-    else if (signalType == BEACON || signalType == COMMIT)
-        ; // these signals are not known by the MAC
-    else
-        throw cRuntimeError("Unknown signal type");
-}
+//void NewEthernetPlca::handleTransmissionStart(SignalType signalType, Packet *packet)
+//{
+//    Enter_Method("handleTransmissionStart");
+//    EV_DEBUG << "Handling transmission start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
+//}
+//
+//void NewEthernetPlca::handleTransmissionEnd(SignalType signalType, Packet *packet)
+//{
+//    Enter_Method("handleTransmissionEnd");
+//    EV_DEBUG << "Handling transmission end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
+//    if (signalType == DATA || signalType == JAM)
+//        mac->handleTransmissionEnd(signalType, packet);
+//    else if (signalType == BEACON || signalType == COMMIT)
+//        ; // these signals are not known by the MAC
+//    else
+//        throw cRuntimeError("Unknown signal type");
+//}
 
 void NewEthernetPlca::handleReceptionStart(SignalType signalType, Packet *packet)
 {
@@ -163,11 +165,11 @@ void NewEthernetPlca::handleReceptionEnd(SignalType signalType, Packet *packet)
 void NewEthernetPlca::startSignalTransmission(SignalType signalType)
 {
     Enter_Method("startSignalTransmission");
+    EV_DEBUG << "Starting signal transmission" << EV_FIELD(signalType) << EV_ENDL;
     if (signalType == JAM) {
-        EV_DEBUG << "Starting jam signal transmission" << EV_ENDL;
         plca_txen = true;
-        plca_txd = nullptr; // TODO ?
-        phy->startSignalTransmission(JAM);
+        plca_txd = nullptr;
+        plca_txtype = JAM;
         handleWithFSMs();
     }
     else
@@ -180,6 +182,7 @@ void NewEthernetPlca::endSignalTransmission()
     EV_DEBUG << "Ending signal transmission" << EV_ENDL;
     plca_txen = false;
     plca_txd = nullptr;
+    plca_txtype = NONE;
     handleWithFSMs();
 }
 
@@ -190,6 +193,7 @@ void NewEthernetPlca::startFrameTransmission(Packet *packet)
     take(packet);
     plca_txen = true;
     plca_txd = packet;
+    plca_txtype = DATA;
     handleWithFSMs();
 }
 
@@ -199,6 +203,7 @@ void NewEthernetPlca::endFrameTransmission()
     EV_DEBUG << "Ending frame transmission" << EV_ENDL;
     plca_txen = false;
     plca_txd = nullptr;
+    plca_txtype = NONE;
     handleWithFSMs();
 }
 
@@ -211,21 +216,22 @@ void NewEthernetPlca::handleWithControlFSM()
                 phy->endSignalTransmission();
                 committed = false;
                 curID = 0;
+                emit(curIDSignal, curID);
                 plca_active = false;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             plca_en && local_nodeID != 0 && local_nodeID != 255,
                             CS_RESYNC,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             plca_en && local_nodeID == 0,
                             CS_RECOVER,
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION4, // open arrow
+//            FSMA_Transition(T4, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -234,19 +240,19 @@ void NewEthernetPlca::handleWithControlFSM()
             FSMA_Enter(
                 plca_active = false;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             local_nodeID != 0 && CRS,
                             CS_EARLY_RECEIVE,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             PMCD && !CRS && local_nodeID == 0,
                             CS_SEND_BEACON,
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION4, // open arrow
+//            FSMA_Transition(T4, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -255,15 +261,15 @@ void NewEthernetPlca::handleWithControlFSM()
             FSMA_Enter(
                 plca_active = false;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             true,
                             CS_WAIT_TO,
             );
-            FSMA_Transition(TRANSITION2, // open arrow
+            FSMA_Transition(T2, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION3, // open arrow
+//            FSMA_Transition(T3, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -274,15 +280,15 @@ void NewEthernetPlca::handleWithControlFSM()
                 phy->startSignalTransmission(BEACON);
                 plca_active = true;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !beacon_timer->isScheduled(),
                             CS_SYNCING,
             );
-            FSMA_Transition(TRANSITION2, // open arrow
+            FSMA_Transition(T2, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION3, // open arrow
+//            FSMA_Transition(T3, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -290,20 +296,21 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_SYNCING) {
             FSMA_Enter(
                 curID = 0;
+                emit(curIDSignal, curID);
 //                phy->endSignalTransmission();
                 plca_active = true;
                 if (local_nodeID != 0 && rx_cmd != "BEACON")
                     rescheduleAfter(4000E-9, invalid_beacon_timer);
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !CRS,
                             CS_WAIT_TO,
             );
-            FSMA_Transition(TRANSITION2, // open arrow
+            FSMA_Transition(T2, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION3, // open arrow
+//            FSMA_Transition(T3, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -312,27 +319,27 @@ void NewEthernetPlca::handleWithControlFSM()
             FSMA_Enter(
                 scheduleAfter(to_interval, to_timer);
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             CRS,
                             CS_EARLY_RECEIVE,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             plca_active && curID == local_nodeID && packetPending && !CRS,
                             CS_COMMIT,
             );
-            FSMA_Transition(TRANSITION3,
+            FSMA_Transition(T3,
                             !to_timer->isScheduled() && curID != local_nodeID && !CRS,
                             CS_NEXT_TX_OPPORTUNITY,
             );
-            FSMA_Transition(TRANSITION4,
+            FSMA_Transition(T4,
                             curID == local_nodeID && (!packetPending || !plca_active) && !CRS,
                             CS_YIELD,
             );
-            FSMA_Transition(TRANSITION5, // open arrow
+            FSMA_Transition(T5, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION6, // open arrow
+//            FSMA_Transition(T6, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -342,27 +349,27 @@ void NewEthernetPlca::handleWithControlFSM()
                 cancelEvent(to_timer);
                 scheduleAfter(22 / 100E+6, beacon_det_timer);
             );
-            FSMA_Transition(TRANSITION1, // D
+            FSMA_Transition(T1, // D
                             local_nodeID != 0 && !receiving && (rx_cmd == "BEACON" || (!CRS && beacon_det_timer->isScheduled())),
                             CS_SYNCING,
             );
-            FSMA_Transition(TRANSITION2, // B
+            FSMA_Transition(T2, // B
                             !CRS && local_nodeID != 0 && rx_cmd != "BEACON" && !beacon_det_timer->isScheduled(),
                             CS_RESYNC,
             );
-            FSMA_Transition(TRANSITION3, // C
+            FSMA_Transition(T3, // C
                             !CRS && local_nodeID == 0,
                             CS_RECOVER,
             );
-            FSMA_Transition(TRANSITION4,
+            FSMA_Transition(T4,
                             receiving && CRS,
                             CS_RECEIVE,
             );
-            FSMA_Transition(TRANSITION5, // open arrow
+            FSMA_Transition(T5, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION6, // open arrow
+//            FSMA_Transition(T6, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -374,51 +381,51 @@ void NewEthernetPlca::handleWithControlFSM()
                 cancelEvent(to_timer);
                 bc = 0;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             TX_EN,
                             CS_TRANSMIT,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             !TX_EN && !packetPending,
                             CS_ABORT,
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION4, // open arrow
+//            FSMA_Transition(T4, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
         }
         FSMA_State(CS_YIELD) {
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             CRS && to_timer->isScheduled(),
                             CS_EARLY_RECEIVE,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             !to_timer->isScheduled(),
                             CS_NEXT_TX_OPPORTUNITY,
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION4, // open arrow
+//            FSMA_Transition(T4, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
         }
         FSMA_State(CS_RECEIVE) {
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !CRS,
                             CS_NEXT_TX_OPPORTUNITY,
             );
-            FSMA_Transition(TRANSITION2, // open arrow
+            FSMA_Transition(T2, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION3, // open arrow
+//            FSMA_Transition(T3, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -429,19 +436,19 @@ void NewEthernetPlca::handleWithControlFSM()
                 if (bc >= max_bc)
                     committed = false;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !TX_EN && !CRS && bc >= max_bc,
                             CS_NEXT_TX_OPPORTUNITY,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             !TX_EN && bc < max_bc,
                             CS_BURST,
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION4, // open arrow
+//            FSMA_Transition(T4, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -452,19 +459,19 @@ void NewEthernetPlca::handleWithControlFSM()
                 phy->startSignalTransmission(COMMIT);
                 scheduleAfter(burst_interval, burst_timer);
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             TX_EN,
                             CS_TRANSMIT,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             !TX_EN && !burst_timer->isScheduled(),
                             CS_ABORT,
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION4, // open arrow
+//            FSMA_Transition(T4, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -473,15 +480,15 @@ void NewEthernetPlca::handleWithControlFSM()
             FSMA_Enter(
                 phy->endSignalTransmission();
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !CRS,
                             CS_NEXT_TX_OPPORTUNITY,
             );
-            FSMA_Transition(TRANSITION2, // open arrow
+            FSMA_Transition(T2, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION3, // open arrow
+//            FSMA_Transition(T3, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -489,21 +496,22 @@ void NewEthernetPlca::handleWithControlFSM()
         FSMA_State(CS_NEXT_TX_OPPORTUNITY) {
             FSMA_Enter(
                 curID = curID + 1;
+                emit(curIDSignal, curID);
                 committed = false;
             );
-            FSMA_Transition(TRANSITION1, // B
+            FSMA_Transition(T1, // B
                             (local_nodeID == 0 && curID >= plca_node_count) || curID == 255,
                             CS_RESYNC,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             true,
                             CS_WAIT_TO,
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || local_nodeID == 255,
                             CS_DISABLE,
             );
-//            FSMA_Transition(TRANSITION4, // open arrow
+//            FSMA_Transition(T4, // open arrow
 //                            !invalid_beacon_timer->isScheduled(),
 //                            CS_RESYNC,
 //            );
@@ -530,15 +538,15 @@ void NewEthernetPlca::handleWithDataFSM()
                 else
                     SIGNAL_STATUS = "NO_SIGNAL_ERROR";
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             plca_en && !plca_reset && plca_status,
                             DS_IDLE,
             );
-//            FSMA_Transition(TRANSITION2,
+//            FSMA_Transition(T2,
 //                            true,
 //                            DS_NORMAL,
 //            );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -554,19 +562,19 @@ void NewEthernetPlca::handleWithDataFSM()
                 a = 0;
                 b = 0;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             MCD && !CRS,
                             DS_IDLE,
             );
-            FSMA_Transition(TRANSITION2, // B
+            FSMA_Transition(T2, // B
                             MCD && CRS && plca_txen,
                             DS_TRANSMIT,
             );
-//            FSMA_Transition(TRANSITION3,
+//            FSMA_Transition(T3,
 //                            true,
 //                            DS_WAIT_IDLE,
 //            );
-            FSMA_Transition(TRANSITION4, // open arrow
+            FSMA_Transition(T4, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -582,19 +590,19 @@ void NewEthernetPlca::handleWithDataFSM()
                 a = 0;
                 b = 0;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             receiving && !plca_txen && tx_cmd == "NONE",
                             DS_RECEIVE,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             plca_txen,
                             DS_HOLD,
             );
-//            FSMA_Transition(TRANSITION3,
+//            FSMA_Transition(T3,
 //                            true,
 //                            DS_IDLE,
 //            );
-            FSMA_Transition(TRANSITION4, // open arrow
+            FSMA_Transition(T4, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -608,19 +616,19 @@ void NewEthernetPlca::handleWithDataFSM()
 //                    TXD = ENCODE_TXD(tx_cmd_sync)
 //                    TX_ER = ENCODE_TXER(tx_cmd_sync)
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !receiving && !plca_txen,
                             DS_IDLE,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             plca_txen,
                             DS_COLLIDE,
             );
-//            FSMA_Transition(TRANSITION3,
+//            FSMA_Transition(T3,
 //                            true,
 //                            DS_RECEIVE,
 //            );
-            FSMA_Transition(TRANSITION4, // open arrow
+            FSMA_Transition(T4, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -634,23 +642,23 @@ void NewEthernetPlca::handleWithDataFSM()
 //                    TXD = ENCODE_TXD(tx_cmd_sync)
                 scheduleAfter(delay_line_length / 100E+6, hold_timer);
             );
-//            FSMA_Transition(TRANSITION1,
+//            FSMA_Transition(T1,
 //                            MCD && !committed && !plca_txer && !receiving && /*a < delay_line_length*/ hold_timer->isScheduled(),
 //                            DS_HOLD,
 //            );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             !plca_txer && (receiving || /*a > delay_line_length*/ !hold_timer->isScheduled()),
                             DS_COLLIDE,
             );
-            FSMA_Transition(TRANSITION3,
+            FSMA_Transition(T3,
                             MCD && committed && !receiving && !plca_txer && /*a < delay_line_length*/ hold_timer->isScheduled(),
                             DS_TRANSMIT,
             );
-            FSMA_Transition(TRANSITION4,
+            FSMA_Transition(T4,
                             MCD && plca_txer,
                             DS_ABORT,
             );
-            FSMA_Transition(TRANSITION5, // open arrow
+            FSMA_Transition(T5, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -661,15 +669,15 @@ void NewEthernetPlca::handleWithDataFSM()
 //                    TX_ER = ENCODE_TXER(tx_cmd_sync)
 //                    TXD = ENCODE_TXD(tx_cmd_sync)
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !plca_txen,
                             DS_ABORT,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             true,
                             DS_IDLE,
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -685,15 +693,15 @@ void NewEthernetPlca::handleWithDataFSM()
 //                    TX_ER = ENCODE_TXER(tx_cmd_sync)
                 scheduleAfter(512 / 100E+6, pending_timer);
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !plca_txen,
                             DS_DELAY_PENDING,
             );
-//            FSMA_Transition(TRANSITION2,
+//            FSMA_Transition(T2,
 //                            true,
 //                            DS_COLLIDE,
 //            );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -704,15 +712,15 @@ void NewEthernetPlca::handleWithDataFSM()
 //                    TXD = ENCODE_TXD(tx_cmd_sync)
 //                    TX_ER = ENCODE_TXER(tx_cmd_sync)
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !pending_timer->isScheduled(),
                             DS_PENDING,
             );
-//            FSMA_Transition(TRANSITION2,
+//            FSMA_Transition(T2,
 //                            true,
 //                            DS_DELAY_PENDING,
 //            );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -724,15 +732,15 @@ void NewEthernetPlca::handleWithDataFSM()
 //                    TXD = ENCODE_TXD(tx_cmd_sync)
 //                    TX_ER = ENCODE_TXER(tx_cmd_sync)
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             committed,
                             DS_WAIT_MAC,
             );
-//            FSMA_Transition(TRANSITION2,
+//            FSMA_Transition(T2,
 //                            true,
 //                            DS_PENDING,
 //            );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -743,19 +751,19 @@ void NewEthernetPlca::handleWithDataFSM()
 //                    TXD = ENCODE_TXD(tx_cmd_sync)
 //                    TX_ER = ENCODE_TXER(tx_cmd_sync)
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             MCD && plca_txen,
                             DS_TRANSMIT,
             );
-            FSMA_Transition(TRANSITION2, // C
+            FSMA_Transition(T2, // C
                             !plca_txen && !commit_timer->isScheduled(),
                             DS_WAIT_IDLE,
             );
-//            FSMA_Transition(TRANSITION3,
+//            FSMA_Transition(T3,
 //                            true,
 //                            DS_WAIT_MAC,
 //            );
-            FSMA_Transition(TRANSITION4, // open arrow
+            FSMA_Transition(T4, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -774,19 +782,19 @@ void NewEthernetPlca::handleWithDataFSM()
                 else
                     SIGNAL_STATUS = "NO_SIGNAL_ERROR";
             );
-//            FSMA_Transition(TRANSITION1,
+//            FSMA_Transition(T1,
 //                            MCD && plca_txen,
 //                            DS_TRANSMIT,
 //            );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             MCD && !plca_txen && a > 0,
                             DS_FLUSH,
             );
-            FSMA_Transition(TRANSITION3, // C
+            FSMA_Transition(T3, // C
                             MCD && !plca_txen && a == 0,
                             DS_WAIT_IDLE,
             );
-            FSMA_Transition(TRANSITION4, // open arrow
+            FSMA_Transition(T4, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -803,15 +811,15 @@ void NewEthernetPlca::handleWithDataFSM()
                 else
                     SIGNAL_STATUS = "NO_SIGNAL_ERROR";
             );
-//            FSMA_Transition(TRANSITION1,
+//            FSMA_Transition(T1,
 //                            MCD && a != b,
 //                            DS_FLUSH,
 //            );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             MCD && a == b,
                             DS_WAIT_IDLE, // C
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en || !plca_status,
                             DS_IDLE,
             );
@@ -855,11 +863,11 @@ void NewEthernetPlca::handleWithStatusFSM()
             FSMA_Enter(
                 plca_status = false;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             plca_active,
                             SS_ACTIVE,
             );
-            FSMA_Transition(TRANSITION2, // open arrow
+            FSMA_Transition(T2, // open arrow
                             plca_reset || !plca_en,
                             SS_INACTIVE,
             );
@@ -868,11 +876,11 @@ void NewEthernetPlca::handleWithStatusFSM()
             FSMA_Enter(
                 plca_status = true;
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             !plca_active,
                             SS_HYSTERESIS,
             );
-            FSMA_Transition(TRANSITION2, // open arrow
+            FSMA_Transition(T2, // open arrow
                             plca_reset || !plca_en,
                             SS_INACTIVE,
             );
@@ -881,15 +889,15 @@ void NewEthernetPlca::handleWithStatusFSM()
             FSMA_Enter(
                 scheduleAfter(130090 / 100E+6, plca_status_timer);
             );
-            FSMA_Transition(TRANSITION1,
+            FSMA_Transition(T1,
                             plca_active,
                             SS_ACTIVE,
             );
-            FSMA_Transition(TRANSITION2,
+            FSMA_Transition(T2,
                             !plca_status_timer->isScheduled() && !plca_active,
                             SS_INACTIVE,
             );
-            FSMA_Transition(TRANSITION3, // open arrow
+            FSMA_Transition(T3, // open arrow
                             plca_reset || !plca_en,
                             SS_INACTIVE,
             );

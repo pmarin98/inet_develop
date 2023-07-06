@@ -7,9 +7,11 @@
 #ifndef __INET_INEWETHERNETCSMAMAC_H
 #define __INET_INEWETHERNETCSMAMAC_H
 
-#include "inet/common/packet/Packet.h"
+#include "inet/physicallayer/wired/ethernet/EthernetSignal_m.h"
 
 namespace inet {
+
+using namespace inet::physicallayer;
 
 class INET_API INewEthernetCsmaMac
 {
@@ -20,11 +22,11 @@ class INET_API INewEthernetCsmaMac
     virtual void handleCollisionStart() = 0; // MII COL signal
     virtual void handleCollisionEnd() = 0; // MII COL signal
 
-    virtual void handleTransmissionStart(int signalType, Packet *packet) = 0;
-    virtual void handleTransmissionEnd(int signalType, Packet *packet) = 0;
+//    virtual void handleTransmissionStart(SignalType signalType, Packet *packet) = 0;
+//    virtual void handleTransmissionEnd(SignalType signalType, Packet *packet) = 0;
 
-    virtual void handleReceptionStart(int signalType, Packet *packet) = 0; // MII RX_DV and RXD signals (rx_cmd)
-    virtual void handleReceptionEnd(int signalType, Packet *packet) = 0; // MII RX_DV and RXD signals (rx_cmd)
+    virtual void handleReceptionStart(SignalType signalType, Packet *packet) = 0; // MII RX_DV and RXD signals (rx_cmd)
+    virtual void handleReceptionEnd(SignalType signalType, Packet *packet) = 0; // MII RX_DV and RXD signals (rx_cmd)
 };
 
 } // namespace inet

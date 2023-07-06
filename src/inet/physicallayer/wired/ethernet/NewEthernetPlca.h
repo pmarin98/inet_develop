@@ -24,6 +24,9 @@ namespace physicallayer {
 class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthernetCsmaMac, public virtual INewEthernetCsmaPhy
 {
   protected:
+    static simsignal_t curIDSignal;
+
+  protected:
     // 148.4.4.6 State diagram from IEEE Std 802.3cg-2019
     enum ControlState {
         CS_DISABLE,
@@ -113,6 +116,7 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
     // additional state variables
     bool old_carrier_sense_signal = false;
     bool old_collision_signal = false;
+    SignalType plca_txtype;
 
     // control state machine timers
     cMessage *beacon_timer = nullptr;
@@ -154,8 +158,8 @@ class INET_API NewEthernetPlca : public cSimpleModule, public virtual INewEthern
     virtual void handleCollisionStart() override;
     virtual void handleCollisionEnd() override;
 
-    virtual void handleTransmissionStart(SignalType signalType, Packet *packet) override;
-    virtual void handleTransmissionEnd(SignalType signalType, Packet *packet) override;
+//    virtual void handleTransmissionStart(SignalType signalType, Packet *packet) override;
+//    virtual void handleTransmissionEnd(SignalType signalType, Packet *packet) override;
 
     virtual void handleReceptionStart(SignalType signalType, Packet *packet) override;
     virtual void handleReceptionEnd(SignalType signalType, Packet *packet) override;

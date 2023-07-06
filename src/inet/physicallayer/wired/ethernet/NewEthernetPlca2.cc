@@ -130,25 +130,25 @@ void NewEthernetPlca2::handleCollisionEnd()
     throw cRuntimeError("TODO");
 }
 
-void NewEthernetPlca2::handleTransmissionStart(SignalType signalType, Packet *packet)
-{
-    Enter_Method("handleTransmissionStart");
-}
-
-void NewEthernetPlca2::handleTransmissionEnd(SignalType signalType, Packet *packet)
-{
-    Enter_Method("handleTransmissionEnd");
-    EV_DEBUG << "Handling transmission end" << EV_ENDL;
-    if (sendingBeacon) {
-        sendingBeacon = false;
-        curID = 0;
-        emit(curIDSignal, curID);
-        handleCRSChanged();
-    }
-    else
-        mac->handleTransmissionEnd(signalType, packet);
-    scheduleAfter(to_interval, to_timer);
-}
+//void NewEthernetPlca2::handleTransmissionStart(SignalType signalType, Packet *packet)
+//{
+//    Enter_Method("handleTransmissionStart");
+//}
+//
+//void NewEthernetPlca2::handleTransmissionEnd(SignalType signalType, Packet *packet)
+//{
+//    Enter_Method("handleTransmissionEnd");
+//    EV_DEBUG << "Handling transmission end" << EV_ENDL;
+//    if (sendingBeacon) {
+//        sendingBeacon = false;
+//        curID = 0;
+//        emit(curIDSignal, curID);
+//        handleCRSChanged();
+//    }
+//    else
+//        mac->handleTransmissionEnd(signalType, packet);
+//    scheduleAfter(to_interval, to_timer);
+//}
 
 void NewEthernetPlca2::handleReceptionStart(SignalType signalType, Packet *packet)
 {

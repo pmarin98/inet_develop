@@ -12,6 +12,7 @@
 #include "inet/linklayer/common/InterfaceTag_m.h"
 #include "inet/linklayer/common/MacAddressTag_m.h"
 #include "inet/linklayer/ethernet/common/Ethernet.h"
+#include "inet/physicallayer/wired/ethernet/EthernetPhyConstants.h"
 
 namespace inet {
 
@@ -19,7 +20,9 @@ Define_Module(NewEthernetCsmaMac);
 
 NewEthernetCsmaMac::~NewEthernetCsmaMac()
 {
+    cancelAndDelete(txTimer);
     cancelAndDelete(ifgTimer);
+    cancelAndDelete(jamTimer);
     cancelAndDelete(backoffTimer);
 }
 
@@ -32,7 +35,9 @@ void NewEthernetCsmaMac::initialize(int stage)
         sendRawBytes = par("sendRawBytes");
         promiscuous = par("promiscuous");
         phy = getConnectedModule<INewEthernetCsmaPhy>(gate("lowerLayerOut"));
+        txTimer = new cMessage("TxTimer", TX_END);
         ifgTimer = new cMessage("IfgTimer", IFG_END);
+        jamTimer = new cMessage("JamTimer", JAM_END);
         backoffTimer = new cMessage("BackoffTimer", BACKOFF_END);
         fsm.setState(IDLE);
     }
@@ -98,19 +103,19 @@ void NewEthernetCsmaMac::handleCollisionEnd()
     // NOTE: this event is not needed in the FSM
 }
 
-void NewEthernetCsmaMac::handleTransmissionStart(SignalType signalType, Packet *packet)
-{
-    Enter_Method("handleTransmissionStart");
-    EV_DEBUG << "Handling transmission start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
-    // NOTE: this event is not needed in the FSM
-}
-
-void NewEthernetCsmaMac::handleTransmissionEnd(SignalType signalType, Packet *packet)
-{
-    Enter_Method("handleTransmissionEnd");
-    EV_DEBUG << "Handling transmission end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
-    handleWithFsm(TX_END, packet);
-}
+//void NewEthernetCsmaMac::handleTransmissionStart(SignalType signalType, Packet *packet)
+//{
+//    Enter_Method("handleTransmissionStart");
+//    EV_DEBUG << "Handling transmission start" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
+//    // NOTE: this event is not needed in the FSM
+//}
+//
+//void NewEthernetCsmaMac::handleTransmissionEnd(SignalType signalType, Packet *packet)
+//{
+//    Enter_Method("handleTransmissionEnd");
+//    EV_DEBUG << "Handling transmission end" << EV_FIELD(signalType) << EV_FIELD(packet) << EV_ENDL;
+//    handleWithFsm(TX_END, packet);
+//}
 
 void NewEthernetCsmaMac::handleReceptionStart(SignalType signalType, Packet *packet)
 {
@@ -175,14 +180,16 @@ void NewEthernetCsmaMac::handleWithFsm(int event, cMessage *message)
             FSMA_Event_Transition(COLLISION_START,
                                   event == COLLISION_START,
                                   JAMMING,
+                abortTransmission();
                 phy->startSignalTransmission(JAM);
             );
             FSMA_Ignore_Event(event == CARRIER_SENSE_START);
             FSMA_Fail_On_Unhandled_Event();
         }
         FSMA_State(JAMMING) {
-            FSMA_Event_Transition(TX_END,
-                                  event == TX_END,
+            FSMA_Enter(scheduleJamTimer());
+            FSMA_Event_Transition(JAM_END,
+                                  event == JAM_END,
                                   BACKOFF,
                 phy->endSignalTransmission();
                 retryTransmission();
@@ -233,6 +240,7 @@ void NewEthernetCsmaMac::setCurrentTransmission(Packet *packet)
 
 void NewEthernetCsmaMac::startTransmission()
 {
+    EV_DEBUG << "Starting frame transmission" << EV_FIELD(currentTxFrame) << EV_ENDL;
     MacAddress address = getMacAddress();
     const auto& macHeader = currentTxFrame->peekAtFront<EthernetMacHeader>();
     if (macHeader->getDest().equals(address)) {
@@ -245,19 +253,30 @@ void NewEthernetCsmaMac::startTransmission()
     }
     addPaddingAndSetFcs(currentTxFrame, MIN_ETHERNET_FRAME_BYTES);
     phy->startFrameTransmission(currentTxFrame->dup());
+    scheduleTxTimer(currentTxFrame);
 }
 
 void NewEthernetCsmaMac::endTransmission()
 {
+    EV_DEBUG << "Ending frame transmission" << EV_FIELD(currentTxFrame) << EV_ENDL;
+    phy->endFrameTransmission();
     delete currentTxFrame;
     currentTxFrame = nullptr;
     numRetries = 0;
 }
 
+void NewEthernetCsmaMac::abortTransmission()
+{
+    EV_DEBUG << "Aborting frame transmission" << EV_FIELD(currentTxFrame) << EV_ENDL;
+    cancelEvent(txTimer);
+    phy->endFrameTransmission();
+}
+
 void NewEthernetCsmaMac::retryTransmission()
 {
+    EV_DEBUG << "Retrying frame transmission" << EV_FIELD(currentTxFrame) << EV_ENDL;
     if (++numRetries > MAX_ATTEMPTS) {
-        EV_DETAIL << "Number of retransmit attempts of frame exceeds maximum, cancelling transmission of frame\n";
+        EV_DEBUG << "Number of retransmit attempts of frame exceeds maximum, cancelling transmission of frame\n";
         PacketDropDetails details;
         details.setReason(RETRY_LIMIT_REACHED);
         details.setLimit(MAX_ATTEMPTS);
@@ -268,6 +287,7 @@ void NewEthernetCsmaMac::retryTransmission()
 
 void NewEthernetCsmaMac::processReceivedFrame(Packet *packet)
 {
+    EV_DEBUG << "Processing received frame" << EV_FIELD(packet) << EV_ENDL;
     const auto& header = packet->peekAtFront<EthernetMacHeader>();
     auto macAddressInd = packet->addTag<MacAddressInd>();
     macAddressInd->setSrcAddress(header->getSrc());
@@ -335,17 +355,33 @@ void NewEthernetCsmaMac::handleCanPullPacketChanged(const cGate *gate)
     }
 }
 
+void NewEthernetCsmaMac::scheduleTxTimer(Packet *packet)
+{
+    EV_DEBUG << "Scheduling TX timer" << EV_FIELD(packet) << EV_ENDL;
+    simtime_t duration = b(packet->getDataLength() + ETHERNET_PHY_HEADER_LEN).get() / 100E+6; // TODO curEtherDescr->txrate;
+    scheduleAfter(duration, txTimer);
+}
+
 void NewEthernetCsmaMac::scheduleIfgTimer()
 {
-    simtime_t ifgDuration = b(INTERFRAME_GAP_BITS).get() / 100E+6; // TODO curEtherDescr->txrate;
-    scheduleAfter(ifgDuration, ifgTimer);
+    EV_DEBUG << "Scheduling IFG timer" << EV_ENDL;
+    simtime_t duration = b(INTERFRAME_GAP_BITS).get() / 100E+6; // TODO curEtherDescr->txrate;
+    scheduleAfter(duration, ifgTimer);
+}
+
+void NewEthernetCsmaMac::scheduleJamTimer()
+{
+    EV_DEBUG << "Scheduling jam timer" << EV_ENDL;
+    simtime_t duration = b(JAM_SIGNAL_BYTES).get() / 100E+6; // TODO curEtherDescr->txrate;
+    scheduleAfter(duration, jamTimer);
 }
 
 void NewEthernetCsmaMac::scheduleBackoffTimer()
 {
+    EV_DEBUG << "Scheduling backoff timer" << EV_ENDL;
     int backoffRange = (numRetries >= BACKOFF_RANGE_LIMIT) ? 1024 : (1 << numRetries);
     int slotNumber = intuniform(0, backoffRange - 1);
-    EV_DETAIL << "Executing backoff procedure (slotNumber=" << slotNumber << ", backoffRange=[0," << backoffRange - 1 << "]" << endl;
+    EV_DEBUG << "Executing backoff procedure" << EV_FIELD(slotNumber) << ", backoffRange = [0," << backoffRange - 1 << "]" << EV_ENDL;
     simtime_t backoffDuration = slotNumber * 512 / 100E+6; // TODO curEtherDescr->slotTime;
     scheduleAfter(backoffDuration, backoffTimer);
 }

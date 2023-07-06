@@ -22,7 +22,6 @@ const B MAX_ETHERNET_FRAME_BYTES         = B(1526); /* excludes preamble and SFD
 const B MIN_ETHERNET_FRAME_BYTES         = B(64); /* excludes preamble and SFD */
 const B GIGABIT_MIN_FRAME_BYTES_WITH_EXT = B(512); /* excludes preamble and SFD, but includes 448 byte extension */
 const b INTERFRAME_GAP_BITS              = b(96);
-
 #define ETHERNET_TXRATE                        10000000.0   /* 10 Mbit/sec (in bit/s) */
 #define FAST_ETHERNET_TXRATE                   100000000.0   /* 100 Mbit/sec (in bit/s) */
 #define GIGABIT_ETHERNET_TXRATE                1000000000.0   /* 1 Gbit/sec (in bit/s) */

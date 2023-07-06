@@ -48,6 +48,7 @@ class INET_API NewEthernetCsmaMac : public MacProtocolBase, public virtual INewE
         COLLISION_START,
         TX_END,
         IFG_END,
+        JAM_END,
         BACKOFF_END,
     };
 
@@ -66,7 +67,9 @@ class INET_API NewEthernetCsmaMac : public MacProtocolBase, public virtual INewE
     bool carrierSense = false;
 
     // timers
+    cMessage *txTimer = nullptr;
     cMessage *ifgTimer = nullptr;
+    cMessage *jamTimer = nullptr;
     cMessage *backoffTimer = nullptr;
 
     // statistics
@@ -80,6 +83,7 @@ class INET_API NewEthernetCsmaMac : public MacProtocolBase, public virtual INewE
     virtual void setCurrentTransmission(Packet *packet);
     virtual void startTransmission();
     virtual void endTransmission();
+    virtual void abortTransmission();
     virtual void retryTransmission();
 
     virtual void processReceivedFrame(Packet *packet);
@@ -89,7 +93,9 @@ class INET_API NewEthernetCsmaMac : public MacProtocolBase, public virtual INewE
 
     virtual void addPaddingAndSetFcs(Packet *packet, B requiredMinBytes) const;
 
+    virtual void scheduleTxTimer(Packet *packet);
     virtual void scheduleIfgTimer();
+    virtual void scheduleJamTimer();
     virtual void scheduleBackoffTimer();
 
   public:
@@ -106,11 +112,11 @@ class INET_API NewEthernetCsmaMac : public MacProtocolBase, public virtual INewE
     virtual void handleCollisionStart() override;
     virtual void handleCollisionEnd() override;
 
-    virtual void handleTransmissionStart(int signalType, Packet *packet) override;
-    virtual void handleTransmissionEnd(int signalType, Packet *packet) override;
+//    virtual void handleTransmissionStart(SignalType signalType, Packet *packet) override;
+//    virtual void handleTransmissionEnd(SignalType signalType, Packet *packet) override;
 
-    virtual void handleReceptionStart(int signalType, Packet *packet) override;
-    virtual void handleReceptionEnd(int signalType, Packet *packet) override;
+    virtual void handleReceptionStart(SignalType signalType, Packet *packet) override;
+    virtual void handleReceptionEnd(SignalType signalType, Packet *packet) override;
 
     virtual IPassivePacketSource *getProvider(const cGate *gate) override;
     virtual void handleCanPullPacketChanged(const cGate *gate) override;

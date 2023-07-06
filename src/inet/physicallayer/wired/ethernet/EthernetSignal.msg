@@ -13,6 +13,15 @@ cplusplus {{
 
 namespace inet::physicallayer;
 
+enum SignalType
+{
+    NONE   = -1;
+    BEACON = 0;
+    COMMIT = 1;
+    DATA   = 2;
+    JAM    = 3;
+}
+
 //
 // Abstract base class for various Ethernet traffic types:
 // EtherJam, EtherFilledIfg and EtherPhyFrame.
