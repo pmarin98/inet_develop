@@ -13,7 +13,7 @@ and an asynchronous traffic shaper (ATS).
 .. **TODO** van egy masik showcase/lehet hogy erdekelne egy masik showcase -> you might be interested in looking at another showcase which ....
 
 | INET version: ``4.4``
-| Source files location: `inet/showcases/tsn/trafficshaping/mixingshapers <https://github.com/inet-framework/inet/tree/master/showcases/tsn/trafficshaping/mixingshapers>`__
+| Source files location: `inet/showcases/tsn/trafficshaping/cbsandats <https://github.com/inet-framework/inet/tree/master/showcases/tsn/trafficshaping/cbsandats>`__
 
 The Model
 ---------
@@ -35,10 +35,10 @@ The Model
 .. time-aware shaping is not enabled. This is the common methodology across these
 .. showcases.
 
-In this demonstration, similarly to the CBS and ATS showcases, we employ a Time
-Aware Shaper module with two traffic classes. However, one class is shaped using
-a Credit-Based Shaper (CBS), and the other class is shaped by an Asynchronous
-Traffic Shaper (ATS). Time-aware shaping is not enabled.
+In this demonstration, similarly to the CBS and ATS showcases, we employ a
+:ned:`Ieee8021qTimeAwareShaper` module with two traffic classes. However, one
+class is shaped using a Credit-Based Shaper (CBS), and the other class is shaped
+by an Asynchronous Traffic Shaper (ATS). Time-aware shaping is not enabled.
 
 .. One class incorporates a Credit-Based Shaper, while the other
 .. utilizes an Asynchronous Traffic Shaper.
@@ -151,48 +151,36 @@ This is achieved by the following:
 Traffic Shaping
 +++++++++++++++
 
-**TODO** two sections? filtering and trafficshaping? or just describe that we need to set up filtering because the ATS has parts in the filtering layer.
+.. In this section, we focus on enabling and configuring traffic shaping. It's
+.. important to note that the ATS has its meter and filter modules in the bridging layer that need to be configured.
+.. For that, we need to set up per-stream filtering.
 
-In the this section, we take a look at what needs to be configured for ATS and CBS.
-ATS has its meter and filter components in the briding layer, which need to be enabled.
+In this section, we focus on enabling and configuring traffic shaping.
+It's important to note that the ATS requires the configuration of its meter and
+filter modules, which are located within the bridging layer. To accomplish this,
+we need to set up per-stream filtering.
 
-- In the this section, we take a look at what needs to be configured for ATS and CBS.
-- ats has its meter and filter components in the bridging layer, we need to add these modules
-- the ats parameters are configured in the meter module, so we configure the committed information rate and committed burst size
+ATS Filtering
+~~~~~~~~~~~~~
 
-.. In this section, we enable and configure traffic shaping.
-.. The asynchronous traffic shaper has components in the bridging layer. I.e., The
-.. ATS requires the transmission eligibility time for each packet to be calculated
-.. by the ingress per-stream filtering.
+Specifically, we need to configure the meter module to calculate the transmission eligibility time for each packet.
+Let's proceed with the configuration of the filtering layer:
 
-In this section, we focus on enabling and configuring traffic shaping. It's
-important to note that the ATS also has components in the bridging layer.
-Specifically, ATS requires the per-stream filtering to calculate the
-transmission eligibility time for each packet.
-
-.. We enable ingress filtering in the switch, this adds a stream filtering layer to
-.. the bridging layer. By default, the ingress filter is a
-.. :ned:`SimpleIeee8021qFilter`. We add the :ned:`EligibilityTimeMeter` and
-.. :ned:`EligibilityTimeFilter` modules here.
-
-We enable ingress filtering in the switch, which adds a stream filtering layer
-to the bridging layer. By default, we use the :ned:`SimpleIeee8021qFilter`` as the
-ingress filter. We add the :ned:`EligibilityTimeMeter`` and
-:ned:`EligibilityTimeFilter`` to the this filter module.
+.. Specifically, ATS requires the per-stream filtering to calculate the
+   transmission eligibility time for each packet.
 
 .. literalinclude:: ../omnetpp.ini
    :start-at: ingress per-stream filtering
    :end-before: egress traffic shaping
    :language: ini
 
-.. We only use one traffic class here, because only the video stream is shaped by
-.. the ATS, and only the ATS has components in the ingess filter. The classifier
-.. will send the video stream through the meter and the filter module, while the
-.. best effort stream will just go through the :ned:`SimpleIeee8021qFilter` module
-.. via the non-filtered direct path:
+In this configuration, we enable ingress filtering in the switch, which adds a stream filtering layer
+to the bridging layer. The ingress filter module in the stream filtering layer is a :ned:`SimpleIeee8021qFilter` by default.
+We add the :ned:`EligibilityTimeMeter` and
+:ned:`EligibilityTimeFilter` as submodules to the filter module.
 
 In this scenario, we utilize a single traffic class since only the video stream
-undergoes shaping through the ATS, which has components in the ingress filter.
+undergoes shaping through the ATS.
 The classifier directs the video stream through the meter and filter modules,
 while the best effort stream follows the non-filtered direct path in the
 :ned:`SimpleIeee8021qFilter`` module, as illustrated on the following image:
@@ -200,51 +188,165 @@ while the best effort stream follows the non-filtered direct path in the
 .. figure:: media/filter.png
    :align: center
 
-**TODO** restructure this
+.. , which has components in the ingress filter
 
-.. *******************
+.. **TODO** configure ATS traffic shaping
 
-.. Furthermore, the ATS parameters are configured at the meter modules in the filter module.
-.. We configure the committed information rate and committed burst size.
-.. The meter modules measure the
-.. data rate of the traffic passing through, calculate the transmission eligibility time and put
-.. an eligibility time tag to all packets. We configure the ATS to limit the video
-.. stream to ~20 Mbps, while allowing some bursts.
+We configure the asynchronous traffic shaping by setting the meter module's parameters.
+Specifically, we set the committed information rate to ~20Mbps, and the committed burst rate to 10kB to allow some bursts.
 
-.. The meter module measures the data rate of the traffic passing through,
-.. calculate the transmission eligibility time and put an eligibility time tag to
-.. all packets. The eligibility time is calculated based on the configured
-.. committed information rate and committed burst size parameters. The eligibility
-.. time will then be used in the interface to delay packets as necessary. We
-.. configure the ATS to limit the video stream to ~20 Mbps, while allowing some
-.. bursts.
+To configure the asynchronous traffic shaping, we set the parameters of the
+meter module. In particular, we set the committed information rate to
+~20 Mbps and the committed burst size to 10 kB, permitting some
+bursts.
 
-The meter module measures the traffic data rate, calculates the transmission
-eligibility time, and assigns an eligibility time tag to each packet. This
-eligibility time is then used at the interface level to appropriately delay
-packets as needed. In this configuration, we limit the video stream to around 20
-Mbps while allowing for occasional bursts.
+.. The meter module measures the traffic data rate, calculates the transmission
+.. eligibility time, and assigns an eligibility time tag to each packet. This
+.. eligibility time is then used at the interface level to appropriately delay
+.. packets as needed. -> this is not needed here
 
-.. Also, we need to configure the committed information rate and committed burst
-.. size parameters of the ATS here, at the meter modules. These modules meter the
-.. data rate of the traffic passing through, calculate the eligibility time and put
-.. an eligibility time tag to all packets. We configure the ATS to limit the video
-.. stream to ~20 Mbps, while allowing some bursts.
+.. In this configuration, we limit the video stream to around 20
+.. Mbps while allowing for occasional bursts.
 
-The traffic shaping takes place in the outgoing network interface of the switch.
-The credit-based shaper only has components here. We configure the CBS to limit
-the data rate of the best effort stream to ~40 Mbps.
+.. Now we need to configure egress traffic shaping in the interfaces
 
-Here is the egress traffic shaping configuration:
+.. Now we need to configure the CBS and ATS components in the interfaces.
+
+.. enable egress traffic shaping
+
+CBS and ATS in Interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Next, we proceed to configure egress traffic shaping in the interfaces of the switch:
 
 .. literalinclude:: ../omnetpp.ini
    :start-at: egress traffic shaping
    :language: ini
 
-.. *******************
+In this configuration, we enable egress traffic shaping in the switch.
+This adds a :ned:`Ieee8021qTimeAwareShaper` module to all interfaces.
+We utilize two traffic classes in the time aware shaper, and override the types of ``transmissionSelectionAlgorithm`` modules
+with :ned:`Ieee8021qCreditBasedShaper` and :ned:`Ieee8021qAsynchronousShaper`. To configure credit-based shaping, we set CBS's idleSlope parameter to ~40Mbps.
 
-Packets that are held up by the shapers are stored in the MAC layer subqueues of
-the corresponding traffic class.
+.. Now that traffic shaping is set up, let's examine the results in the next section.
+
+With traffic shaping now configured, let's proceed to the next section where we can analyze the results of the simulation.
+
+.. X
+
+.. **TODO** two sections? filtering and trafficshaping? or just describe that we need to set up filtering because the ATS has parts in the filtering layer.
+
+.. In the this section, we take a look at what needs to be configured for ATS and CBS.
+.. ATS has its meter and filter components in the briding layer, which need to be enabled.
+
+.. - In the this section, we take a look at what needs to be configured for ATS and CBS.
+.. - ats has its meter and filter components in the bridging layer, we need to add these modules
+.. - the ats parameters are configured in the meter module, so we configure the committed information rate and committed burst size
+
+
+.. - ATS has components in the filtering layer that need to be configured -> more specifically, calculate the eligibility time -> introduction
+.. - So we need a filtering layer/we need to configure the filtering layer -> introduction
+.. - We use just 1 traffic class + the default path, like so -> introduction
+.. - Here is the configuration
+.. - What does it do?
+
+.. lets take a look at the configuration, and explain what it does
+
+.. here is the configuration of the filtering layer:
+
+.. CONF
+
+.. And here are the details of what its doing/let's examine what its doing
+
+
+.. .. In this section, we enable and configure traffic shaping.
+.. .. The asynchronous traffic shaper has components in the bridging layer. I.e., The
+.. .. ATS requires the transmission eligibility time for each packet to be calculated
+.. .. by the ingress per-stream filtering.
+
+.. In this section, we focus on enabling and configuring traffic shaping. It's
+.. important to note that the ATS also has components in the bridging layer that need to be configured.
+.. Specifically, ATS requires the per-stream filtering to calculate the
+.. transmission eligibility time for each packet.
+
+.. .. We enable ingress filtering in the switch, this adds a stream filtering layer to
+.. .. the bridging layer. By default, the ingress filter is a
+.. .. :ned:`SimpleIeee8021qFilter`. We add the :ned:`EligibilityTimeMeter` and
+.. .. :ned:`EligibilityTimeFilter` modules here.
+
+.. First, we enable ingress filtering in the switch, which adds a stream filtering layer
+.. to the bridging layer. The ingress filter module in the stream filtering layer is a :ned:`SimpleIeee8021qFilter` by default.
+.. We add the :ned:`EligibilityTimeMeter` and
+.. :ned:`EligibilityTimeFilter` to the this filter module.
+
+.. .. By default, we use the :ned:`SimpleIeee8021qFilter` as the
+..    ingress filter. 
+
+.. .. literalinclude:: ../omnetpp.ini
+..    :start-at: ingress per-stream filtering
+..    :end-before: egress traffic shaping
+..    :language: ini
+
+.. .. We only use one traffic class here, because only the video stream is shaped by
+.. .. the ATS, and only the ATS has components in the ingess filter. The classifier
+.. .. will send the video stream through the meter and the filter module, while the
+.. .. best effort stream will just go through the :ned:`SimpleIeee8021qFilter` module
+.. .. via the non-filtered direct path:
+
+.. In this scenario, we utilize a single traffic class since only the video stream
+.. undergoes shaping through the ATS, which has components in the ingress filter.
+.. The classifier directs the video stream through the meter and filter modules,
+.. while the best effort stream follows the non-filtered direct path in the
+.. :ned:`SimpleIeee8021qFilter`` module, as illustrated on the following image:
+
+.. .. figure:: media/filter.png
+..    :align: center
+
+.. **TODO** restructure this
+
+.. .. *******************
+
+.. .. Furthermore, the ATS parameters are configured at the meter modules in the filter module.
+.. .. We configure the committed information rate and committed burst size.
+.. .. The meter modules measure the
+.. .. data rate of the traffic passing through, calculate the transmission eligibility time and put
+.. .. an eligibility time tag to all packets. We configure the ATS to limit the video
+.. .. stream to ~20 Mbps, while allowing some bursts.
+
+.. .. The meter module measures the data rate of the traffic passing through,
+.. .. calculate the transmission eligibility time and put an eligibility time tag to
+.. .. all packets. The eligibility time is calculated based on the configured
+.. .. committed information rate and committed burst size parameters. The eligibility
+.. .. time will then be used in the interface to delay packets as necessary. We
+.. .. configure the ATS to limit the video stream to ~20 Mbps, while allowing some
+.. .. bursts.
+
+.. The meter module measures the traffic data rate, calculates the transmission
+.. eligibility time, and assigns an eligibility time tag to each packet. This
+.. eligibility time is then used at the interface level to appropriately delay
+.. packets as needed. In this configuration, we limit the video stream to around 20
+.. Mbps while allowing for occasional bursts.
+
+.. .. Also, we need to configure the committed information rate and committed burst
+.. .. size parameters of the ATS here, at the meter modules. These modules meter the
+.. .. data rate of the traffic passing through, calculate the eligibility time and put
+.. .. an eligibility time tag to all packets. We configure the ATS to limit the video
+.. .. stream to ~20 Mbps, while allowing some bursts.
+
+.. The traffic shaping takes place in the outgoing network interface of the switch.
+.. The credit-based shaper only has components here. We configure the CBS to limit
+.. the data rate of the best effort stream to ~40 Mbps.
+
+.. Here is the egress traffic shaping configuration:
+
+.. .. literalinclude:: ../omnetpp.ini
+..    :start-at: egress traffic shaping
+..    :language: ini
+
+.. .. *******************
+
+.. Packets that are held up by the shapers are stored in the MAC layer subqueues of
+.. the corresponding traffic class.
 
 Results
 -------
