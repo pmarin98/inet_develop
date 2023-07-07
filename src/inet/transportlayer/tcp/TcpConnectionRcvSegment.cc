@@ -550,9 +550,9 @@ TcpEventCode TcpConnection::processSegment1stThru8th(Packet *packet, const Ptr<c
                     // as many bytes as requested. rcv_wnd should be decreased
                     // accordingly!
                     //
-                    if (!isToBeAccepted())
-                        sendAvailableDataToApp();
-
+                    if (!isToBeAccepted()) {
+                        sendAvailableDataToApp(); // TODO : contains "if (autoSendUp)"
+                    }
                     // if this segment "filled the gap" until the previously arrived segment
                     // that carried a FIN (i.e.rcv_nxt == rcv_fin_seq), we have to advance
                     // rcv_nxt over the FIN.

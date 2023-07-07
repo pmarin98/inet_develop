@@ -134,6 +134,11 @@ class TcpOpenCommand extends TcpCommand
     string tcpAlgorithmClass; // TCP congestion control algorithm; leave empty for default
 }
 
+class TcpReadCommand extends TcpCommand
+{
+    int64_t numberOfBytes;
+}
+
 //
 // Control info to be used to accept an available connection.
 //
