@@ -551,7 +551,7 @@ TcpEventCode TcpConnection::processSegment1stThru8th(Packet *packet, const Ptr<c
                     // accordingly!
                     //
                     if (!isToBeAccepted()) {
-                        sendAvailableDataToApp(); // TODO : contains "if (autoSendUp)"
+                        sendAvailableDataToApp(state->rcv_nxt); // TODO : contains "if (autoSendUp)"
                     }
                     // if this segment "filled the gap" until the previously arrived segment
                     // that carried a FIN (i.e.rcv_nxt == rcv_fin_seq), we have to advance

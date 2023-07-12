@@ -400,7 +400,7 @@ void TcpConnection::sendToApp(cMessage *msg)
     tcpMain->sendFromConn(msg, "appOut");
 }
 
-void TcpConnection::sendAvailableDataToApp()
+void TcpConnection::sendAvailableDataToApp(uint32 old_rcv_nxt)
 {
     if (receiveQueue->getAmountOfBufferedBytes()) {
         if (tcpMain->useDataNotification) {
@@ -410,11 +410,18 @@ void TcpConnection::sendAvailableDataToApp()
             indication->setControlInfo(cmd);
             sendToApp(indication);
         } else {
-            while (auto msg = receiveQueue->extractBytesUpTo(state->rcv_nxt)) {
+            /*while (auto msg = receiveQueue->extractBytesUpTo(state->rcv_nxt)) {
+                msg->setKind(TCP_I_DATA);    // TBD currently we never send TCP_I_URGENT_DATA
+                msg->addTag<SocketInd>()->setSocketId(socketId);
+                sendToApp(msg);
+            }*/
+
+            while (auto msg = receiveQueue->extractBytesUpTo(old_rcv_nxt)) {
                 msg->setKind(TCP_I_DATA);    // TBD currently we never send TCP_I_URGENT_DATA
                 msg->addTag<SocketInd>()->setSocketId(socketId);
                 sendToApp(msg);
             }
+
         }
     }
 }

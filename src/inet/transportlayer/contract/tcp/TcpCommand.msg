@@ -133,7 +133,7 @@ class TcpOpenCommand extends TcpCommand
     bool fork = false;        // used only for passive open
     string tcpAlgorithmClass; // TCP congestion control algorithm; leave empty for default
 }
-
+// Number of bytes to be read
 class TcpReadCommand extends TcpCommand
 {
     int64_t numberOfBytes;

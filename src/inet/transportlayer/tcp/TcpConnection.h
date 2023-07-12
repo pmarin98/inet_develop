@@ -572,7 +572,7 @@ class INET_API TcpConnection : public cSimpleModule
     virtual void sendEstabIndicationToApp();
 
     /** Utility: sends data or data notification to application */
-    virtual void sendAvailableDataToApp();
+    virtual void sendAvailableDataToApp(uint32 old_rcv_nxt);
 
   public:
     /** Utility: prints local/remote addr/port and app gate index/socketId */

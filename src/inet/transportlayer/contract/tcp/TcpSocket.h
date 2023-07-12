@@ -307,7 +307,10 @@ class INET_API TcpSocket : public ISocket
      * Active OPEN to the given remote socket.
      */
     void connect(L3Address remoteAddr, int remotePort);
-
+    /**
+     * sends a read request to TCP
+     */
+    void read(int64_t numBytes);
     /**
      * Sends data packet.
      */
