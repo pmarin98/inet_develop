@@ -167,7 +167,6 @@ void TcpSocket::read(int64_t numBytes)
 
     request->setControlInfo(readCmd);
     sendToTcp(request);
-    // sockstate = CONNECTING; TODO: Maybe adapt the state here
 }
 
 void TcpSocket::send(Packet *msg)

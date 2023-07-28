@@ -168,6 +168,7 @@ void TcpConnection::process_SEND(TcpEventCode& event, TcpCommand *tcpCommand, cM
 
 void TcpConnection::process_READ_REQUEST(TcpEventCode& event, TcpCommand *tcpCommand, cMessage *msg)
 {
+    //check whether we have data in the TCP queue. Store how much data the application wants. Check for pending read request.
     TcpReadCommand *readCmd = check_and_cast<TcpReadCommand *>(tcpCommand);
     int64_t numBytes = readCmd->getNumberOfBytes();
     if (isToBeAccepted())

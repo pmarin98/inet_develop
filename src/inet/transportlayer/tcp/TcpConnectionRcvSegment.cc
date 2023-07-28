@@ -551,7 +551,13 @@ TcpEventCode TcpConnection::processSegment1stThru8th(Packet *packet, const Ptr<c
                     // accordingly!
                     //
                     if (!isToBeAccepted()) {
-                        sendAvailableDataToApp(state->rcv_nxt); // TODO : contains "if (autoSendUp)"
+                        if (autoSendUp){
+                         // everything should be implemented inside this function, also if condition
+                        sendAvailableDatatoApp(state->old_nxt + 10)
+                        sendAvailableDataToApp(state->rcv_nxt); // TODO : contains "if (autoSendUp)" # last lenght of read
+                        }
+                        else { // we should identify 2 cases : whether there is a pending READ_COMMAND
+                        }
                     }
                     // if this segment "filled the gap" until the previously arrived segment
                     // that carried a FIN (i.e.rcv_nxt == rcv_fin_seq), we have to advance

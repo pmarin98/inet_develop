@@ -400,7 +400,7 @@ void TcpConnection::sendToApp(cMessage *msg)
     tcpMain->sendFromConn(msg, "appOut");
 }
 
-void TcpConnection::sendAvailableDataToApp(uint32 old_rcv_nxt)
+void TcpConnection::sendAvailableDataToApp(uint32 requiredBytes)
 {
     if (receiveQueue->getAmountOfBufferedBytes()) {
         if (tcpMain->useDataNotification) {
@@ -416,9 +416,13 @@ void TcpConnection::sendAvailableDataToApp(uint32 old_rcv_nxt)
                 sendToApp(msg);
             }*/
 
-            while (auto msg = receiveQueue->extractBytesUpTo(old_rcv_nxt)) {
+            //Sanity check here: compare whether FirstSeqNo+requiredBytes smaller than state->rcv_nxt
+            // use getLE as comparator
+            // receiveQueue->extractBytesUpTo(receiveQueue->getFirstSeqNo + requiredBytes)
+            while (auto msg = receiveQueue->extractBytesUpTo(requiredBytes)) {
                 msg->setKind(TCP_I_DATA);    // TBD currently we never send TCP_I_URGENT_DATA
                 msg->addTag<SocketInd>()->setSocketId(socketId);
+                //udpate state_rcv_nxt accordinstate_rcv_nxt = state_rcv_nxt - ;
                 sendToApp(msg);
             }
 

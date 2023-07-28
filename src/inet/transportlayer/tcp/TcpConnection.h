@@ -367,7 +367,8 @@ class INET_API TcpConnection : public cSimpleModule
     int ttl = -1;
     short dscp = -1;
     short tos = -1;
-    bool autoSendUp = true;  // first READ request switches from true to false
+    bool autoSendUp = true;  // You should set it in open command.Set it in c++. Whenever timer is set -> at open connection check, check value of timer.
+    // introduce this parameter at the application. User won't know the meaning of the variable. Describe it from the user point of view.
     int64_t numBytesRequested = 0;  // from READ requests
 
   protected:
